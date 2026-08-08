@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon Operations & Decision Intelligence</title>
+  <title>Combinido Biocarbon Operations & Executive Suite</title>
   
-  <!-- Chart.js CDN for Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     :root {
       --header-bg: #1a1816;
@@ -119,7 +116,6 @@
     .form-control:focus { border-color: var(--brand-orange); }
 
     .btn { background-color: var(--brand-orange); color: #ffffff; font-weight: 700; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; }
-    .btn-secondary { background-color: #334155; color: #ffffff; }
     .btn-danger { background-color: #fee2e2; color: var(--brand-danger); border: 1px solid var(--brand-danger); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
 
     .search-input {
@@ -188,11 +184,12 @@
     <!-- NAVIGATION SIDEBAR -->
     <aside class="sidebar">
       <a class="nav-link active" onclick="switchTab('owner-suite', this)"><span>📈</span> Business Health & Decisions</a>
+      <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
+      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> Batch Carbonization Cycles</a>
+      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Health Watch</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
       <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory Balances</a>
-      <a class="nav-link" onclick="switchTab('furnace1', this)"><span>🔥</span> Furnace Watch & Processing</a>
       <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Sales Tickets</a>
-      <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Log</a>
       <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Downtime & Bottlenecks</a>
       <a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew Attendance & Payroll</a>
       <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
@@ -205,19 +202,19 @@
       <div id="owner-suite" class="tab-pane active">
         
         <div class="insight-card">
-          💡 <strong>Executive Summary:</strong> Monitor yield efficiency, margin per kg, raw material stock health, and plant availability to optimize factory performance.
+          💡 <strong>Executive Dashboard:</strong> Real-time operational intelligence tracking batch timelines, thermal peaks, conversion yield, and raw feed availability for optimal profitability.
         </div>
 
         <div class="kpi-grid">
           <div class="kpi-card orange-accent">
-            <div class="kpi-title">TOTAL REVENUE (OUTBOUND)</div>
+            <div class="kpi-title">TOTAL SALES REVENUE</div>
             <div class="kpi-main-val" id="biz-revenue">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Gross sales from finished product deliveries</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Outbound customer deliveries</div>
           </div>
           <div class="kpi-card blue-accent">
-            <div class="kpi-title">RAW CONVERSION EFFICIENCY</div>
+            <div class="kpi-title">RAW CONVERSION YIELD</div>
             <div class="kpi-main-val" id="biz-yield">0%</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Average finished output yield vs raw feed</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Output yield vs. raw feed input</div>
           </div>
           <div class="kpi-card gold-accent">
             <div class="kpi-title">PLANT DOWNTIME LOSS</div>
@@ -225,33 +222,162 @@
             <div style="font-size: 0.82rem; color: #94a3b8;">Unplanned stoppage duration</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-title">ACTIVE STAFF ON PAYROLL</div>
+            <div class="kpi-title">ACTIVE CREW STAFF</div>
             <div class="kpi-main-val" id="biz-staff">0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Registered operational personnel</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Registered operational staff</div>
           </div>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Operational Health & Action Recommendations</div>
+          <div class="panel-title">Operational Health & Decision Recommendations</div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-orange);">1. Raw Material Stock Risk Analysis</h4>
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-orange);">1. Feedstock Inventory Buffer</h4>
               <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-stock-text">Analyzing stock levels...</p>
             </div>
             <div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-blue);">2. Carbonization Yield Performance</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing production runs...</p>
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-blue);">2. Furnace Thermal & Cycle Efficiency</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing production timelines...</p>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- TAB 2: SMART CONTACT DIRECTORY WITH SEARCH -->
+      <!-- TAB 2: FACTORY SHIFT OPEN/CLOSE LOG -->
+      <div id="openclose" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Daily Factory Shift Open & Close Log (Pagbukas ug Pagsara)</div>
+          <form onsubmit="handleOpenCloseLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Shift Date</label><input type="date" id="oc-date" class="form-control" required></div>
+              <div class="form-group"><label>Opened By (Attendant)</label><select id="oc-opened-by" class="form-control"></select></div>
+              <div class="form-group"><label>Opening Time (In)</label><input type="time" id="oc-time-in" class="form-control" required></div>
+              <div class="form-group"><label>Machines & Safety Check</label><select id="oc-mach-ok" class="form-control"><option value="OK">OK - All Normal</option><option value="ISSUE">ISSUE - Alert Raised</option></select></div>
+              <div class="form-group"><label>Closed By (Attendant)</label><select id="oc-closed-by" class="form-control"></select></div>
+              <div class="form-group"><label>Closing Time (Out)</label><input type="time" id="oc-time-out" class="form-control"></div>
+              <div class="form-group"><label>Run Mode</label><select id="oc-mode" class="form-control"><option value="Standard Day">Standard Shift Day</option><option value="24-hr Continuous">24-hr Continuous Furnace Run</option></select></div>
+              <div class="form-group"><label>Shift Handover Notes</label><input type="text" id="oc-notes" class="form-control" placeholder="All dampers closed; perimeter secured"></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 16px;">Save Factory Shift Log</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Factory Daily Operations Ledger</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Opened By</th>
+                  <th>In</th>
+                  <th>Machinery Status</th>
+                  <th>Closed By</th>
+                  <th>Out</th>
+                  <th>Run Mode</th>
+                  <th>Handover Notes</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-openclose"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: BATCH CARBONIZATION CYCLES & TIMELINES -->
+      <div id="furnace-batches" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Log Granular Batch Carbonization Lifecycle</div>
+          <form onsubmit="handleProcessBatch(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
+              <div class="form-group"><label>Raw Feed Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="1000" required></div>
+              <div class="form-group"><label>Finished Item Produced</label><select id="proc-fin-item" class="form-control"></select></div>
+              <div class="form-group"><label>Finished Yield Output (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="550" required></div>
+              <div class="form-group"><label>Time Loading Started</label><input type="datetime-local" id="proc-t-load" class="form-control" required></div>
+              <div class="form-group"><label>Time Cooking/Ignition Started</label><input type="datetime-local" id="proc-t-cook-start" class="form-control" required></div>
+              <div class="form-group"><label>Time Cooking Ended</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
+              <div class="form-group"><label>Time Cooling Ended</label><input type="datetime-local" id="proc-t-cool-end" class="form-control" required></div>
+              <div class="form-group"><label>Time Unloading Ended</label><input type="datetime-local" id="proc-t-unload" class="form-control" required></div>
+              <div class="form-group"><label>Max Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="580" required></div>
+              <div class="form-group"><label>Lead Operator</label><select id="proc-operator" class="form-control"></select></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Log Complete Batch Lifecycle & Transfer Stock</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Carbonization Batch History & Lifecycle Metrics</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Batch ID</th>
+                  <th>Raw Feed Input</th>
+                  <th>Yield Output</th>
+                  <th>Yield %</th>
+                  <th>Loading Start</th>
+                  <th>Cook Period</th>
+                  <th>Cooling Ended</th>
+                  <th>Unload Ended</th>
+                  <th>Max Temp</th>
+                  <th>Operator</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-batches"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: 2-HOUR FURNACE HEALTH & SAFETY MONITOR -->
+      <div id="furnace-monitor" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Log Scheduled 2-Hour Furnace Inspection</div>
+          <form onsubmit="handleFurnaceWatchLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Inspection Time</label><input type="datetime-local" id="fw-datetime" class="form-control" required></div>
+              <div class="form-group"><label>Furnace Unit</label><select id="fw-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option></select></div>
+              <div class="form-group"><label>Current Temp (°C)</label><input type="number" id="fw-temp" class="form-control" placeholder="450" required></div>
+              <div class="form-group"><label>Flue Gas / Vent Status</label><select id="fw-vent" class="form-control"><option value="NORMAL">Normal - Clean Pyrolysis Gas</option><option value="EXCESS_SMOKE">Excess Smoke Detected</option><option value="BLOCKED">Exhaust Blocked</option></select></div>
+              <div class="form-group"><label>Fire & CO Watch Status</label><select id="fw-safety" class="form-control"><option value="SAFE">Safe - CO Detector Normal</option><option value="HAZARD">Hazard / Leak Identified</option></select></div>
+              <div class="form-group"><label>Inspector / Operator</label><select id="fw-attendant" class="form-control"></select></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Unusual Observations / Maintenance Notes</label><input type="text" id="fw-notes" class="form-control" placeholder="No refractory leaks; blower motor operating normally"></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">🌡️ Save 2-Hour Furnace Inspection</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Regular 2-Hour Furnace Check Ledger</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Unit</th>
+                  <th>Temp (°C)</th>
+                  <th>Ventilation Status</th>
+                  <th>Safety Status</th>
+                  <th>Unusual Observations / Notes</th>
+                  <th>Inspector</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-furnace-watch"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: CONTACT DIRECTORY WITH SEARCH -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
             <span>Contact Directory</span>
-            <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Quick search by name, company, position, or location...">
+            <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search company, person, position, location...">
           </div>
           <div class="table-container">
             <table>
@@ -272,7 +398,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: STOCK & INVENTORY BALANCES -->
+      <!-- TAB 6: STOCK & INVENTORY BALANCES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Real-Time Inventory Balances</div>
@@ -294,47 +420,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: FURNACE WATCH & PROCESSING -->
-      <div id="furnace1" class="tab-pane">
-        <div class="panel">
-          <div class="panel-title">Log Batch Processing (Consumes Raw Stock $\rightarrow$ Generates Biochar/Briquettes)</div>
-          <form onsubmit="handleProcessBatch(event)">
-            <div class="form-grid">
-              <div class="form-group"><label>Raw Material Used</label><select id="proc-raw-item" class="form-control"></select></div>
-              <div class="form-group"><label>Raw Weight Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="1000" required></div>
-              <div class="form-group"><label>Finished Product Yielded</label><select id="proc-fin-item" class="form-control"></select></div>
-              <div class="form-group"><label>Output Yield (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="550" required></div>
-              <div class="form-group"><label>Furnace Peak Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="550" required></div>
-              <div class="form-group"><label>Shift Operator</label><select id="proc-operator" class="form-control"></select></div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Process Batch & Transfer Stock</button>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panel-title">Carbonization Production History</div>
-          <div class="table-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>Batch ID</th>
-                  <th>Date/Time</th>
-                  <th>Raw Input</th>
-                  <th>Consumed</th>
-                  <th>Finished Output</th>
-                  <th>Yield %</th>
-                  <th>Peak Temp</th>
-                  <th>Operator</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="tbl-batches"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 5: DELIVERIES & LOGISTICS TICKETS -->
+      <!-- TAB 7: DELIVERIES & LOGISTICS TICKETS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Delivery Ticket</div>
@@ -377,47 +463,38 @@
         </div>
       </div>
 
-      <!-- TAB 6: SHIFT OPEN/CLOSE -->
-      <div id="openclose" class="tab-pane">
-        <div class="panel">
-          <div class="panel-title">Daily Shift Open & Close Log</div>
-          <form onsubmit="handleOpenCloseLog(event)">
-            <div class="form-grid">
-              <div class="form-group"><label>Date</label><input type="date" id="oc-date" class="form-control" required></div>
-              <div class="form-group"><label>Opened By</label><select id="oc-opened-by" class="form-control"></select></div>
-              <div class="form-group"><label>Time In</label><input type="time" id="oc-time-in" class="form-control" required></div>
-              <div class="form-group"><label>Machines OK?</label><select id="oc-mach-ok" class="form-control"><option value="OK">OK</option><option value="ISSUE">ISSUE</option></select></div>
-              <div class="form-group"><label>Closed By</label><select id="oc-closed-by" class="form-control"></select></div>
-              <div class="form-group"><label>Time Out</label><input type="time" id="oc-time-out" class="form-control"></div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 16px;">Save Shift Log</button>
-          </form>
-        </div>
-        <div class="panel">
-          <div class="panel-title">Shift Operations Ledger</div>
-          <div class="table-container"><table><thead><tr><th>Date</th><th>Opened By</th><th>In</th><th>Machines</th><th>Closed By</th><th>Out</th><th>Action</th></tr></thead><tbody id="tbl-openclose"></tbody></table></div>
-        </div>
-      </div>
-
-      <!-- TAB 7: DOWNTIME -->
+      <!-- TAB 8: DOWNTIME & BOTTLENECKS -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Log Downtime Event</div>
+          <div class="panel-title">Log Stoppage / Downtime Incident</div>
           <form onsubmit="handleDowntimeLog(event)">
             <div class="form-grid">
-              <div class="form-group"><label>Reason</label><input type="text" id="dt-reason" class="form-control" placeholder="Grid Power Failure" required></div>
-              <div class="form-group"><label>Duration (Mins)</label><input type="number" id="dt-dur" class="form-control" placeholder="30" required></div>
+              <div class="form-group"><label>Stoppage Reason</label><input type="text" id="dt-reason" class="form-control" placeholder="Grid Power Outage" required></div>
+              <div class="form-group"><label>Duration (Minutes)</label><input type="number" id="dt-dur" class="form-control" placeholder="45" required></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 12px;">Log Stoppage</button>
+            <button type="submit" class="btn" style="margin-top: 12px;">Log Stoppage Event</button>
           </form>
         </div>
+
         <div class="panel">
           <div class="panel-title">Downtime Ledger</div>
-          <div class="table-container"><table><thead><tr><th>ID</th><th>Reason</th><th>Duration</th><th>Action</th></tr></thead><tbody id="tbl-downtime"></tbody></table></div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Stoppage Reason</th>
+                  <th>Duration (mins)</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-downtime"></tbody>
+            </table>
+          </div>
         </div>
       </div>
 
-      <!-- TAB 8: CREW & PAYROLL -->
+      <!-- TAB 9: CREW ATTENDANCE & PAYROLL -->
       <div id="hr" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Crew Attendance & Automated Payroll Calculation</div>
@@ -439,15 +516,14 @@
         </div>
       </div>
 
-      <!-- TAB 9: COMPREHENSIVE MASTER DATA MANAGER -->
+      <!-- TAB 10: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
-        
         <div class="panel">
-          <div class="panel-title">Add / Register Employee (With Emergency Contact Details)</div>
+          <div class="panel-title">Register Employee (With Emergency Contact Info)</div>
           <form onsubmit="handleAddEmployee(event)">
             <div class="form-grid">
               <div class="form-group"><label>Full Name</label><input type="text" id="m-emp-name" class="form-control" placeholder="Amber" required></div>
-              <div class="form-group"><label>Job Title / Position</label><input type="text" id="m-emp-pos" class="form-control" placeholder="Furnace Operator" required></div>
+              <div class="form-group"><label>Job Title / Position</label><input type="text" id="m-emp-pos" class="form-control" placeholder="Furnace Lead Operator" required></div>
               <div class="form-group"><label>Daily Rate (₱)</label><input type="number" id="m-emp-rate" class="form-control" placeholder="650" required></div>
               <div class="form-group"><label>Phone Number</label><input type="text" id="m-emp-phone" class="form-control" placeholder="0917-111-2222" required></div>
               <div class="form-group"><label>Email Address</label><input type="email" id="m-emp-email" class="form-control" placeholder="amber@cbcm.ph"></div>
@@ -459,12 +535,12 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Add / Register External Contact (Supplier / Customer)</div>
+          <div class="panel-title">Register External Contact (Supplier / Customer)</div>
           <form onsubmit="handleAddContact(event)">
             <div class="form-grid">
               <div class="form-group"><label>Company / Entity Name</label><input type="text" id="m-con-company" class="form-control" placeholder="Carigara Bamboo Farmers Co-Op" required></div>
               <div class="form-group"><label>Contact Person</label><input type="text" id="m-con-person" class="form-control" placeholder="Juan Dela Cruz" required></div>
-              <div class="form-group"><label>Position / Title</label><input type="text" id="m-con-pos" class="form-control" placeholder="Supply Officer" required></div>
+              <div class="form-group"><label>Position / Title</label><input type="text" id="m-con-pos" class="form-control" placeholder="Supply Lead" required></div>
               <div class="form-group">
                 <label>Category</label>
                 <select id="m-con-type" class="form-control">
@@ -473,20 +549,19 @@
                 </select>
               </div>
               <div class="form-group"><label>Contact Number</label><input type="text" id="m-con-phone" class="form-control" placeholder="0917-123-4567" required></div>
-              <div class="form-group"><label>Email Address</label><input type="email" id="m-con-email" class="form-control" placeholder="juan@bamboo.ph"></div>
+              <div class="form-group"><label>Email Address</label><input type="email" id="m-con-email" class="form-control" placeholder="juan@bamboocoop.ph"></div>
               <div class="form-group"><label>Address / Location</label><input type="text" id="m-con-addr" class="form-control" placeholder="Carigara, Leyte" required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">Add Directory Contact</button>
           </form>
         </div>
-
       </div>
 
     </main>
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v11';
+    const STORAGE_KEY = 'cbcm_master_suite_v12';
 
     const defaultState = {
       inventory: [
@@ -496,14 +571,24 @@
         { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300 }
       ],
       batches: [
-        { id: "BATCH-101", date: "2026-08-08 10:00", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, temp: 550, operator: "Amber" }
+        {
+          id: "BATCH-101",
+          rawItem: "Spiny Bamboo", consumedKg: 1000,
+          finItem: "Charcoal Briquettes", yieldKg: 550,
+          tLoad: "08/08 08:00", tCookStart: "08/08 08:30", tCookEnd: "08/08 12:30",
+          tCoolEnd: "08/08 16:30", tUnload: "08/08 17:30",
+          maxTemp: 580, operator: "Amber"
+        }
+      ],
+      furnaceWatch: [
+        { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable pyrolysis draft; CO level 0 ppm.", attendant: "Amber" }
       ],
       logistics: [
         { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
         { id: "TICKET-502", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 }
       ],
-      openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00" }],
-      downtime: [{ id: "DT-01", reason: "Scheduled Maintenance", duration: 30 }],
+      openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Shift Day", notes: "Perimeter clear; dampers locked." }],
+      downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
         { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", daysWorked: 12, advance: 500 },
         { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", daysWorked: 12, advance: 0 }
@@ -542,14 +627,27 @@
       }
     }
 
+    function handleOpenCloseLog(e) {
+      e.preventDefault();
+      state.openclose.unshift({
+        date: document.getElementById('oc-date').value,
+        openedBy: document.getElementById('oc-opened-by').value,
+        timeIn: document.getElementById('oc-time-in').value,
+        machOk: document.getElementById('oc-mach-ok').value,
+        closedBy: document.getElementById('oc-closed-by').value,
+        timeOut: document.getElementById('oc-time-out').value,
+        mode: document.getElementById('oc-mode').value,
+        notes: document.getElementById('oc-notes').value
+      });
+      saveState(); renderAll(); e.target.reset();
+    }
+
     function handleProcessBatch(e) {
       e.preventDefault();
       const rawItemName = document.getElementById('proc-raw-item').value;
       const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
       const finItemName = document.getElementById('proc-fin-item').value;
       const finQty = parseFloat(document.getElementById('proc-fin-qty').value);
-      const temp = parseInt(document.getElementById('proc-temp').value);
-      const operator = document.getElementById('proc-operator').value;
 
       const rawStock = state.inventory.find(i => i.name === rawItemName);
       if (!rawStock || rawStock.stock < rawQty) {
@@ -563,8 +661,29 @@
 
       state.batches.unshift({
         id: `BATCH-${Date.now().toString().slice(-3)}`,
-        date: new Date().toISOString().slice(0, 16).replace('T', ' '),
-        rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty, temp, operator
+        rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty,
+        tLoad: document.getElementById('proc-t-load').value.replace('T', ' '),
+        tCookStart: document.getElementById('proc-t-cook-start').value.replace('T', ' '),
+        tCookEnd: document.getElementById('proc-t-cook-end').value.replace('T', ' '),
+        tCoolEnd: document.getElementById('proc-t-cool-end').value.replace('T', ' '),
+        tUnload: document.getElementById('proc-t-unload').value.replace('T', ' '),
+        maxTemp: parseInt(document.getElementById('proc-temp').value),
+        operator: document.getElementById('proc-operator').value
+      });
+
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    function handleFurnaceWatchLog(e) {
+      e.preventDefault();
+      state.furnaceWatch.unshift({
+        datetime: document.getElementById('fw-datetime').value.replace('T', ' '),
+        unit: document.getElementById('fw-unit').value,
+        temp: parseInt(document.getElementById('fw-temp').value),
+        vent: document.getElementById('fw-vent').value,
+        safety: document.getElementById('fw-safety').value,
+        attendant: document.getElementById('fw-attendant').value,
+        notes: document.getElementById('fw-notes').value
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -598,17 +717,6 @@
       saveState(); renderAll(); e.target.reset();
     }
 
-    function handleOpenCloseLog(e) {
-      e.preventDefault();
-      state.openclose.unshift({
-        date: document.getElementById('oc-date').value,
-        openedBy: document.getElementById('oc-opened-by').value, timeIn: document.getElementById('oc-time-in').value,
-        machOk: document.getElementById('oc-mach-ok').value, closedBy: document.getElementById('oc-closed-by').value,
-        timeOut: document.getElementById('oc-time-out').value
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
     function handleDowntimeLog(e) {
       e.preventDefault();
       state.downtime.unshift({ id: `DT-${Date.now().toString().slice(-2)}`, reason: document.getElementById('dt-reason').value, duration: parseInt(document.getElementById('dt-dur').value) });
@@ -617,26 +725,23 @@
 
     function handleAddEmployee(e) {
       e.preventDefault();
+      const empName = document.getElementById('m-emp-name').value;
+      const empPos = document.getElementById('m-emp-pos').value;
+      const empPhone = document.getElementById('m-emp-phone').value;
+      const empEmail = document.getElementById('m-emp-email').value || '-';
+
       state.employees.push({
-        name: document.getElementById('m-emp-name').value,
-        pos: document.getElementById('m-emp-pos').value,
+        name: empName, pos: empPos,
         rate: parseFloat(document.getElementById('m-emp-rate').value),
-        phone: document.getElementById('m-emp-phone').value,
-        email: document.getElementById('m-emp-email').value || '-',
+        phone: empPhone, email: empEmail,
         emName: document.getElementById('m-emp-em-name').value,
         emPhone: document.getElementById('m-emp-em-phone').value,
         daysWorked: 0, advance: 0
       });
 
-      // Also add to directory
       state.contacts.push({
-        company: "Combinido Biocarbon (Internal Staff)",
-        person: document.getElementById('m-emp-name').value,
-        position: document.getElementById('m-emp-pos').value,
-        type: "Plant Crew",
-        phone: document.getElementById('m-emp-phone').value,
-        email: document.getElementById('m-emp-email').value || '-',
-        address: "Manloy, Carigara, Leyte Plant"
+        company: "Combinido Biocarbon (Staff)", person: empName, position: empPos,
+        type: "Plant Crew", phone: empPhone, email: empEmail, address: "Manloy, Carigara Plant"
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -659,9 +764,7 @@
     function filterContacts() {
       const q = document.getElementById('contact-search').value.toLowerCase();
       const rows = document.querySelectorAll('#tbl-contacts tr');
-      rows.forEach(r => {
-        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-      });
+      rows.forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; });
     }
 
     function deleteEntry(arrayKey, index) {
@@ -672,11 +775,12 @@
     }
 
     function renderAll() {
-      // Dynamic Select Boxes
+      // Dynamic Select Dropdowns
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
       if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
       if(document.getElementById('proc-operator')) document.getElementById('proc-operator').innerHTML = empOpts;
+      if(document.getElementById('fw-attendant')) document.getElementById('fw-attendant').innerHTML = empOpts;
 
       document.getElementById('proc-raw-item').innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail)</option>`).join('');
       document.getElementById('proc-fin-item').innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
@@ -684,7 +788,53 @@
       
       toggleLogisticsItemOptions();
 
-      // Render Tables
+      // Shift Open/Close Table
+      document.getElementById('tbl-openclose').innerHTML = state.openclose.map((o, idx) => `
+        <tr>
+          <td><strong>${o.date}</strong></td>
+          <td>${o.openedBy}</td>
+          <td>${o.timeIn}</td>
+          <td><span class="badge ${o.machOk === 'OK' ? 'badge-pass' : 'badge-fail'}">${o.machOk}</span></td>
+          <td>${o.closedBy || '-'}</td>
+          <td>${o.timeOut || '-'}</td>
+          <td><span class="badge badge-warn">${o.mode}</span></td>
+          <td>${o.notes || '-'}</td>
+          <td><button onclick="deleteEntry('openclose', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
+
+      // Batch Lifecycle Table
+      document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
+        <tr>
+          <td><strong>${b.id}</strong></td>
+          <td>${b.rawItem} (${b.consumedKg} kg)</td>
+          <td><strong>${b.yieldKg} kg (${b.finItem})</strong></td>
+          <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
+          <td>${b.tLoad}</td>
+          <td>${b.tCookStart} $\rightarrow$ ${b.tCookEnd}</td>
+          <td>${b.tCoolEnd}</td>
+          <td>${b.tUnload}</td>
+          <td><strong>${b.maxTemp} °C</strong></td>
+          <td>${b.operator}</td>
+          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
+
+      // 2-Hour Furnace Health Watch Table
+      document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
+        <tr>
+          <td><strong>${fw.datetime}</strong></td>
+          <td>${fw.unit}</td>
+          <td><strong>${fw.temp} °C</strong></td>
+          <td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td>
+          <td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td>
+          <td>${fw.notes || 'No unusual conditions'}</td>
+          <td>${fw.attendant}</td>
+          <td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
+
+      // Contact Directory
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
         <tr>
           <td><strong>${c.company}</strong></td>
@@ -697,6 +847,7 @@
         </tr>
       `).join('');
 
+      // Inventory Balances
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -708,20 +859,7 @@
         </tr>
       `).join('');
 
-      document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
-        <tr>
-          <td><strong>${b.id}</strong></td>
-          <td>${b.date}</td>
-          <td>${b.rawItem}</td>
-          <td>${b.consumedKg.toLocaleString()} kg</td>
-          <td><strong>${b.yieldKg.toLocaleString()} kg (${b.finItem})</strong></td>
-          <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
-          <td>${b.temp} °C</td>
-          <td>${b.operator}</td>
-          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
+      // Logistics Ticket Ledger
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -734,6 +872,7 @@
         </tr>
       `).join('');
 
+      // Payroll Ledger
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => `
         <tr>
           <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.phone}</small></td>
@@ -745,10 +884,9 @@
         </tr>
       `).join('');
 
-      document.getElementById('tbl-openclose').innerHTML = state.openclose.map(o => `<tr><td>${o.date}</td><td>${o.openedBy}</td><td>${o.timeIn}</td><td><span class="badge badge-pass">${o.machOk}</span></td><td>${o.closedBy}</td><td>${o.timeOut}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
 
-      // Business Owner Decision Calculations
+      // Executive Business Intelligence Calculations
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
       const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
       const totalFin = state.batches.reduce((s, b) => s + b.yieldKg, 0);
@@ -760,18 +898,18 @@
       document.getElementById('biz-downtime').innerText = `${totalDowntimeHrs} hrs`;
       document.getElementById('biz-staff').innerText = `${state.employees.length} Crew`;
 
-      // Smart Recommendation Engine
+      // Smart Recommendation Alerts
       const lowItems = state.inventory.filter(i => i.stock < i.min);
       if (lowItems.length > 0) {
-        document.getElementById('rec-stock-text').innerHTML = `<strong style="color: var(--brand-danger);">⚠️ REORDER NEEDED:</strong> Stock level for <strong>${lowItems.map(i => i.name).join(', ')}</strong> is below safety limit. Contact suppliers now to avoid furnace idle time.`;
+        document.getElementById('rec-stock-text').innerHTML = `<strong style="color: var(--brand-danger);">⚠️ REORDER NEEDED:</strong> Stock level for <strong>${lowItems.map(i => i.name).join(', ')}</strong> is below safety threshold. Contact bamboo/coconut shell suppliers to prevent furnace idle time.`;
       } else {
-        document.getElementById('rec-stock-text').innerHTML = `✅ <strong>All raw material & finished goods buffers are healthy.</strong> Plant has sufficient feed for upcoming shifts.`;
+        document.getElementById('rec-stock-text').innerHTML = `✅ <strong>Feedstock buffers are healthy.</strong> Stock is sufficient for continuous furnace runs.`;
       }
 
-      if (parseFloat(avgYield) < 50.0 && totalRaw > 0) {
-        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-gold);">⚡ YIELD WARNING:</strong> Current conversion is <strong>${avgYield}%</strong> (Target: &ge;55%). Check furnace air dampers, moisture levels in bamboo feed, or temperature maintenance.`;
+      if (parseFloat(avgYield) < 52.0 && totalRaw > 0) {
+        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-gold);">⚡ EFFICIENCY ALERT:</strong> Average conversion rate is <strong>${avgYield}%</strong> (Target: &ge;55%). Inspect furnace dampers, reduce moisture content in bamboo feed, or adjust air intake.`;
       } else {
-        document.getElementById('rec-yield-text').innerHTML = `✅ <strong>Carbonization conversion rate is optimal (${avgYield}%).</strong> Pyrolysis burn cycles are yielding high output per kg of feed.`;
+        document.getElementById('rec-yield-text').innerHTML = `✅ <strong>Carbonization conversion efficiency is optimal (${avgYield}%).</strong> Pyrolysis burn cycles are yielding high biochar output.`;
       }
     }
 
