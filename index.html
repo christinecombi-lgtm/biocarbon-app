@@ -5,50 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Combinido Biocarbon Operations Dashboard</title>
   
-  <!-- Chart.js CDN for Analytics -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
-    /* ==========================================================================
-       COMBINIDO BRAND SYSTEM & COLOR PALETTE
-       ========================================================================== */
     :root {
-      --header-bg: #1a1816;         /* Dark Charcoal Header */
-      --canvas-bg: #f3f4f6;         /* Light Canvas Background */
-      --card-bg: #ffffff;           /* Clean White Card Surface */
-      --sidebar-bg: #1e293b;        /* Dark Sidebar Background */
-      --border-light: #e5e7eb;      /* Soft Card Border */
+      --header-bg: #1a1816;
+      --canvas-bg: #f3f4f6;
+      --card-bg: #ffffff;
+      --sidebar-bg: #1e293b;
+      --border-light: #e5e7eb;
       
-      --brand-orange: #f26522;      /* Primary Brand Orange Accent */
-      --brand-green: #10b981;       /* Operational Green */
-      --brand-green-bg: #ecfdf5;    /* Light Green Alert Fill */
-      --brand-blue: #0284c7;        /* Analytical Blue Accent */
-      --brand-gold: #f59e0b;        /* Warning/Pending Accent */
-      --brand-danger: #ef4444;      /* Alert Red */
+      --brand-orange: #f26522;
+      --brand-green: #10b981;
+      --brand-green-bg: #ecfdf5;
+      --brand-blue: #0284c7;
+      --brand-gold: #f59e0b;
+      --brand-danger: #ef4444;
       
-      --text-main: #0f172a;         /* High-Contrast Main Text */
-      --text-muted: #64748b;       /* Muted Subtitles & Labels */
+      --text-main: #0f172a;
+      --text-muted: #64748b;
       --sidebar-width: 260px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--canvas-bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
 
-    body {
-      background-color: var(--canvas-bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ==========================================================================
-       TOP BRAND HEADER
-       ========================================================================== */
     header {
       background-color: var(--header-bg);
       color: #ffffff;
@@ -60,103 +39,22 @@
       z-index: 101;
     }
 
-    .brand-container {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
+    .brand-container { display: flex; align-items: center; gap: 16px; }
+    .brand-shapes { display: flex; align-items: center; gap: 8px; }
+    .shape-diamond-orange { width: 22px; height: 22px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 3px; }
+    .shape-circle-white { width: 24px; height: 24px; background-color: #ffffff; border-radius: 50%; }
+    .shape-diamond-green { width: 22px; height: 22px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 3px; }
 
-    .brand-shapes {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .brand-text h1 { font-size: 1.6rem; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+    .brand-text span { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #cbd5e1; margin-top: 3px; display: block; }
 
-    .shape-diamond-orange {
-      width: 22px;
-      height: 22px;
-      background-color: var(--brand-orange);
-      transform: rotate(45deg);
-      border-radius: 3px;
-    }
+    .header-meta { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .tagline { font-style: italic; color: var(--brand-orange); font-size: 0.95rem; font-weight: 600; }
+    .ops-subtitle { font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; color: #94a3b8; text-transform: uppercase; }
 
-    .shape-circle-white {
-      width: 24px;
-      height: 24px;
-      background-color: #ffffff;
-      border-radius: 50%;
-    }
-
-    .shape-diamond-green {
-      width: 22px;
-      height: 22px;
-      background-color: var(--brand-green);
-      transform: rotate(45deg);
-      border-radius: 3px;
-    }
-
-    .brand-text h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-text span {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: #cbd5e1;
-      margin-top: 3px;
-      display: block;
-    }
-
-    .header-meta {
-      text-align: right;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 4px;
-    }
-
-    .tagline {
-      font-style: italic;
-      color: var(--brand-orange);
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .ops-subtitle {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #94a3b8;
-      text-transform: uppercase;
-    }
-
-    .live-status-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 2px;
-    }
-
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      color: #e2e8f0;
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      background-color: var(--brand-green);
-      border-radius: 50%;
-      box-shadow: 0 0 6px var(--brand-green);
-    }
+    .live-status-row { display: flex; align-items: center; gap: 10px; margin-top: 2px; }
+    .status-indicator { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: #e2e8f0; }
+    .status-dot { width: 8px; height: 8px; background-color: var(--brand-green); border-radius: 50%; box-shadow: 0 0 6px var(--brand-green); }
 
     .btn-refresh {
       background-color: var(--brand-orange);
@@ -169,13 +67,7 @@
       cursor: pointer;
     }
 
-    /* ==========================================================================
-       APP LAYOUT (SIDEBAR + CONTENT)
-       ========================================================================== */
-    .app-body {
-      display: flex;
-      flex: 1;
-    }
+    .app-body { display: flex; flex: 1; }
 
     .sidebar {
       width: var(--sidebar-width);
@@ -202,40 +94,15 @@
       transition: all 0.2s;
     }
 
-    .nav-link:hover, .nav-link.active {
-      background-color: #334155;
-      color: #ffffff;
-    }
+    .nav-link:hover, .nav-link.active { background-color: #334155; color: #ffffff; }
+    .nav-link.active { border-left: 4px solid var(--brand-orange); }
 
-    .nav-link.active {
-      border-left: 4px solid var(--brand-orange);
-    }
-
-    .main-content {
-      flex: 1;
-      padding: 28px 36px;
-      max-width: calc(100vw - var(--sidebar-width));
-      overflow-x: hidden;
-    }
-
+    .main-content { flex: 1; padding: 28px 36px; max-width: calc(100vw - var(--sidebar-width)); overflow-x: hidden; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    /* ==========================================================================
-       CARDS & METRICS
-       ========================================================================== */
-    .filter-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-
-    .period-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .filter-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .period-controls { display: flex; align-items: center; gap: 12px; }
 
     .btn-pill {
       background-color: transparent;
@@ -248,43 +115,15 @@
       cursor: pointer;
     }
 
-    .btn-pill.active {
-      background-color: var(--sidebar-bg);
-      color: #ffffff;
-      border-color: var(--sidebar-bg);
-    }
+    .btn-pill.active { background-color: var(--sidebar-bg); color: #ffffff; border-color: var(--sidebar-bg); }
 
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-bottom: 28px;
-    }
-
-    .kpi-card {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      padding: 20px 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      border-left: 4px solid var(--brand-green);
-    }
-
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    .kpi-card { background-color: var(--card-bg); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--brand-green); }
     .kpi-card.blue-accent { border-left-color: var(--brand-blue); }
+    .kpi-card.orange-accent { border-left-color: var(--brand-orange); }
 
-    .kpi-title {
-      font-size: 0.78rem;
-      font-weight: 800;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .kpi-main-val {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin: 8px 0 2px 0;
-    }
+    .kpi-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-main-val { font-size: 2rem; font-weight: 800; color: var(--text-main); margin: 6px 0 2px 0; }
 
     .status-banner {
       background-color: var(--brand-green-bg);
@@ -298,142 +137,28 @@
       margin-bottom: 16px;
     }
 
-    .furnace-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+    .furnace-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; margin-bottom: 16px; }
+    .furnace-card { background-color: var(--card-bg); border-radius: 8px; padding: 14px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-top: 3px solid var(--brand-orange); min-height: 90px; }
+    .furnace-card-label { font-size: 0.68rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; }
+    .furnace-card-val { font-size: 1.15rem; font-weight: 800; color: var(--text-main); margin-top: 6px; }
 
-    .furnace-card {
-      background-color: var(--card-bg);
-      border-radius: 8px;
-      padding: 14px 12px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      border-top: 3px solid var(--brand-orange);
-      min-height: 90px;
-    }
+    .panel { background-color: var(--card-bg); border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; border: 1px solid var(--border-light); }
+    .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); }
 
-    .furnace-card-label {
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: #94a3b8;
-      text-transform: uppercase;
-    }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
+    .form-control { padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.88rem; outline: none; }
 
-    .furnace-card-val {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-top: 6px;
-    }
+    .btn { background-color: var(--brand-orange); color: #ffffff; font-weight: 700; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; }
+    .btn-danger { background-color: #fee2e2; color: var(--brand-danger); border: 1px solid var(--brand-danger); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
 
-    /* ==========================================================================
-       PANELS, FORMS & TABLES
-       ========================================================================== */
-    .panel {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      padding: 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-      margin-bottom: 24px;
-      border: 1px solid var(--border-light);
-    }
+    .table-container { width: 100%; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+    th { background-color: #f8fafc; color: var(--text-muted); padding: 12px 14px; font-weight: 700; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
+    td { padding: 12px 14px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
 
-    .panel-title {
-      font-size: 1.05rem;
-      font-weight: 700;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-light);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .form-group label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .form-control {
-      padding: 9px 12px;
-      border: 1px solid var(--border-light);
-      border-radius: 6px;
-      font-size: 0.88rem;
-      outline: none;
-    }
-
-    .btn {
-      background-color: var(--brand-orange);
-      color: #ffffff;
-      font-weight: 700;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .btn-danger {
-      background-color: #fee2e2;
-      color: var(--brand-danger);
-      border: 1px solid var(--brand-danger);
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.85rem;
-    }
-
-    th {
-      background-color: #f8fafc;
-      color: var(--text-muted);
-      padding: 12px 14px;
-      font-weight: 700;
-      border-bottom: 1px solid var(--border-light);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border-light);
-      white-space: nowrap;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
     .badge-pass { background: #d1fae5; color: #047857; }
     .badge-fail { background: #fee2e2; color: #b91c1c; }
     .badge-warn { background: #fef3c7; color: #b45309; }
@@ -449,7 +174,7 @@
 </head>
 <body>
 
-  <!-- TOP BRAND HEADER -->
+  <!-- TOP HEADER -->
   <header>
     <div class="brand-container">
       <div class="brand-shapes">
@@ -471,7 +196,7 @@
           <div class="status-dot"></div>
           <strong id="live-date">8 August 2026</strong>
         </div>
-        <span style="font-size: 0.78rem; color: #94a3b8;" id="live-timestamp">Live · read 8 Aug 2026, 4:18 PM</span>
+        <span style="font-size: 0.78rem; color: #94a3b8;" id="live-timestamp">Live · Connected System</span>
         <button class="btn-refresh" onclick="refreshDashboard()">Refresh now</button>
       </div>
     </div>
@@ -482,10 +207,9 @@
     <aside class="sidebar">
       <a class="nav-link active" onclick="switchTab('dashboard', this)"><span>📊</span> Operations Overview</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Open/Close Log</a>
-      <a class="nav-link" onclick="switchTab('furnace1', this)"><span>🔥</span> Furnace 1 Watch</a>
-      <a class="nav-link" onclick="switchTab('furnace2', this)"><span>🔥</span> Furnace 2 Watch</a>
+      <a class="nav-link" onclick="switchTab('furnace1', this)"><span>🔥</span> Furnace Watch & Batches</a>
       <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Logistics</a>
-      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Inventory Tracking</a>
+      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory</a>
       <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Operations Downtime</a>
       <a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a>
       <a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a>
@@ -493,10 +217,10 @@
       <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
     </aside>
 
-    <!-- MAIN CONTENT AREA -->
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
-      <!-- TAB 1: OVERVIEW -->
+      <!-- TAB 1: OPERATIONS OVERVIEW -->
       <div id="dashboard" class="tab-pane active">
         <div class="filter-bar">
           <div class="period-controls">
@@ -505,45 +229,50 @@
             <button class="btn-pill" onclick="setPeriod(this)">Last 6 months</button>
             <button class="btn-pill active" onclick="setPeriod(this)">All time</button>
           </div>
-          <span style="font-size: 0.78rem; color: #94a3b8;">Inventory below is always the current snapshot</span>
+          <span style="font-size: 0.78rem; color: #94a3b8;">Real-time synchronized data model</span>
         </div>
 
         <div class="kpi-grid">
           <div class="kpi-card">
-            <div class="kpi-title">NEEDS ACTION</div>
-            <div class="kpi-main-val">0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">inventory all healthy</div>
+            <div class="kpi-title">LOW STOCK ALERTS</div>
+            <div class="kpi-main-val" id="kpi-alerts">0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;" id="kpi-alerts-sub">inventory healthy</div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-title">TOTAL OUTPUT</div>
-            <div class="kpi-main-val">15,740 <span style="font-size: 1.1rem;">kg</span></div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">57 batches logged</div>
+            <div class="kpi-title">TOTAL FINISHED OUTPUT</div>
+            <div class="kpi-main-val" id="kpi-output">0 <span style="font-size: 1.1rem;">kg</span></div>
+            <div style="font-size: 0.82rem; color: #94a3b8;" id="kpi-batches-sub">0 production runs logged</div>
           </div>
           <div class="kpi-card blue-accent">
-            <div class="kpi-title">AVG YIELD</div>
-            <div class="kpi-main-val">55.0<span style="font-size: 1.1rem;">%</span></div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">output ÷ feedstock</div>
+            <div class="kpi-title">AVG PROCESS YIELD</div>
+            <div class="kpi-main-val" id="kpi-yield">0<span style="font-size: 1.1rem;">%</span></div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">output ÷ raw feed</div>
+          </div>
+          <div class="kpi-card orange-accent">
+            <div class="kpi-title">TOTAL SALES REVENUE</div>
+            <div class="kpi-main-val" id="kpi-revenue">₱0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">from outbound dispatches</div>
           </div>
         </div>
 
-        <div style="font-size: 1rem; font-weight: 800; color: #334155; margin-bottom: 12px;">🔥 FURNACE WATCH</div>
-        <div class="status-banner">✅ Furnace not running — all clear.</div>
+        <div style="font-size: 1rem; font-weight: 800; color: #334155; margin-bottom: 12px;">🔥 REAL-TIME FURNACE STATUS</div>
+        <div class="status-banner" id="furnace-banner">✅ Furnace not running — all clear.</div>
 
         <div class="furnace-grid">
-          <div class="furnace-card"><div class="furnace-card-label">RUNNING NOW?</div><div class="furnace-card-val" style="color: var(--brand-green);">No</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">TURNED ON</div><div class="furnace-card-val" style="font-size: 0.95rem;">Wed 8:00 AM · Jul 01</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">LAST CHECK</div><div class="furnace-card-val" style="font-size: 0.95rem;">Wed 8:00 AM · Jul 01</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">CHECK DEADLINE</div><div class="furnace-card-val" style="color: var(--brand-green); font-size: 1rem;">Not running</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">LATEST TEMP</div><div class="furnace-card-val">68 °C</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">CHECKS TODAY</div><div class="furnace-card-val">0</div></div>
-          <div class="furnace-card"><div class="furnace-card-label">FAILS TODAY</div><div class="furnace-card-val" style="color: var(--brand-green);">0</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">RUNNING NOW?</div><div class="furnace-card-val" id="fc-running">No</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">TURNED ON</div><div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-turned-on">-</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">LAST CHECK</div><div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-last-check">-</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">CHECK DEADLINE</div><div class="furnace-card-val" style="color: var(--brand-green); font-size: 1rem;" id="fc-deadline">Not running</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">LATEST TEMP</div><div class="furnace-card-val" id="fc-temp">0 °C</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">CHECKS TODAY</div><div class="furnace-card-val" id="fc-checks">0</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">SAFETY FAILS</div><div class="furnace-card-val" style="color: var(--brand-green);" id="fc-fails">0</div></div>
         </div>
       </div>
 
       <!-- TAB 2: FACTORY OPEN/CLOSE LOG -->
       <div id="openclose" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Daily Operations — Open & Close Log (Pagbukas ug Pagsara)</div>
+          <div class="panel-title">Daily Shift Open & Close Log</div>
           <form onsubmit="handleOpenCloseLog(event)">
             <div class="form-grid">
               <div class="form-group"><label>Date</label><input type="date" id="oc-date" class="form-control" required></div>
@@ -562,79 +291,84 @@
         </div>
       </div>
 
-      <!-- TAB 3: FURNACE 1 WATCH -->
+      <!-- TAB 3: FURNACE WATCH & BATCH PROCESSING -->
       <div id="furnace1" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Furnace 1 Hourly Check Log</div>
-          <form onsubmit="handleFurnaceWatchLog(event, 1)">
+          <div class="panel-title">Process Raw Material $\rightarrow$ Produce Finished Charcoal</div>
+          <form onsubmit="handleProcessBatch(event)">
             <div class="form-grid">
-              <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="f1-datetime" class="form-control" required></div>
-              <div class="form-group"><label>Attendant</label><select id="f1-attendant" class="form-control"></select></div>
-              <div class="form-group"><label>Temp (°C)</label><input type="number" id="f1-temp" class="form-control" required></div>
-              <div class="form-group"><label>Ventilation/CO OK?</label><select id="f1-vent-ok" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+              <div class="form-group"><label>Raw Feed Stock to Consume</label><select id="proc-raw-item" class="form-control"></select></div>
+              <div class="form-group"><label>Raw Weight Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="1000" required></div>
+              <div class="form-group"><label>Finished Item Produced</label><select id="proc-fin-item" class="form-control"></select></div>
+              <div class="form-group"><label>Finished Output Yield (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="550" required></div>
+              <div class="form-group"><label>Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="550" required></div>
+              <div class="form-group"><label>Attendant</label><select id="proc-operator" class="form-control"></select></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 1 Check</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Run Batch & Transfer Stock</button>
           </form>
         </div>
         <div class="panel">
-          <div class="panel-title">Furnace 1 Watch Ledger</div>
-          <div class="table-container"><table><thead><tr><th>Date</th><th>Time</th><th>Attendant</th><th>Temp °C</th><th>Ventilation OK</th><th>Action</th></tr></thead><tbody id="tbl-furnace1"></tbody></table></div>
+          <div class="panel-title">Carbonization Production Runs</div>
+          <div class="table-container"><table><thead><tr><th>Batch ID</th><th>Date/Time</th><th>Raw Input</th><th>Consumed</th><th>Yield Output</th><th>Yield %</th><th>Temp</th><th>Attendant</th><th>Action</th></tr></thead><tbody id="tbl-batches"></tbody></table></div>
         </div>
       </div>
 
-      <!-- TAB 4: FURNACE 2 WATCH -->
-      <div id="furnace2" class="tab-pane">
-        <div class="panel">
-          <div class="panel-title">Furnace 2 Hourly Check Log</div>
-          <form onsubmit="handleFurnaceWatchLog(event, 2)">
-            <div class="form-grid">
-              <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="f2-datetime" class="form-control" required></div>
-              <div class="form-group"><label>Attendant</label><select id="f2-attendant" class="form-control"></select></div>
-              <div class="form-group"><label>Temp (°C)</label><input type="number" id="f2-temp" class="form-control" required></div>
-              <div class="form-group"><label>Ventilation/CO OK?</label><select id="f2-vent-ok" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 2 Check</button>
-          </form>
-        </div>
-        <div class="panel">
-          <div class="panel-title">Furnace 2 Watch Ledger</div>
-          <div class="table-container"><table><thead><tr><th>Date</th><th>Time</th><th>Attendant</th><th>Temp °C</th><th>Ventilation OK</th><th>Action</th></tr></thead><tbody id="tbl-furnace2"></tbody></table></div>
-        </div>
-      </div>
-
-      <!-- TAB 5: LOGISTICS -->
+      <!-- TAB 4: DELIVERIES & LOGISTICS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
+          <div class="panel-title">Record Delivery Ticket (Inbound Supplier / Outbound Customer)</div>
+          <form onsubmit="handleLogisticsTicket(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Ticket Type</label><select id="log-type" class="form-control" onchange="toggleLogisticsItemOptions()"><option value="INBOUND_SUPPLIER">Inbound Raw Material Pickup (Adds to Stock)</option><option value="OUTBOUND_CUSTOMER">Outbound Customer Delivery (Deducts Stock & Adds Revenue)</option></select></div>
+              <div class="form-group"><label>Contact / Entity</label><select id="log-party" class="form-control"></select></div>
+              <div class="form-group"><label>Inventory Item</label><select id="log-item" class="form-control"></select></div>
+              <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="2000" required></div>
+              <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="10000" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">🚚 Process Delivery Ticket</button>
+          </form>
+        </div>
+        <div class="panel">
           <div class="panel-title">Logistics & Deliveries Ledger</div>
-          <div class="table-container"><table><thead><tr><th>ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity</th><th>Amount</th></tr></thead><tbody id="tbl-logistics"></tbody></table></div>
+          <div class="table-container"><table><thead><tr><th>Ticket ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity</th><th>Amount</th><th>Action</th></tr></thead><tbody id="tbl-logistics"></tbody></table></div>
         </div>
       </div>
 
-      <!-- TAB 6: INVENTORY -->
+      <!-- TAB 5: STOCK & INVENTORY -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Real-Time Inventory Balances</div>
-          <div class="table-container"><table><thead><tr><th>SKU</th><th>Category</th><th>Item Name</th><th>Stock (kg)</th><th>Status</th></tr></thead><tbody id="tbl-inventory"></tbody></table></div>
+          <div class="panel-title">Real-Time Inventory Balances (Auto-Updated across Tabs)</div>
+          <div class="table-container"><table><thead><tr><th>SKU</th><th>Category</th><th>Item Name</th><th>Available Stock (kg)</th><th>Min Safety Threshold</th><th>Stock Status</th></tr></thead><tbody id="tbl-inventory"></tbody></table></div>
         </div>
       </div>
 
-      <!-- TAB 7: DOWNTIME -->
+      <!-- TAB 6: DOWNTIME -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
+          <div class="panel-title">Log Downtime Event</div>
+          <form onsubmit="handleDowntimeLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Reason</label><input type="text" id="dt-reason" class="form-control" placeholder="Grid Power Failure" required></div>
+              <div class="form-group"><label>Duration (Mins)</label><input type="number" id="dt-dur" class="form-control" placeholder="30" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 12px;">Log Downtime</button>
+          </form>
+        </div>
+        <div class="panel">
           <div class="panel-title">Operations Downtime Tracker</div>
-          <div class="table-container"><table><thead><tr><th>ID</th><th>Date</th><th>Reason</th><th>Duration</th></tr></thead><tbody id="tbl-downtime"></tbody></table></div>
+          <div class="table-container"><table><thead><tr><th>ID</th><th>Reason</th><th>Duration</th><th>Action</th></tr></thead><tbody id="tbl-downtime"></tbody></table></div>
         </div>
       </div>
 
-      <!-- TAB 8: SAFETY -->
+      <!-- TAB 7: SAFETY -->
       <div id="safety" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Security & Safety Audit Logs</div>
-          <div class="table-container"><table><thead><tr><th>ID</th><th>Date</th><th>Type</th><th>Inspector</th></tr></thead><tbody id="tbl-safety"></tbody></table></div>
+          <div class="table-container"><table><thead><tr><th>ID</th><th>Type</th><th>Inspector</th></tr></thead><tbody id="tbl-safety"></tbody></table></div>
         </div>
       </div>
 
-      <!-- TAB 9: CREW & PAYROLL -->
+      <!-- TAB 8: CREW & PAYROLL -->
       <div id="hr" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Crew Attendance & Automated Payroll</div>
@@ -642,7 +376,7 @@
         </div>
       </div>
 
-      <!-- TAB 10: CONTACTS -->
+      <!-- TAB 9: CONTACT DIRECTORY -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Contact Directory</div>
@@ -650,7 +384,7 @@
         </div>
       </div>
 
-      <!-- TAB 11: SETTINGS / MASTER DATA MANAGER -->
+      <!-- TAB 10: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Add Plant Crew</div>
@@ -668,24 +402,33 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_state_v9';
+    const STORAGE_KEY = 'cbcm_connected_state_v10';
+
     const defaultState = {
-      openclose: [{ date: "2026-06-29", day: "Mon", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "23:40" }],
-      furnace1Watch: [{ date: "06/24", time: "10:34 AM", attendant: "Amber", temp: 260, ventOk: "Yes" }],
-      furnace2Watch: [{ date: "06/26", time: "09:00 AM", attendant: "Beryl", temp: 310, ventOk: "Yes" }],
       inventory: [
-        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800 },
-        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200 },
-        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 2400 }
+        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 5000, min: 1000 },
+        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6500, min: 1500 },
+        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1200, min: 500 },
+        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 800, min: 300 }
       ],
-      logistics: [{ id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500 }],
-      downtime: [{ id: "DT-01", date: "2026-08-05", reason: "Grid Power Outage", duration: 45 }],
-      safety: [{ id: "SF-01", date: "2026-08-08", type: "Routine Safety Audit", officer: "Mark Santos" }],
+      batches: [
+        { id: "BATCH-101", date: "2026-08-08 10:00", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, temp: 550, operator: "Amber" }
+      ],
+      logistics: [
+        { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
+        { id: "TICKET-502", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 }
+      ],
+      openclose: [{ date: "2026-08-08", day: "Sat", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00" }],
+      downtime: [{ id: "DT-01", reason: "Scheduled Maintenance", duration: 30 }],
+      safety: [{ id: "SF-01", type: "Routine Safety Check", officer: "Amber" }],
       employees: [
-        { name: "Amber", rate: 650, daysWorked: 12, otHours: 4, advance: 1000 },
-        { name: "Beryl", rate: 600, daysWorked: 12, otHours: 2, advance: 500 }
+        { name: "Amber", rate: 650, daysWorked: 12, otHours: 4, advance: 500 },
+        { name: "Beryl", rate: 600, daysWorked: 12, otHours: 0, advance: 0 }
       ],
-      contacts: [{ name: "Carigara Bamboo Farmers Co-Op", type: "Supplier", phone: "0917-123-4567", location: "Carigara, Leyte" }]
+      contacts: [
+        { name: "Carigara Bamboo Farmers Co-Op", type: "Supplier", phone: "0917-123-4567", location: "Carigara, Leyte" },
+        { name: "AgriGrow Distributors", type: "Customer", phone: "0920-555-0192", location: "Tacloban City" }
+      ]
     };
 
     function loadState() {
@@ -711,24 +454,89 @@
       btn.classList.add('active');
     }
 
+    function toggleLogisticsItemOptions() {
+      const type = document.getElementById('log-type').value;
+      const itemSelect = document.getElementById('log-item');
+      if (type === 'INBOUND_SUPPLIER') {
+        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      } else {
+        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      }
+    }
+
+    // CONNECTED LOGIC 1: BATCH PROCESSING CONSUMES RAW & PRODUCES FINISHED STOCK
+    function handleProcessBatch(e) {
+      e.preventDefault();
+      const rawItemName = document.getElementById('proc-raw-item').value;
+      const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
+      const finItemName = document.getElementById('proc-fin-item').value;
+      const finQty = parseFloat(document.getElementById('proc-fin-qty').value);
+      const temp = parseInt(document.getElementById('proc-temp').value);
+      const operator = document.getElementById('proc-operator').value;
+
+      const rawStock = state.inventory.find(i => i.name === rawItemName);
+      if (!rawStock || rawStock.stock < rawQty) {
+        alert(`Insufficient raw stock of ${rawItemName}! Available: ${rawStock ? rawStock.stock : 0} kg`);
+        return;
+      }
+
+      // Deduct Raw Material & Add Finished Goods
+      rawStock.stock -= rawQty;
+      const finStock = state.inventory.find(i => i.name === finItemName);
+      if (finStock) finStock.stock += finQty;
+
+      state.batches.unshift({
+        id: `BATCH-${Date.now().toString().slice(-3)}`,
+        date: new Date().toISOString().slice(0, 16).replace('T', ' '),
+        rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty, temp, operator
+      });
+
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    // CONNECTED LOGIC 2: DELIVERIES UPDATE STOCK & SALES REVENUE
+    function handleLogisticsTicket(e) {
+      e.preventDefault();
+      const type = document.getElementById('log-type').value;
+      const party = document.getElementById('log-party').value;
+      const itemName = document.getElementById('log-item').value;
+      const qty = parseFloat(document.getElementById('log-qty').value);
+      const amount = parseFloat(document.getElementById('log-amount').value);
+
+      const invItem = state.inventory.find(i => i.name === itemName);
+
+      if (type === 'INBOUND_SUPPLIER') {
+        if (invItem) invItem.stock += qty;
+      } else {
+        if (!invItem || invItem.stock < qty) {
+          alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
+          return;
+        }
+        invItem.stock -= qty;
+      }
+
+      state.logistics.unshift({
+        id: `TICKET-${Date.now().toString().slice(-3)}`,
+        type, party, item: itemName, qty, amount
+      });
+
+      saveState(); renderAll(); e.target.reset();
+    }
+
     function handleOpenCloseLog(e) {
       e.preventDefault();
-      const dateVal = document.getElementById('oc-date').value;
       state.openclose.unshift({
-        date: dateVal, day: 'Mon', openedBy: document.getElementById('oc-opened-by').value,
-        timeIn: document.getElementById('oc-time-in').value, machOk: document.getElementById('oc-mach-ok').value,
-        closedBy: document.getElementById('oc-closed-by').value, timeOut: document.getElementById('oc-time-out').value
+        date: document.getElementById('oc-date').value, day: 'Sat',
+        openedBy: document.getElementById('oc-opened-by').value, timeIn: document.getElementById('oc-time-in').value,
+        machOk: document.getElementById('oc-mach-ok').value, closedBy: document.getElementById('oc-closed-by').value,
+        timeOut: document.getElementById('oc-time-out').value
       });
       saveState(); renderAll(); e.target.reset();
     }
 
-    function handleFurnaceWatchLog(e, num) {
+    function handleDowntimeLog(e) {
       e.preventDefault();
-      const target = num === 1 ? state.furnace1Watch : state.furnace2Watch;
-      target.unshift({
-        date: "08/08", time: "04:00 PM", attendant: document.getElementById(`f${num}-attendant`).value,
-        temp: document.getElementById(`f${num}-temp`).value, ventOk: document.getElementById(`f${num}-vent-ok`).value
-      });
+      state.downtime.unshift({ id: `DT-${Date.now().toString().slice(-2)}`, reason: document.getElementById('dt-reason').value, duration: parseInt(document.getElementById('dt-dur').value) });
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -738,27 +546,96 @@
       saveState(); renderAll(); e.target.reset();
     }
 
+    function deleteEntry(arrayKey, index) {
+      if (confirm("Delete this log entry?")) {
+        state[arrayKey].splice(index, 1);
+        saveState(); renderAll();
+      }
+    }
+
     function renderAll() {
+      // Dynamic Form Selects
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
       if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
-      if(document.getElementById('f1-attendant')) document.getElementById('f1-attendant').innerHTML = empOpts;
-      if(document.getElementById('f2-attendant')) document.getElementById('f2-attendant').innerHTML = empOpts;
+      if(document.getElementById('proc-operator')) document.getElementById('proc-operator').innerHTML = empOpts;
+
+      document.getElementById('proc-raw-item').innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail)</option>`).join('');
+      document.getElementById('proc-fin-item').innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      document.getElementById('log-party').innerHTML = state.contacts.map(c => `<option value="${c.name}">${c.name} (${c.type})</option>`).join('');
+      
+      toggleLogisticsItemOptions();
+
+      // Render Tables
+      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
+        <tr>
+          <td><strong>${i.id}</strong></td>
+          <td>${i.category}</td>
+          <td>${i.name}</td>
+          <td><strong>${i.stock.toLocaleString()} kg</strong></td>
+          <td>${i.min.toLocaleString()} kg</td>
+          <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'OK' : 'LOW STOCK'}</span></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
+        <tr>
+          <td><strong>${b.id}</strong></td>
+          <td>${b.date}</td>
+          <td>${b.rawItem}</td>
+          <td>${b.consumedKg.toLocaleString()} kg</td>
+          <td><strong>${b.yieldKg.toLocaleString()} kg (${b.finItem})</strong></td>
+          <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
+          <td>${b.temp} °C</td>
+          <td>${b.operator}</td>
+          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
+
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
+        <tr>
+          <td><strong>${l.id}</strong></td>
+          <td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound Pickup' : 'Outbound Sales'}</span></td>
+          <td>${l.party}</td>
+          <td>${l.item}</td>
+          <td>${l.qty.toLocaleString()} kg</td>
+          <td>₱${l.amount.toLocaleString()}</td>
+          <td><button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
 
       document.getElementById('tbl-openclose').innerHTML = state.openclose.map(o => `<tr><td>${o.date}</td><td>${o.day}</td><td>${o.openedBy}</td><td>${o.timeIn}</td><td><span class="badge badge-pass">${o.machOk}</span></td><td>${o.closedBy}</td><td>${o.timeOut}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
-      document.getElementById('tbl-furnace1').innerHTML = state.furnace1Watch.map(f => `<tr><td>${f.date}</td><td>${f.time}</td><td>${f.attendant}</td><td>${f.temp} °C</td><td>${f.ventOk}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
-      document.getElementById('tbl-furnace2').innerHTML = state.furnace2Watch.map(f => `<tr><td>${f.date}</td><td>${f.time}</td><td>${f.attendant}</td><td>${f.temp} °C</td><td>${f.ventOk}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
-      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `<tr><td>${i.id}</td><td>${i.category}</td><td>${i.name}</td><td>${i.stock} kg</td><td><span class="badge badge-pass">OK</span></td></tr>`).join('');
-      document.getElementById('tbl-logistics').innerHTML = state.logistics.map(l => `<tr><td>${l.id}</td><td>${l.type}</td><td>${l.party}</td><td>${l.item}</td><td>${l.qty} kg</td><td>₱${l.amount}</td></tr>`).join('');
-      document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.date}</td><td>${d.reason}</td><td>${d.duration} mins</td></tr>`).join('');
-      document.getElementById('tbl-safety').innerHTML = state.safety.map(s => `<tr><td>${s.id}</td><td>${s.date}</td><td>${s.type}</td><td>${s.officer}</td></tr>`).join('');
+      document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
+      document.getElementById('tbl-safety').innerHTML = state.safety.map(s => `<tr><td>${s.id}</td><td>${s.type}</td><td>${s.officer}</td></tr>`).join('');
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => `<tr><td>${e.name}</td><td>₱${e.rate}</td><td>${e.daysWorked}</td><td>₱${e.daysWorked * e.rate}</td><td><strong style="color: var(--brand-green);">₱${(e.daysWorked * e.rate) - e.advance}</strong></td></tr>`).join('');
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `<tr><td>${c.name}</td><td>${c.type}</td><td>${c.phone}</td><td>${c.location}</td></tr>`).join('');
+
+      // Recalculate Operations Overview KPIs Live
+      const lowStockAlerts = state.inventory.filter(i => i.stock < i.min).length;
+      const totalFinishedOutput = state.batches.reduce((sum, b) => sum + b.yieldKg, 0);
+      const totalRawConsumed = state.batches.reduce((sum, b) => sum + b.consumedKg, 0);
+      const avgYield = totalRawConsumed > 0 ? ((totalFinishedOutput / totalRawConsumed) * 100).toFixed(1) : 0;
+      const totalRevenue = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((sum, l) => sum + l.amount, 0);
+
+      document.getElementById('kpi-alerts').innerText = lowStockAlerts;
+      document.getElementById('kpi-alerts-sub').innerText = lowStockAlerts === 0 ? "inventory all healthy" : `${lowStockAlerts} items need reorder`;
+      document.getElementById('kpi-output').innerText = totalFinishedOutput.toLocaleString();
+      document.getElementById('kpi-batches-sub').innerText = `${state.batches.length} production runs logged`;
+      document.getElementById('kpi-yield').innerText = avgYield;
+      document.getElementById('kpi-revenue').innerText = `₱${totalRevenue.toLocaleString()}`;
+
+      if (state.batches.length > 0) {
+        document.getElementById('fc-running').innerText = "Yes";
+        document.getElementById('fc-running').style.color = "var(--brand-green)";
+        document.getElementById('fc-last-check').innerText = state.batches[0].date;
+        document.getElementById('fc-temp').innerText = `${state.batches[0].temp} °C`;
+        document.getElementById('fc-checks').innerText = state.batches.length;
+        document.getElementById('furnace-banner').innerText = `🔥 Furnace active — Last batch running at ${state.batches[0].temp}°C (${state.batches[0].operator})`;
+      }
     }
 
     function refreshDashboard() {
-      const now = new Date();
-      document.getElementById('live-timestamp').innerText = `Live · read ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
+      renderAll();
     }
 
     window.onload = function() {
