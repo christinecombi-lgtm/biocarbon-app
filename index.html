@@ -3,32 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon Charcoal Manufacturing (CBCM)</title>
+  <title>Combinido Biocarbon Operations Dashboard</title>
   
-  <!-- Chart.js CDN for Analytics & Business Health -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
   <style>
     /* ==========================================================================
-       COMBINIDO BIOCARBON CHARCOAL MANUFACTURING (CBCM) BRAND PALETTE
+       COMBINIDO BRAND SYSTEM & COLOR PALETTE
        ========================================================================== */
     :root {
-      --brand-green: #00e676;         /* Neon Brand Accent & Success Indicators */
-      --brand-green-hover: #00c853;   /* Interactive Hover State */
-      --brand-green-glow: rgba(0, 230, 118, 0.25);
+      --header-bg: #1a1816;         /* Dark Charcoal Top Header */
+      --canvas-bg: #f3f4f6;         /* Light Canvas Background */
+      --card-bg: #ffffff;           /* Clean White Card Surface */
+      --border-light: #e5e7eb;      /* Soft Card Border */
       
-      --bg-main: #0d1117;             /* Dark Canvas Background */
-      --bg-card: #161b22;             /* Panel & Navigation Card Background */
-      --bg-input: #21262d;            /* Inputs, Search Bars & Table Headers */
-      --border-color: #30363d;        /* Container Dividers & Borders */
+      --brand-orange: #f26522;      /* Primary Brand Orange Accent */
+      --brand-green: #10b981;       /* Operational Green */
+      --brand-green-bg: #ecfdf5;    /* Light Green Alert Fill */
+      --brand-blue: #0284c7;        /* Analytical Blue Accent */
+      --brand-dark-blue: #1e293b;   /* Active Filter Pill Background */
       
-      --brand-gold: #ffc107;          /* Furnace Heat & Pending Alerts */
-      --brand-danger: #ff5252;        /* Downtime & Safety Alerts */
-      --brand-blue: #29b6f6;          /* Logistics Badges */
-      
-      --text-main: #f0f6fc;           /* High-Contrast Primary Text */
-      --text-muted: #8b949e;          /* Subtitles & Labels */
-      --sidebar-width: 280px;
+      --text-main: #0f172a;         /* High-Contrast Main Text */
+      --text-muted: #64748b;       /* Muted Subtitles & Labels */
+      --text-header-sub: #94a3b8;   /* Header Subtext */
     }
 
     * {
@@ -39,1686 +34,522 @@
     }
 
     body {
-      background-color: var(--bg-main);
+      background-color: var(--canvas-bg);
       color: var(--text-main);
-      display: flex;
       min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    /* ==========================================================================
-       SIDEBAR NAVIGATION & BRANDING
-       ========================================================================== */
-    .sidebar {
-      width: var(--sidebar-width);
-      background-color: var(--bg-card);
-      border-right: 1px solid var(--border-color);
       display: flex;
       flex-direction: column;
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 100;
-    }
-
-    .brand-header {
-      padding: 20px 16px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .brand-logo-svg {
-      width: 42px;
-      height: 42px;
-      flex-shrink: 0;
-      filter: drop-shadow(0 0 6px var(--brand-green-glow));
-    }
-
-    .brand-title {
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1.25;
-      letter-spacing: 0.3px;
-    }
-
-    .brand-title span {
-      display: block;
-      font-size: 0.68rem;
-      color: var(--brand-green);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
-
-    .nav-menu {
-      list-style: none;
-      padding: 12px 8px;
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .nav-item {
-      margin-bottom: 4px;
-    }
-
-    .nav-link {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 12px;
-      color: var(--text-muted);
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .nav-link:hover, .nav-link.active {
-      background-color: var(--bg-input);
-      color: var(--brand-green);
-    }
-
-    .nav-link.active {
-      border-left: 3px solid var(--brand-green);
     }
 
     /* ==========================================================================
-       MAIN CONTENT CANVAS & LAYOUT PANELS
+       TOP BRAND HEADER
        ========================================================================== */
-    .main-content {
-      margin-left: var(--sidebar-width);
-      flex: 1;
-      padding: 24px 32px;
-      max-width: calc(100vw - var(--sidebar-width));
-    }
-
-    .header-bar {
+    header {
+      background-color: var(--header-bg);
+      color: #ffffff;
+      padding: 16px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
 
-    .page-title {
-      font-size: 1.4rem;
-      font-weight: 700;
+    .brand-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
-    .plant-status-pill {
+    /* 3-Shape Brand Symbol */
+    .brand-shapes {
       display: flex;
       align-items: center;
       gap: 8px;
-      background: var(--bg-card);
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid var(--border-color);
-      font-size: 0.82rem;
+    }
+
+    .shape-diamond-orange {
+      width: 22px;
+      height: 22px;
+      background-color: var(--brand-orange);
+      transform: rotate(45deg);
+      border-radius: 3px;
+    }
+
+    .shape-circle-white {
+      width: 24px;
+      height: 24px;
+      background-color: #ffffff;
+      border-radius: 50%;
+    }
+
+    .shape-diamond-green {
+      width: 22px;
+      height: 22px;
+      background-color: var(--brand-green);
+      transform: rotate(45deg);
+      border-radius: 3px;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-text h1 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-text span {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      margin-top: 3px;
+    }
+
+    .header-meta {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+    }
+
+    .tagline {
+      font-style: italic;
+      color: var(--brand-orange);
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+    }
+
+    .ops-subtitle {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-header-sub);
+      text-transform: uppercase;
+    }
+
+    .live-status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 2px;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #e2e8f0;
     }
 
     .status-dot {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
       background-color: var(--brand-green);
-      box-shadow: 0 0 8px var(--brand-green);
+      border-radius: 50%;
+      box-shadow: 0 0 6px var(--brand-green);
     }
 
-    .tab-pane { display: none; }
-    .tab-pane.active { display: block; }
-
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .kpi-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 16px 20px;
-    }
-
-    .kpi-label {
+    .btn-refresh {
+      background-color: var(--brand-orange);
+      color: #ffffff;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 14px;
       font-size: 0.78rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 6px;
-    }
-
-    .kpi-value {
-      font-size: 1.6rem;
       font-weight: 700;
-      color: var(--text-main);
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
 
-    .kpi-sub {
-      font-size: 0.78rem;
-      margin-top: 4px;
+    .btn-refresh:hover {
+      opacity: 0.9;
     }
 
-    .text-green { color: var(--brand-green); }
-    .text-gold { color: var(--brand-gold); }
-    .text-danger { color: var(--brand-danger); }
-    .text-blue { color: var(--brand-blue); }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
-      margin-bottom: 24px;
+    /* ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== */
+    main {
+      padding: 24px 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
     }
 
-    .full-width { grid-column: 1 / -1; }
-
-    .panel {
-      background-color: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-
-    .panel-header {
+    /* Period Filter Row */
+    .filter-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
     }
 
-    .panel-title {
-      font-size: 1.05rem;
+    .period-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .period-label {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .btn-pill {
+      background-color: transparent;
+      border: 1px solid #cbd5e1;
+      color: var(--text-muted);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-pill.active {
+      background-color: var(--brand-dark-blue);
+      color: #ffffff;
+      border-color: var(--brand-dark-blue);
+    }
+
+    .filter-note {
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    /* Top KPI Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .kpi-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 20px 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border-left: 4px solid var(--brand-green);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-card.blue-accent {
+      border-left-color: var(--brand-blue);
+    }
+
+    .kpi-title {
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .kpi-main-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 8px 0 2px 0;
+      line-height: 1;
+    }
+
+    .kpi-main-val span {
+      font-size: 1.1rem;
       font-weight: 600;
     }
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px;
+    .kpi-subtext {
+      font-size: 0.82rem;
+      color: #94a3b8;
     }
 
-    .form-group {
+    /* ==========================================================================
+       FURNACE WATCH SECTION
+       ========================================================================== */
+    .section-header {
       display: flex;
-      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #334155;
+      display: flex;
+      align-items: center;
       gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .form-group label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 500;
+    .section-subtext {
+      font-size: 0.75rem;
+      color: #94a3b8;
     }
 
-    .form-control {
-      background-color: var(--bg-input);
-      border: 1px solid var(--border-color);
-      color: var(--text-main);
-      padding: 9px 12px;
-      border-radius: 6px;
-      font-size: 0.88rem;
-      outline: none;
-    }
-
-    .form-control:focus {
-      border-color: var(--brand-green);
-    }
-
-    .btn {
-      background-color: var(--brand-green);
-      color: #000;
+    /* Green Alert Status Banner */
+    .status-banner {
+      background-color: var(--brand-green-bg);
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      border-radius: 8px;
+      padding: 14px;
+      text-align: center;
       font-weight: 700;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      transition: background 0.2s ease, box-shadow 0.2s ease;
-      display: inline-flex;
+      font-size: 1rem;
+      margin-bottom: 16px;
+      display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
     }
 
-    .btn:hover {
-      background-color: var(--brand-green-hover);
-      box-shadow: 0 0 12px var(--brand-green-glow);
+    /* Furnace Watch Sub-Cards Row */
+    .furnace-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-bottom: 12px;
     }
 
-    .btn-secondary {
-      background-color: var(--bg-input);
-      color: var(--text-main);
-      border: 1px solid var(--border-color);
+    .furnace-card {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 14px 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border-top: 3px solid var(--brand-orange);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 90px;
     }
 
-    .btn-secondary:hover { background-color: var(--border-color); }
-
-    .btn-danger {
-      background-color: rgba(255, 82, 82, 0.2);
-      color: var(--brand-danger);
-      border: 1px solid var(--brand-danger);
-      padding: 4px 8px;
-      font-size: 0.75rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .btn-danger:hover {
-      background-color: var(--brand-danger);
-      color: #000;
-    }
-
-    .table-container {
-      width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.85rem;
-    }
-
-    th {
-      background-color: var(--bg-input);
-      color: var(--text-muted);
-      padding: 12px 14px;
-      font-weight: 600;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border-color);
-      white-space: nowrap;
-    }
-
-    tr:hover { background-color: rgba(255, 255, 255, 0.02); }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-size: 0.72rem;
-      font-weight: 700;
+    .furnace-card-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #94a3b8;
       text-transform: uppercase;
+      letter-spacing: 0.4px;
+      line-height: 1.2;
     }
 
-    .badge-pass { background: rgba(0, 230, 118, 0.15); color: var(--brand-green); }
-    .badge-fail { background: rgba(255, 82, 82, 0.15); color: var(--brand-danger); }
-    .badge-warn { background: rgba(255, 193, 7, 0.15); color: var(--brand-gold); }
-
-    .banner-box {
-      padding: 12px 16px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      margin-bottom: 16px;
-      line-height: 1.4;
-    }
-
-    .banner-info {
-      background: rgba(41, 182, 246, 0.1);
-      border: 1px solid var(--brand-blue);
+    .furnace-card-val {
+      font-size: 1.15rem;
+      font-weight: 800;
       color: var(--text-main);
+      margin-top: 6px;
     }
 
-    @media (max-width: 900px) {
-      .content-grid { grid-template-columns: 1fr; }
-      .main-content { padding: 16px; max-width: 100vw; margin-left: 0; }
-      .sidebar { display: none; }
+    .furnace-card-val.green-text {
+      color: var(--brand-green);
+    }
+
+    .furnace-card-val.temp-text {
+      font-size: 1.3rem;
+    }
+
+    .furnace-card-val.temp-text span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .legend-row {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .furnace-grid { grid-template-columns: repeat(2, 1fr); }
+      header { flex-direction: column; gap: 16px; align-items: flex-start; }
+      .header-meta { align-items: flex-start; text-align: left; }
     }
   </style>
 </head>
 <body>
 
   <!-- ==========================================================================
-       SIDEBAR NAVIGATION
+       TOP BRAND HEADER
        ========================================================================== -->
-  <aside class="sidebar">
-    <div class="brand-header">
-      <!-- CBCM Brand SVG Vector Logo -->
-      <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="22" fill="url(#cbcmGrad)"/>
-        <circle cx="50" cy="50" r="32" fill="#0d1117"/>
-        <path d="M50 24 C34 36 28 52 35 68 C48 78 66 72 70 56 C74 42 62 28 50 24 Z" fill="#00e676"/>
-        <path d="M50 28 L50 68 M38 42 L62 50" stroke="#0d1117" stroke-width="4" stroke-linecap="round"/>
-        <defs>
-          <linearGradient id="cbcmGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-            <stop stop-color="#00e676"/>
-            <stop offset="1" stop-color="#004d40"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      
-      <div class="brand-title">
-        COMBINIDO BIOCARBON
-        <span>Charcoal Manufacturing</span>
+  <header>
+    <div class="brand-container">
+      <div class="brand-shapes">
+        <div class="shape-diamond-orange"></div>
+        <div class="shape-circle-white"></div>
+        <div class="shape-diamond-green"></div>
+      </div>
+      <div class="brand-text">
+        <h1>Combinido</h1>
+        <span>BIOCARBON</span>
       </div>
     </div>
 
-    <ul class="nav-menu">
-      <li class="nav-item"><a class="nav-link active" onclick="switchTab('dashboard', this)"><span>📊</span> Business Health</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Open/Close Log</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('furnace1', this)"><span>🔥</span> Furnace 1 Watch</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('furnace2', this)"><span>🔥</span> Furnace 2 Watch</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Logistics</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Inventory Tracking</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Operations Downtime</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory</a></li>
-      <li class="nav-item" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 8px;">
-        <a class="nav-link" onclick="switchTab('settings', this)"><span style="color: var(--brand-gold);">⚙️</span> Master Data Manager</a>
-      </li>
-    </ul>
-  </aside>
+    <div class="header-meta">
+      <div class="tagline">One carbon. Two lives.</div>
+      <div class="ops-subtitle">OPERATIONS DASHBOARD · CARIGARA, LEYTE</div>
+      <div class="live-status-row">
+        <div class="status-indicator">
+          <div class="status-dot"></div>
+          <strong id="live-date">8 August 2026</strong>
+        </div>
+        <span style="font-size: 0.78rem; color: #94a3b8;" id="live-timestamp">Live · read 8 Aug 2026, 4:13 PM</span>
+        <button class="btn-refresh" onclick="refreshDashboard()">Refresh now</button>
+      </div>
+    </div>
+  </header>
 
   <!-- ==========================================================================
-       MAIN CONTENT CANVAS & LAYOUT PANELS
+       MAIN CONTENT DASHBOARD
        ========================================================================== -->
-  <main class="main-content">
+  <main>
     
-    <div class="header-bar">
-      <h1 class="page-title" id="page-title-text">Business Health & KPI Scorecard</h1>
-      <div class="plant-status-pill">
-        <div class="status-dot"></div>
-        <span>Plant Status: <strong>OPERATIONAL (Manloy, Carigara, Leyte)</strong></span>
+    <!-- Filter Controls -->
+    <div class="filter-bar">
+      <div class="period-controls">
+        <span class="period-label">Period:</span>
+        <button class="btn-pill" onclick="setPeriod(this)">Last 3 months</button>
+        <button class="btn-pill" onclick="setPeriod(this)">Last 6 months</button>
+        <button class="btn-pill active" onclick="setPeriod(this)">All time</button>
+      </div>
+      <div class="filter-note">
+        Inventory below is always the current snapshot (not affected by the period filter)
       </div>
     </div>
 
-    <!-- TAB 1: BUSINESS HEALTH & KPIS -->
-    <div id="dashboard" class="tab-pane active">
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-label">Monthly Biochar Yield</div>
-          <div class="kpi-value text-green" id="kpi-yield">510 kg</div>
-          <div class="kpi-sub text-muted">Avg Yield Conversion Ratio</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Monthly Sales Revenue</div>
-          <div class="kpi-value text-green" id="kpi-revenue">₱0</div>
-          <div class="kpi-sub text-muted">Outbound Dispatches</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Plant Downtime</div>
-          <div class="kpi-value text-gold" id="kpi-downtime">0.8 hrs</div>
-          <div class="kpi-sub text-muted">Plant Availability Metric</div>
-        </div>
-        <div class="kpi-card">
-          <div class="kpi-label">Safety Record</div>
-          <div class="kpi-value text-green">0 Incidents</div>
-          <div class="kpi-sub text-muted">Days Incident Free: <span class="text-green">142 Days</span></div>
-        </div>
+    <!-- Top KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-title">NEEDS ACTION</div>
+        <div class="kpi-main-val" id="val-needs-action">0</div>
+        <div class="kpi-subtext">inventory all healthy</div>
       </div>
 
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Production Yield vs. Sales Dispatches (Monthly)</span>
-          </div>
-          <canvas id="chart-production" height="110"></canvas>
-        </div>
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Furnace Operating Temp Trend (°C)</span>
-          </div>
-          <canvas id="chart-temp" height="230"></canvas>
-        </div>
+      <div class="kpi-card">
+        <div class="kpi-title">TOTAL OUTPUT</div>
+        <div class="kpi-main-val" id="val-total-output">15740 <span>kg</span></div>
+        <div class="kpi-subtext" id="val-batches">57 batches logged</div>
+      </div>
+
+      <div class="kpi-card blue-accent">
+        <div class="kpi-title">AVG YIELD</div>
+        <div class="kpi-main-val" id="val-avg-yield">55.0<span>%</span></div>
+        <div class="kpi-subtext">output ÷ feedstock</div>
       </div>
     </div>
 
-    <!-- TAB 2: DAILY OPERATIONS — OPEN & CLOSE LOG -->
-    <div id="openclose" class="tab-pane">
-      <div class="banner-box banner-info">
-        <strong>DAILY OPERATIONS — OPEN & CLOSE LOG (Pagbukas ug Pagsara)</strong><br>
-        One row per day. Set dropdowns and notes; the action flag turns red if an alert needs attention. For 24-hour furnace runs, set <em>Run Mode = 24-hr</em> (no closing needed).
+    <!-- Furnace Watch Section -->
+    <div class="section-header">
+      <div class="section-title">
+        🔥 FURNACE WATCH
+      </div>
+      <div class="section-subtext">keep it monitored</div>
+    </div>
+
+    <!-- Status Banner -->
+    <div class="status-banner" id="furnace-status-banner">
+      ✅ Furnace not running — all clear.
+    </div>
+
+    <!-- Furnace Metrics Row -->
+    <div class="furnace-grid">
+      <div class="furnace-card">
+        <div class="furnace-card-label">FURNACE RUNNING NOW?</div>
+        <div class="furnace-card-val green-text" id="fc-running">No</div>
       </div>
 
-      <div class="content-grid">
-        <div class="panel full-width">
-          <div class="panel-header">
-            <span class="panel-title">Log Daily Shift Opening / Closing Entry</span>
-          </div>
-          <form onsubmit="handleOpenCloseLog(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="oc-date" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Opened By (Attendant)</label>
-                <select id="oc-opened-by" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Opening Time (In)</label>
-                <input type="time" id="oc-time-in" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Machines OK?</label>
-                <select id="oc-mach-ok" class="form-control">
-                  <option value="OK">OK</option>
-                  <option value="ISSUE">ISSUE</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Safety OK?</label>
-                <select id="oc-safety-ok" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Stock / Fuel OK?</label>
-                <select id="oc-stock-ok" class="form-control">
-                  <option value="OK">OK</option>
-                  <option value="LOW">LOW</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Opening Notes (Priorities / Issues)</label>
-                <input type="text" id="oc-open-notes" class="form-control" placeholder="Check binder levels; run bamboo feed">
-              </div>
-            </div>
-
-            <div class="form-grid" style="margin-top: 14px; border-top: 1px solid var(--border-color); padding-top: 14px;">
-              <div class="form-group">
-                <label>Closed By (Attendant)</label>
-                <select id="oc-closed-by" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Closing Time (Out)</label>
-                <input type="time" id="oc-time-out" class="form-control">
-              </div>
-              <div class="form-group">
-                <label>Safe to Close?</label>
-                <select id="oc-safe-close" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Run Mode</label>
-                <select id="oc-run-mode" class="form-control">
-                  <option value="24-hr">24-hr (Continuous)</option>
-                  <option value="Standard">Standard Day</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Closing Notes (Handover)</label>
-                <input type="text" id="oc-close-notes" class="form-control" placeholder="Furnace cooling down; perimeter locked">
-              </div>
-            </div>
-
-            <button type="submit" class="btn" style="margin-top: 16px;">Save Shift Log Entry</button>
-          </form>
-        </div>
+      <div class="furnace-card">
+        <div class="furnace-card-label">TURNED ON</div>
+        <div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-turned-on">Wed 8:00 AM · Jul 01</div>
       </div>
 
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Factory Daily Operations Ledger</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Day</th>
-                <th>Status (Δ)</th>
-                <th>Opened By</th>
-                <th>In</th>
-                <th>Machines OK</th>
-                <th>Safety OK</th>
-                <th>Stock/Fuel</th>
-                <th>Opening Notes</th>
-                <th>Closed By</th>
-                <th>Out</th>
-                <th>Safe to Close?</th>
-                <th>Closing Notes</th>
-                <th>Mode</th>
-                <th>Hours Open</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-openclose"></tbody>
-          </table>
-        </div>
+      <div class="furnace-card">
+        <div class="furnace-card-label">LAST CHECK</div>
+        <div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-last-check">Wed 8:00 AM · Jul 01</div>
+      </div>
+
+      <div class="furnace-card">
+        <div class="furnace-card-label">CHECK DEADLINE</div>
+        <div class="furnace-card-val green-text" style="font-size: 1rem;" id="fc-deadline">Not running</div>
+      </div>
+
+      <div class="furnace-card">
+        <div class="furnace-card-label">LATEST TEMPERATURE</div>
+        <div class="furnace-card-val temp-text" id="fc-temp">68<span>°C</span></div>
+      </div>
+
+      <div class="furnace-card">
+        <div class="furnace-card-label">CHECKS LOGGED TODAY</div>
+        <div class="furnace-card-val" id="fc-checks-today">0</div>
+      </div>
+
+      <div class="furnace-card">
+        <div class="furnace-card-label">VENT / FIRE-WATCH FAILS TODAY</div>
+        <div class="furnace-card-val green-text" id="fc-fails-today">0</div>
       </div>
     </div>
 
-    <!-- TAB 3: FURNACE 1 WATCH -->
-    <div id="furnace1" class="tab-pane">
-      <div class="banner-box banner-info">
-        <strong>FURNACE 1 WATCH — monitor whenever Furnace 1 is running</strong><br>
-        Log a check <strong>EVERY HOURLY SHIFT</strong> during operation — every 30 min during ignition & unloading. Someone must remain with the unit (Carbon Monoxide safety). <em>Kada oras nga andar an pugon, susiha.</em>
-      </div>
-
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Check — Furnace 1</span>
-          </div>
-          <form onsubmit="handleFurnaceWatchLog(event, 1)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Date & Time</label>
-                <input type="datetime-local" id="f1-datetime" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Attendant</label>
-                <select id="f1-attendant" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Temp (°C)</label>
-                <input type="number" id="f1-temp" class="form-control" placeholder="350" required>
-              </div>
-              <div class="form-group">
-                <label>Ventilation / CO OK?</label>
-                <select id="f1-vent-ok" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Fire-watch OK?</label>
-                <select id="f1-fire-ok" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Action Check</label>
-                <select id="f1-action-check" class="form-control">
-                  <option value="MONITOR ONLY">👁️ MONITOR ONLY</option>
-                  <option value="STARTED">▶️ STARTED</option>
-                  <option value="STOPPED">⏹️ STOPPED</option>
-                </select>
-              </div>
-              <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Notes / Observations</label>
-                <input type="text" id="f1-notes" class="form-control" placeholder="Ignition stable; draft fan set to normal">
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 1 Check</button>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Furnace 1 Real-time Status</span>
-          </div>
-          <div style="font-size: 0.9rem; line-height: 1.8;">
-            <p>Running Status: <strong class="text-green" id="f1-status-text">RUNNING</strong></p>
-            <p>Last Peak Temp: <strong class="text-gold" id="f1-last-temp">0 °C</strong></p>
-            <p>Carbon Monoxide Safety: <strong class="text-green">Detector Active</strong></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Furnace 1 Hourly Watch Log</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Attendant</th>
-                <th>Temp °C</th>
-                <th>Ventilation / CO OK?</th>
-                <th>Fire-watch OK?</th>
-                <th>Status (Δ)</th>
-                <th>Notes / Check</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-furnace1"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: FURNACE 2 WATCH -->
-    <div id="furnace2" class="tab-pane">
-      <div class="banner-box banner-info">
-        <strong>FURNACE 2 WATCH — monitor whenever Furnace 2 is running</strong><br>
-        Log a check <strong>EVERY HOURLY SHIFT</strong> during operation — every 30 min during ignition & unloading. Someone must remain with the unit (Carbon Monoxide safety). <em>Kada oras nga andar an pugon, susiha.</em>
-      </div>
-
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Check — Furnace 2</span>
-          </div>
-          <form onsubmit="handleFurnaceWatchLog(event, 2)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Date & Time</label>
-                <input type="datetime-local" id="f2-datetime" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Attendant</label>
-                <select id="f2-attendant" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Temp (°C)</label>
-                <input type="number" id="f2-temp" class="form-control" placeholder="380" required>
-              </div>
-              <div class="form-group">
-                <label>Ventilation / CO OK?</label>
-                <select id="f2-vent-ok" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Fire-watch OK?</label>
-                <select id="f2-fire-ok" class="form-control">
-                  <option value="Yes">Yes</option>
-                  <option value="No">No</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Action Check</label>
-                <select id="f2-action-check" class="form-control">
-                  <option value="MONITOR ONLY">👁️ MONITOR ONLY</option>
-                  <option value="STARTED">▶️ STARTED</option>
-                  <option value="STOPPED">⏹️ STOPPED</option>
-                </select>
-              </div>
-              <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Notes / Observations</label>
-                <input type="text" id="f2-notes" class="form-control" placeholder="Air intake open; pyrolysis gas burning clean">
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 2 Check</button>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Furnace 2 Real-time Status</span>
-          </div>
-          <div style="font-size: 0.9rem; line-height: 1.8;">
-            <p>Running Status: <strong class="text-green" id="f2-status-text">RUNNING</strong></p>
-            <p>Last Peak Temp: <strong class="text-gold" id="f2-last-temp">0 °C</strong></p>
-            <p>Carbon Monoxide Safety: <strong class="text-green">Detector Active</strong></p>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Furnace 2 Hourly Watch Log</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Attendant</th>
-                <th>Temp °C</th>
-                <th>Ventilation / CO OK?</th>
-                <th>Fire-watch OK?</th>
-                <th>Status (Δ)</th>
-                <th>Notes / Check</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-furnace2"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 5: LOGISTICS (INBOUND / OUTBOUND) -->
-    <div id="logistics" class="tab-pane">
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Logistics Ticket (Supplier Pickup / Delivery)</span>
-          </div>
-          <form onsubmit="handleLogisticsLog(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Ticket Type</label>
-                <select id="log-type" class="form-control">
-                  <option value="SUPPLIER_PICKUP">Supplier Raw Material Pickup / Inbound</option>
-                  <option value="CUSTOMER_DELIVERY">Customer Finished Goods Delivery / Outbound</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Party / Contact Name</label>
-                <select id="log-party-select" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Item Description</label>
-                <select id="log-item" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Weight / Quantity (kg)</label>
-                <input type="number" id="log-qty" class="form-control" placeholder="2500" required>
-              </div>
-              <div class="form-group">
-                <label>Total Price / Amount (₱)</label>
-                <input type="number" id="log-amount" class="form-control" placeholder="12500" required>
-              </div>
-              <div class="form-group">
-                <label>Driver / Plate No.</label>
-                <input type="text" id="log-driver" class="form-control" placeholder="Tacloban Trucking (ABC-123)" required>
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Record Logistics Ticket</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Deliveries & Supplier Pickup Ledger</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Ticket ID</th>
-                <th>Type</th>
-                <th>Party / Contact</th>
-                <th>Item</th>
-                <th>Quantity</th>
-                <th>Amount (₱)</th>
-                <th>Transport Info</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-logistics"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 6: INVENTORY TRACKING -->
-    <div id="inventory" class="tab-pane">
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Real-Time Inventory Balances & Thresholds</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>SKU ID</th>
-                <th>Category</th>
-                <th>Item Name</th>
-                <th>Current Stock (kg)</th>
-                <th>Min Safety Threshold (kg)</th>
-                <th>Stock Status</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-inventory"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 7: OPERATIONS DOWNTIME -->
-    <div id="downtime" class="tab-pane">
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Operations Downtime Incident</span>
-          </div>
-          <form onsubmit="handleDowntimeLog(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Date & Time</label>
-                <input type="datetime-local" id="dt-date" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Downtime Reason</label>
-                <select id="dt-reason" class="form-control">
-                  <option value="Grid Power Outage">Grid Power Outage</option>
-                  <option value="VFD Motor Overheat">VFD Motor Overheat</option>
-                  <option value="Furnace Refractory Inspection">Furnace Refractory Inspection</option>
-                  <option value="Binder Mixer Jam">Binder Mixer Jam</option>
-                  <option value="Scheduled Maintenance">Scheduled Maintenance</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Duration (Minutes)</label>
-                <input type="number" id="dt-duration" class="form-control" placeholder="45" required>
-              </div>
-              <div class="form-group">
-                <label>Action Taken</label>
-                <input type="text" id="dt-action" class="form-control" placeholder="Switched to generator backup" required>
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Downtime</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Plant Downtime Log</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Log ID</th>
-                <th>Date/Time</th>
-                <th>Reason</th>
-                <th>Duration (mins)</th>
-                <th>Action Taken</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-downtime"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 8: SECURITY & SAFETY -->
-    <div id="safety" class="tab-pane">
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Safety Audit or Incident</span>
-          </div>
-          <form onsubmit="handleSafetyLog(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Date & Time</label>
-                <input type="datetime-local" id="sf-date" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Log Category</label>
-                <select id="sf-type" class="form-control">
-                  <option value="ROUTINE_SAFETY_CHECK">Routine Plant Safety Audit</option>
-                  <option value="SECURITY_PATROL">Perimeter / Gate Patrol</option>
-                  <option value="NEAR_MISS">Near Miss / Hazard Identified</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Inspector / Officer</label>
-                <input type="text" id="sf-officer" class="form-control" placeholder="Mark Santos" required>
-              </div>
-              <div class="form-group">
-                <label>Notes / Observations</label>
-                <input type="text" id="sf-notes" class="form-control" placeholder="All fire extinguishers inspected; pressure OK." required>
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Save Safety Entry</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Safety & Security Audit Log</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Log ID</th>
-                <th>Date/Time</th>
-                <th>Type</th>
-                <th>Inspector</th>
-                <th>Observations / Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-safety"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 9: CREW ATTENDANCE & PAYROLL -->
-    <div id="hr" class="tab-pane">
-      <div class="content-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Log Daily Attendance & Overtime</span>
-          </div>
-          <form onsubmit="handleAttendanceLog(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Employee Name</label>
-                <select id="hr-emp" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Date</label>
-                <input type="date" id="hr-date" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <label>Status</label>
-                <select id="hr-status" class="form-control">
-                  <option value="PRESENT">Present</option>
-                  <option value="ABSENT">Absent</option>
-                  <option value="HALF_DAY">Half Day</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Overtime Hours</label>
-                <input type="number" id="hr-ot" class="form-control" value="0" step="0.5">
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Log Timecard</button>
-          </form>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Issue Cash Advance (Vale)</span>
-          </div>
-          <form onsubmit="handleCashAdvance(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Employee</label>
-                <select id="ca-emp" class="form-control"></select>
-              </div>
-              <div class="form-group">
-                <label>Advance Amount (₱)</label>
-                <input type="number" id="ca-amount" class="form-control" placeholder="1000" required>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-secondary" style="margin-top: 14px;">Record Advance</button>
-          </form>
-        </div>
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Automated Payroll Calculations (% Deductions applied)</span>
-        </div>
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Employee Name</th>
-                <th>Daily Rate (₱)</th>
-                <th>Days Worked</th>
-                <th>OT Pay (₱)</th>
-                <th>Gross Pay (₱)</th>
-                <th>Cash Advances (₱)</th>
-                <th>Deductions (% SSS/PagIBIG)</th>
-                <th>Net Pay Out (₱)</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-payroll"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 10: CONTACT DIRECTORY -->
-    <div id="contacts" class="tab-pane">
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">Directory (Suppliers, Customers & Crew)</span>
-        </div>
-        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts...">
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Name / Entity</th>
-                <th>Category</th>
-                <th>Phone Number</th>
-                <th>Location</th>
-                <th>Primary Material / Service</th>
-              </tr>
-            </thead>
-            <tbody id="tbl-contacts"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 11: MASTER DATA MANAGER & SETTINGS -->
-    <div id="settings" class="tab-pane">
-      <div class="content-grid">
-        
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Add / Manage Plant Crew</span>
-          </div>
-          <form onsubmit="handleAddEmployee(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Employee Full Name</label>
-                <input type="text" id="new-emp-name" class="form-control" placeholder="e.g. Amber" required>
-              </div>
-              <div class="form-group">
-                <label>Daily Rate (₱)</label>
-                <input type="number" id="new-emp-rate" class="form-control" placeholder="600" required>
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 12px;">Add Employee to System</button>
-          </form>
-          <div class="table-container" style="margin-top: 16px;">
-            <table>
-              <thead><tr><th>Name</th><th>Daily Rate</th><th>Action</th></tr></thead>
-              <tbody id="tbl-manage-emp"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">Add / Manage Contact Directory</span>
-          </div>
-          <form onsubmit="handleAddContact(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Entity / Person Name</label>
-                <input type="text" id="new-con-name" class="form-control" placeholder="e.g. Carigara Bamboo Farmers" required>
-              </div>
-              <div class="form-group">
-                <label>Category</label>
-                <select id="new-con-type" class="form-control">
-                  <option value="Supplier">Supplier</option>
-                  <option value="Customer">Customer</option>
-                  <option value="Plant Crew">Plant Crew</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label>Phone Number</label>
-                <input type="text" id="new-con-phone" class="form-control" placeholder="0917-000-0000" required>
-              </div>
-              <div class="form-group">
-                <label>Location</label>
-                <input type="text" id="new-con-loc" class="form-control" placeholder="Carigara, Leyte" required>
-              </div>
-            </div>
-            <button type="submit" class="btn" style="margin-top: 12px;">Add Contact</button>
-          </form>
-        </div>
-
-      </div>
-
-      <div class="panel full-width">
-        <div class="panel-header">
-          <span class="panel-title">System Backup & Data Control</span>
-        </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-          Export your entire operational database to JSON for Excel/offline archiving, or restore data anytime.
-        </p>
-        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-          <button onclick="exportData()" class="btn">📥 Export System Data (JSON Backup)</button>
-          <button onclick="document.getElementById('file-import').click()" class="btn btn-secondary">📤 Import System Data Backup</button>
-          <input type="file" id="file-import" style="display: none;" onchange="importData(event)">
-          <button onclick="resetSystemData()" class="btn btn-danger">⚠️ Reset System to Default State</button>
-        </div>
-      </div>
+    <!-- Footer Legend -->
+    <div class="legend-row">
+      <span>Deadline colour counts down live from the last logged check —</span>
+      <span class="legend-item"><span class="legend-dot" style="background-color: var(--brand-green);"></span> within the hour</span>
+      <span class="legend-item"><span class="legend-dot" style="background-color: #f59e0b;"></span> last 15 min</span>
+      <span class="legend-item"><span class="legend-dot" style="background-color: #ef4444;"></span> flashing once overdue.</span>
+      <span id="footer-live-time">Read live from the Furnace Watch log at 8 Aug 2026, 4:13 PM.</span>
     </div>
 
   </main>
 
   <!-- ==========================================================================
-       JAVASCRIPT DATA ENGINE
+       DASHBOARD INTERACTION ENGINE
        ========================================================================== -->
   <script>
-    const STORAGE_KEY = 'cbcm_master_state_v8';
-
-    const defaultState = {
-      openclose: [
-        { date: "2026-06-29", day: "Mon", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", safetyOk: "Yes", stockOk: "OK", openNotes: "", closedBy: "Beryl", timeOut: "23:40", safeClose: "Yes", closeNotes: "", mode: "24-hr", hoursOpen: 40.7 },
-        { date: "2026-07-01", day: "Wed", openedBy: "Beryl", timeIn: "08:00", machOk: "OK", safetyOk: "Yes", stockOk: "OK", openNotes: "", closedBy: "Beryl", timeOut: "23:40", safeClose: "Yes", closeNotes: "", mode: "24-hr", hoursOpen: 39.7 }
-      ],
-      furnace1Watch: [
-        { date: "06/24", time: "10:34 AM", attendant: "Amber", temp: 260, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "MONITOR ONLY." },
-        { date: "06/24", time: "12:34 PM", attendant: "Amber", temp: 340, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "MONITOR ONLY." },
-        { date: "06/25", time: "12:34 PM", attendant: "Beryl", temp: 400, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "MONITOR ONLY." },
-        { date: "06/25", time: "08:33 PM", attendant: "Amber", temp: 300, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "STOPPED." },
-        { date: "06/26", time: "08:00 AM", attendant: "Beryl", temp: 34, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "STARTED." }
-      ],
-      furnace2Watch: [
-        { date: "06/26", time: "09:00 AM", attendant: "Beryl", temp: 310, ventOk: "Yes", fireOk: "Yes", status: "OK", notes: "STARTED." }
-      ],
-      inventory: [
-        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800, min: 1500 },
-        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 2000 },
-        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 2400, min: 800 },
-        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1800, min: 500 }
-      ],
-      logistics: [
-        { id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500, transport: "Plate: ABC-123" }
-      ],
-      downtime: [
-        { id: "DT-01", date: "2026-08-05 10:15", reason: "Grid Power Outage", duration: 45, action: "Engaged generator backup" }
-      ],
-      safety: [
-        { id: "SF-01", date: "2026-08-08 07:00", type: "Routine Safety Audit", officer: "Mark Santos", notes: "Furnace temperature gauges calibrated; PPE verified." }
-      ],
-      employees: [
-        { name: "Amber", rate: 650, daysWorked: 12, otHours: 4, advance: 1000 },
-        { name: "Beryl", rate: 600, daysWorked: 12, otHours: 2, advance: 500 },
-        { name: "Juan Cruz", rate: 650, daysWorked: 10, otHours: 0, advance: 0 },
-        { name: "Mark Santos", rate: 550, daysWorked: 10, otHours: 0, advance: 0 }
-      ],
-      contacts: [
-        { name: "Carigara Bamboo Farmers Co-Op", type: "Supplier", phone: "0917-123-4567", location: "Carigara, Leyte", material: "Spiny Bamboo Feeds" },
-        { name: "Barugo Coconut Shell Collectors", type: "Supplier", phone: "0918-987-6543", location: "Barugo, Leyte", material: "Raw Coconut Shells" }
-      ]
-    };
-
-    function loadState() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : defaultState;
+    function setPeriod(buttonEl) {
+      document.querySelectorAll('.btn-pill').forEach(btn => btn.classList.remove('active'));
+      buttonEl.classList.add('active');
     }
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    function refreshDashboard() {
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+
+      document.getElementById('live-timestamp').innerText = `Live · read ${dateStr}, ${timeStr}`;
+      document.getElementById('footer-live-time').innerText = `Read live from the Furnace Watch log at ${dateStr}, ${timeStr}.`;
     }
-
-    let state = loadState();
-
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      el.classList.add('active');
-
-      const titleMap = {
-        'dashboard': 'Business Health & KPI Scorecard',
-        'openclose': 'Daily Operations — Open & Close Log (Pagbukas ug Pagsara)',
-        'furnace1': 'Furnace 1 Watch — Hourly Operations Monitor',
-        'furnace2': 'Furnace 2 Watch — Hourly Operations Monitor',
-        'logistics': 'Deliveries & Supplier Pickup Management',
-        'inventory': 'Real-Time Inventory Ledger',
-        'downtime': 'Plant Downtime & Maintenance Tracker',
-        'safety': 'Security & Safety Audit Logs',
-        'hr': 'Crew Attendance & Payroll System',
-        'contacts': 'Contact Lookup Directory',
-        'settings': 'Master Data Manager & System Controls'
-      };
-      document.getElementById('page-title-text').innerText = titleMap[tabId];
-    }
-
-    function handleOpenCloseLog(e) {
-      e.preventDefault();
-      const dateVal = document.getElementById('oc-date').value;
-      const dayStr = new Date(dateVal).toLocaleDateString('en-US', { weekday: 'short' });
-      const openedBy = document.getElementById('oc-opened-by').value;
-      const timeIn = document.getElementById('oc-time-in').value;
-      const machOk = document.getElementById('oc-mach-ok').value;
-      const safetyOk = document.getElementById('oc-safety-ok').value;
-      const stockOk = document.getElementById('oc-stock-ok').value;
-      const openNotes = document.getElementById('oc-open-notes').value;
-      
-      const closedBy = document.getElementById('oc-closed-by').value;
-      const timeOut = document.getElementById('oc-time-out').value;
-      const safeClose = document.getElementById('oc-safe-close').value;
-      const mode = document.getElementById('oc-run-mode').value;
-      const closeNotes = document.getElementById('oc-close-notes').value;
-
-      state.openclose.unshift({
-        date: dateVal, day: dayStr, openedBy, timeIn, machOk, safetyOk, stockOk, openNotes,
-        closedBy, timeOut, safeClose, closeNotes, mode, hoursOpen: mode === '24-hr' ? 24.0 : 12.0
-      });
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleFurnaceWatchLog(e, num) {
-      e.preventDefault();
-      const dtVal = document.getElementById(`f${num}-datetime`).value;
-      const dtObj = new Date(dtVal);
-      const dateStr = dtObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit' });
-      const timeStr = dtObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-
-      const attendant = document.getElementById(`f${num}-attendant`).value;
-      const temp = parseInt(document.getElementById(`f${num}-temp`).value);
-      const ventOk = document.getElementById(`f${num}-vent-ok`).value;
-      const fireOk = document.getElementById(`f${num}-fire-ok`).value;
-      const actionCheck = document.getElementById(`f${num}-action-check`).value;
-      const userNotes = document.getElementById(`f${num}-notes`).value;
-
-      const fullNotes = `${actionCheck}. ${userNotes}`.trim();
-      const targetArray = num === 1 ? state.furnace1Watch : state.furnace2Watch;
-
-      targetArray.unshift({
-        date: dateStr, time: timeStr, attendant, temp, ventOk, fireOk, status: (ventOk === 'Yes' && fireOk === 'Yes') ? "OK" : "ALERT", notes: fullNotes
-      });
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleAddEmployee(e) {
-      e.preventDefault();
-      const name = document.getElementById('new-emp-name').value.trim();
-      const rate = parseFloat(document.getElementById('new-emp-rate').value);
-
-      if (state.employees.some(emp => emp.name === name)) {
-        alert("Employee already exists!");
-        return;
-      }
-
-      state.employees.push({ name, rate, daysWorked: 0, otHours: 0, advance: 0 });
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function deleteEmployee(index) {
-      if (confirm(`Remove ${state.employees[index].name} from active staff list?`)) {
-        state.employees.splice(index, 1);
-        saveState();
-        renderAll();
-      }
-    }
-
-    function handleAddContact(e) {
-      e.preventDefault();
-      const name = document.getElementById('new-con-name').value.trim();
-      const type = document.getElementById('new-con-type').value;
-      const phone = document.getElementById('new-con-phone').value.trim();
-      const location = document.getElementById('new-con-loc').value.trim();
-
-      state.contacts.push({ name, type, phone, location, material: type === 'Supplier' ? 'Raw Materials' : 'Finished Goods' });
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function deleteLogEntry(type, index) {
-      if (confirm("Are you sure you want to delete this log record?")) {
-        state[type].splice(index, 1);
-        saveState();
-        renderAll();
-      }
-    }
-
-    function handleLogisticsLog(e) {
-      e.preventDefault();
-      const type = document.getElementById('log-type').value;
-      const party = document.getElementById('log-party-select').value;
-      const item = document.getElementById('log-item').value;
-      const qty = parseFloat(document.getElementById('log-qty').value);
-      const amount = parseFloat(document.getElementById('log-amount').value);
-      const transport = document.getElementById('log-driver').value;
-
-      const invItem = state.inventory.find(i => i.name === item);
-      if (invItem) {
-        if (type === 'SUPPLIER_PICKUP') invItem.stock += qty;
-        if (type === 'CUSTOMER_DELIVERY') invItem.stock = Math.max(0, invItem.stock - qty);
-      }
-
-      state.logistics.unshift({
-        id: `LOG-${Date.now().toString().slice(-3)}`,
-        type, party, item, qty, amount, transport
-      });
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleDowntimeLog(e) {
-      e.preventDefault();
-      const reason = document.getElementById('dt-reason').value;
-      const duration = parseInt(document.getElementById('dt-duration').value);
-      const action = document.getElementById('dt-action').value;
-      const dateVal = document.getElementById('dt-date').value.replace('T', ' ');
-
-      state.downtime.unshift({
-        id: `DT-${Date.now().toString().slice(-2)}`,
-        date: dateVal, reason, duration, action
-      });
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleSafetyLog(e) {
-      e.preventDefault();
-      const type = document.getElementById('sf-type').value;
-      const officer = document.getElementById('sf-officer').value;
-      const notes = document.getElementById('sf-notes').value;
-      const dateVal = document.getElementById('sf-date').value.replace('T', ' ');
-
-      state.safety.unshift({
-        id: `SF-${Date.now().toString().slice(-2)}`,
-        date: dateVal, type, officer, notes
-      });
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleAttendanceLog(e) {
-      e.preventDefault();
-      const empName = document.getElementById('hr-emp').value;
-      const status = document.getElementById('hr-status').value;
-      const ot = parseFloat(document.getElementById('hr-ot').value);
-
-      const emp = state.employees.find(e => e.name === empName);
-      if (emp) {
-        if (status === 'PRESENT') emp.daysWorked += 1;
-        if (status === 'HALF_DAY') emp.daysWorked += 0.5;
-        emp.otHours += ot;
-      }
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function handleCashAdvance(e) {
-      e.preventDefault();
-      const empName = document.getElementById('ca-emp').value;
-      const amount = parseFloat(document.getElementById('ca-amount').value);
-
-      const emp = state.employees.find(e => e.name === empName);
-      if (emp) emp.advance += amount;
-
-      saveState();
-      renderAll();
-      e.target.reset();
-    }
-
-    function filterContacts() {
-      const q = document.getElementById('contact-search').value.toLowerCase();
-      const rows = document.querySelectorAll('#tbl-contacts tr');
-      rows.forEach(r => {
-        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
-      });
-    }
-
-    function exportData() {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `cbcm_backup_${new Date().toISOString().slice(0,10)}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-    }
-
-    function importData(event) {
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        try {
-          state = JSON.parse(e.target.result);
-          saveState();
-          renderAll();
-          alert("Backup successfully restored!");
-        } catch (err) {
-          alert("Invalid backup JSON file.");
-        }
-      };
-      reader.readAsText(event.target.files[0]);
-    }
-
-    function resetSystemData() {
-      if (confirm("Reset system back to original factory defaults? All manual entries will be erased.")) {
-        localStorage.removeItem(STORAGE_KEY);
-        state = defaultState;
-        saveState();
-        renderAll();
-      }
-    }
-
-    function renderAll() {
-      // Dynamic Dropdowns
-      const empOptions = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
-      document.getElementById('oc-opened-by').innerHTML = empOptions;
-      document.getElementById('oc-closed-by').innerHTML = empOptions;
-      document.getElementById('f1-attendant').innerHTML = empOptions;
-      document.getElementById('f2-attendant').innerHTML = empOptions;
-      document.getElementById('hr-emp').innerHTML = empOptions;
-      document.getElementById('ca-emp').innerHTML = empOptions;
-
-      document.getElementById('log-party-select').innerHTML = state.contacts.map(c => `<option value="${c.name}">${c.name} (${c.type})</option>`).join('');
-      document.getElementById('log-item').innerHTML = state.inventory.map(i => `<option value="${i.name}">${i.name}</option>`).join('');
-
-      // Open/Close Table
-      document.getElementById('tbl-openclose').innerHTML = state.openclose.map((o, idx) => `
-        <tr>
-          <td><strong>${o.date}</strong></td>
-          <td>${o.day}</td>
-          <td><span class="badge ${o.machOk === 'OK' && o.safetyOk === 'Yes' ? 'badge-pass' : 'badge-fail'}">${o.machOk === 'OK' && o.safetyOk === 'Yes' ? 'OK' : 'ALERT'}</span></td>
-          <td>${o.openedBy}</td>
-          <td>${o.timeIn}</td>
-          <td>${o.machOk}</td>
-          <td>${o.safetyOk}</td>
-          <td>${o.stockOk}</td>
-          <td>${o.openNotes || '-'}</td>
-          <td>${o.closedBy || '-'}</td>
-          <td>${o.timeOut || '-'}</td>
-          <td>${o.safeClose}</td>
-          <td>${o.closeNotes || '-'}</td>
-          <td><span class="badge badge-warn">${o.mode}</span></td>
-          <td><strong>${o.hoursOpen} hrs</strong></td>
-          <td><button onclick="deleteLogEntry('openclose', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Furnace 1 Table
-      document.getElementById('tbl-furnace1').innerHTML = state.furnace1Watch.map((f, idx) => `
-        <tr>
-          <td><strong>${f.date}</strong></td>
-          <td>${f.time}</td>
-          <td>${f.attendant}</td>
-          <td><strong>${f.temp} °C</strong></td>
-          <td>${f.ventOk}</td>
-          <td>${f.fireOk}</td>
-          <td><span class="badge ${f.status === 'OK' ? 'badge-pass' : 'badge-fail'}">${f.status}</span></td>
-          <td>${f.notes}</td>
-          <td><button onclick="deleteLogEntry('furnace1Watch', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Furnace 2 Table
-      document.getElementById('tbl-furnace2').innerHTML = state.furnace2Watch.map((f, idx) => `
-        <tr>
-          <td><strong>${f.date}</strong></td>
-          <td>${f.time}</td>
-          <td>${f.attendant}</td>
-          <td><strong>${f.temp} °C</strong></td>
-          <td>${f.ventOk}</td>
-          <td>${f.fireOk}</td>
-          <td><span class="badge ${f.status === 'OK' ? 'badge-pass' : 'badge-fail'}">${f.status}</span></td>
-          <td>${f.notes}</td>
-          <td><button onclick="deleteLogEntry('furnace2Watch', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Inventory Table
-      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
-        <tr>
-          <td><strong>${i.id}</strong></td>
-          <td>${i.category}</td>
-          <td>${i.name}</td>
-          <td><strong>${i.stock.toLocaleString()} kg</strong></td>
-          <td>${i.min.toLocaleString()} kg</td>
-          <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'OK' : 'LOW STOCK ALERT'}</span></td>
-        </tr>
-      `).join('');
-
-      // Logistics Table
-      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
-        <tr>
-          <td><strong>${l.id}</strong></td>
-          <td><span class="badge ${l.type === 'SUPPLIER_PICKUP' ? 'badge-warn' : 'badge-pass'}">${l.type === 'SUPPLIER_PICKUP' ? 'Inbound' : 'Outbound'}</span></td>
-          <td>${l.party}</td>
-          <td>${l.item}</td>
-          <td>${l.qty.toLocaleString()} kg</td>
-          <td>₱${l.amount.toLocaleString()}</td>
-          <td>${l.transport}</td>
-          <td><button onclick="deleteLogEntry('logistics', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Downtime Table
-      document.getElementById('tbl-downtime').innerHTML = state.downtime.map((d, idx) => `
-        <tr>
-          <td><strong>${d.id}</strong></td>
-          <td>${d.date}</td>
-          <td><span class="text-gold">${d.reason}</span></td>
-          <td>${d.duration} mins</td>
-          <td>${d.action}</td>
-          <td><button onclick="deleteLogEntry('downtime', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Safety Table
-      document.getElementById('tbl-safety').innerHTML = state.safety.map((s, idx) => `
-        <tr>
-          <td><strong>${s.id}</strong></td>
-          <td>${s.date}</td>
-          <td>${s.type}</td>
-          <td>${s.officer}</td>
-          <td>${s.notes}</td>
-          <td><button onclick="deleteLogEntry('safety', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
-      `).join('');
-
-      // Payroll Table
-      document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => {
-        const otPay = e.otHours * (e.rate / 8) * 1.25;
-        const grossPay = (e.daysWorked * e.rate) + otPay;
-        const deductions = grossPay * 0.05;
-        const netPay = grossPay - e.advance - deductions;
-
-        return `
-          <tr>
-            <td><strong>${e.name}</strong></td>
-            <td>₱${e.rate.toLocaleString()}</td>
-            <td>${e.daysWorked} days</td>
-            <td>₱${otPay.toFixed(2)}</td>
-            <td>₱${grossPay.toFixed(2)}</td>
-            <td>₱${e.advance.toLocaleString()}</td>
-            <td>₱${deductions.toFixed(2)}</td>
-            <td><strong class="text-green">₱${Math.max(0, netPay).toFixed(2)}</strong></td>
-          </tr>
-        `;
-      }).join('');
-
-      // Contacts Table
-      document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
-        <tr>
-          <td><strong>${c.name}</strong></td>
-          <td><span class="badge ${c.type === 'Supplier' ? 'badge-pass' : 'badge-warn'}">${c.type}</span></td>
-          <td>${c.phone}</td>
-          <td>${c.location}</td>
-          <td>${c.material}</td>
-        </tr>
-      `).join('');
-
-      // Manage Employees Table
-      document.getElementById('tbl-manage-emp').innerHTML = state.employees.map((e, idx) => `
-        <tr>
-          <td><strong>${e.name}</strong></td>
-          <td>₱${e.rate}</td>
-          <td><button onclick="deleteEmployee(${idx})" class="btn-danger">Remove</button></td>
-        </tr>
-      `).join('');
-
-      // Realtime Status Cards
-      if (state.furnace1Watch.length > 0) {
-        document.getElementById('f1-last-temp').innerText = `${state.furnace1Watch[0].temp} °C`;
-      }
-      if (state.furnace2Watch.length > 0) {
-        document.getElementById('f2-last-temp').innerText = `${state.furnace2Watch[0].temp} °C`;
-      }
-
-      // KPIs
-      const totalRev = state.logistics.filter(l => l.type === 'CUSTOMER_DELIVERY').reduce((a, b) => a + b.amount, 0);
-      const totalDowntime = state.downtime.reduce((a, b) => a + b.duration, 0) / 60;
-
-      document.getElementById('kpi-yield').innerText = `510 kg`;
-      document.getElementById('kpi-revenue').innerText = `₱${totalRev.toLocaleString()}`;
-      document.getElementById('kpi-downtime').innerText = `${totalDowntime.toFixed(1)} hrs`;
-    }
-
-    function initCharts() {
-      const ctxProd = document.getElementById('chart-production').getContext('2d');
-      new Chart(ctxProd, {
-        type: 'bar',
-        data: {
-          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-          datasets: [
-            { label: 'Biochar Produced (kg)', data: [3200, 4100, 3800, 4500], backgroundColor: '#00e676' },
-            { label: 'Customer Dispatches (kg)', data: [2800, 3500, 3900, 4200], backgroundColor: '#29b6f6' }
-          ]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { labels: { color: '#8b949e' } } },
-          scales: {
-            x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
-            y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } }
-          }
-        }
-      });
-
-      const ctxTemp = document.getElementById('chart-temp').getContext('2d');
-      new Chart(ctxTemp, {
-        type: 'line',
-        data: {
-          labels: ['Run 1', 'Run 2', 'Run 3', 'Run 4', 'Run 5', 'Run 6'],
-          datasets: [{
-            label: 'Furnace Temp (°C)',
-            data: [520, 550, 540, 580, 560, 575],
-            borderColor: '#ffc107',
-            backgroundColor: 'rgba(255, 193, 7, 0.1)',
-            fill: true,
-            tension: 0.3
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: { legend: { labels: { color: '#8b949e' } } },
-          scales: {
-            x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
-            y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } }
-          }
-        }
-      });
-    }
-
-    window.onload = function() {
-      const today = new Date().toISOString().slice(0, 10);
-      const now = new Date().toISOString().slice(0, 16);
-      if(document.getElementById('oc-date')) document.getElementById('oc-date').value = today;
-      if(document.getElementById('f1-datetime')) document.getElementById('f1-datetime').value = now;
-      if(document.getElementById('f2-datetime')) document.getElementById('f2-datetime').value = now;
-      if(document.getElementById('dt-date')) document.getElementById('dt-date').value = now;
-      if(document.getElementById('sf-date')) document.getElementById('sf-date').value = now;
-      if(document.getElementById('hr-date')) document.getElementById('hr-date').value = today;
-
-      renderAll();
-      initCharts();
-    };
   </script>
 </body>
 </html>
