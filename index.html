@@ -4,22 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Combinido Biocarbon - Operational Management System</title>
+  
   <!-- Chart.js CDN for Analytics & Business Health -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
+    /* ==========================================================================
+       BRAND PALETTE & CSS CUSTOM VARIABLES
+       ========================================================================== */
     :root {
-      --bg-main: #0d1117;
-      --bg-card: #161b22;
-      --bg-input: #21262d;
-      --border-color: #30363d;
-      --brand-green: #00e676;
-      --brand-green-hover: #00c853;
-      --brand-gold: #ffc107;
-      --brand-danger: #ff5252;
-      --brand-blue: #29b6f6;
-      --text-main: #f0f6fc;
-      --text-muted: #8b949e;
-      --sidebar-width: 250px;
+      /* Primary Brand Palette */
+      --brand-green: #00e676;         /* Accent highlights & primary action buttons */
+      --brand-green-hover: #00c853;   /* Button hover states */
+      --brand-green-glow: rgba(0, 230, 118, 0.25);
+      
+      /* Dark Canvas & Card Shades */
+      --bg-main: #0d1117;             /* Main app canvas background */
+      --bg-card: #161b22;             /* Sidebar, panels, and container background */
+      --bg-input: #21262d;            /* Form fields, search bars, and table headers */
+      --border-color: #30363d;        /* Dividers and container borders */
+      
+      /* Operational Accent Palette */
+      --brand-gold: #ffc107;          /* Pending states & temperature alerts */
+      --brand-danger: #ff5252;        /* Downtime, safety risks & low-stock alerts */
+      --brand-blue: #29b6f6;          /* Logistics & information badges */
+      
+      /* Typography Colors */
+      --text-main: #f0f6fc;           /* Primary text */
+      --text-muted: #8b949e;          /* Subtitles, labels, and metadata */
+      --sidebar-width: 260px;
     }
 
     * {
@@ -37,7 +50,9 @@
       overflow-x: hidden;
     }
 
-    /* Sidebar Navigation */
+    /* ==========================================================================
+       SIDEBAR NAVIGATION & BRANDING
+       ========================================================================== */
     .sidebar {
       width: var(--sidebar-width);
       background-color: var(--bg-card);
@@ -59,7 +74,13 @@
       gap: 12px;
     }
 
-    .brand-logo-mark {
+    .brand-logo-img {
+      height: 38px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .brand-logo-fallback {
       width: 38px;
       height: 38px;
       background: linear-gradient(135deg, var(--brand-green), #004d40);
@@ -69,13 +90,12 @@
       justify-content: center;
       font-weight: 900;
       color: #000;
-      font-size: 1.2rem;
-      letter-spacing: -1px;
-      box-shadow: 0 0 12px rgba(0,230,118,0.3);
+      font-size: 1.1rem;
+      box-shadow: 0 0 10px var(--brand-green-glow);
     }
 
     .brand-title {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       color: var(--text-main);
       line-height: 1.2;
@@ -85,7 +105,7 @@
       display: block;
       font-size: 0.72rem;
       color: var(--brand-green);
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.8px;
     }
@@ -124,7 +144,9 @@
       border-left: 3px solid var(--brand-green);
     }
 
-    /* Main Area */
+    /* ==========================================================================
+       MAIN CONTENT CANVAS & LAYOUT PANELS
+       ========================================================================== */
     .main-content {
       margin-left: var(--sidebar-width);
       flex: 1;
@@ -186,7 +208,6 @@
       border: 1px solid var(--border-color);
       border-radius: 8px;
       padding: 16px 20px;
-      position: relative;
     }
 
     .kpi-label {
@@ -213,7 +234,7 @@
     .text-danger { color: var(--brand-danger); }
     .text-blue { color: var(--brand-blue); }
 
-    /* Layout Sections & Forms */
+    /* Layout Grids & Panels */
     .content-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -247,7 +268,7 @@
       font-weight: 600;
     }
 
-    /* Forms */
+    /* Forms & Inputs */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -289,7 +310,7 @@
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.88rem;
-      transition: background 0.2s;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -298,6 +319,7 @@
 
     .btn:hover {
       background-color: var(--brand-green-hover);
+      box-shadow: 0 0 12px var(--brand-green-glow);
     }
 
     .btn-secondary {
@@ -310,7 +332,7 @@
       background-color: var(--border-color);
     }
 
-    /* Data Tables */
+    /* Tables & Badges */
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -355,7 +377,6 @@
     .badge-fail { background: rgba(255, 82, 82, 0.15); color: var(--brand-danger); }
     .badge-warn { background: rgba(255, 193, 7, 0.15); color: var(--brand-gold); }
 
-    /* Checkbox Group */
     .checkbox-group {
       display: flex;
       gap: 16px;
@@ -376,7 +397,6 @@
       accent-color: var(--brand-green);
     }
 
-    /* Search bar */
     .search-box {
       margin-bottom: 16px;
       max-width: 320px;
@@ -391,15 +411,21 @@
 </head>
 <body>
 
-  <!-- Sidebar Navigation -->
+  <!-- ==========================================================================
+       SIDEBAR NAVIGATION
+       ========================================================================== -->
   <aside class="sidebar">
     <div class="brand-header">
-      <div class="brand-logo-mark">CB</div>
+      <!-- Transparent Logo Mark with Fallback -->
+      <img src="logo-mark-transparent.png" alt="Combinido Logo" class="brand-logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+      <div id="logo-fallback" class="brand-logo-fallback" style="display: none;">CB</div>
+      
       <div class="brand-title">
         COMBINIDO
         <span>Biocarbon Charcoal</span>
       </div>
     </div>
+
     <ul class="nav-menu">
       <li class="nav-item"><a class="nav-link active" onclick="switchTab('dashboard', this)"><span>📊</span> Business Health</a></li>
       <li class="nav-item"><a class="nav-link" onclick="switchTab('furnace', this)"><span>🔥</span> Furnace & Production</a></li>
@@ -408,22 +434,24 @@
       <li class="nav-item"><a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Operations Downtime</a></li>
       <li class="nav-item"><a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a></li>
       <li class="nav-item"><a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a></li>
-      <li class="nav-item"><a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Lookup</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory</a></li>
     </ul>
   </aside>
 
-  <!-- Main Content Container -->
+  <!-- ==========================================================================
+       MAIN CONTENT PANELS
+       ========================================================================== -->
   <main class="main-content">
     
     <div class="header-bar">
       <h1 class="page-title" id="page-title-text">Business Health & KPI Scorecard</h1>
       <div class="plant-status-pill">
         <div class="status-dot"></div>
-        <span>Plant Status: <strong>OPERATIONAL (Gongyi/Leyte Line)</strong></span>
+        <span>Plant Status: <strong>OPERATIONAL (Manloy, Leyte Plant)</strong></span>
       </div>
     </div>
 
-    <!-- ================= TAB 1: BUSINESS HEALTH & KPIS ================= -->
+    <!-- TAB 1: BUSINESS HEALTH & KPIS -->
     <div id="dashboard" class="tab-pane active">
       <div class="kpi-grid">
         <div class="kpi-card">
@@ -439,7 +467,7 @@
         <div class="kpi-card">
           <div class="kpi-label">Plant Downtime</div>
           <div class="kpi-value text-gold" id="kpi-downtime">4.5 hrs</div>
-          <div class="kpi-sub text-muted">Availability: <span class="text-green">98.1%</span></div>
+          <div class="kpi-sub text-muted">Plant Availability: <span class="text-green">98.1%</span></div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Safety Record</div>
@@ -457,14 +485,14 @@
         </div>
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Furnace Operating Temperature Trend (°C)</span>
+            <span class="panel-title">Furnace Operating Temp Trend (°C)</span>
           </div>
           <canvas id="chart-temp" height="230"></canvas>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 2: FURNACE & BATCH LOGS ================= -->
+    <!-- TAB 2: FURNACE & BATCH LOGS -->
     <div id="furnace" class="tab-pane">
       <div class="content-grid">
         <div class="panel">
@@ -511,7 +539,7 @@
               <div class="checkbox-group">
                 <label class="checkbox-item"><input type="checkbox" id="chk-vfd" checked> VFD Motor Drives Normal</label>
                 <label class="checkbox-item"><input type="checkbox" id="chk-plc" checked> PLC Controller Operational</label>
-                <label class="checkbox-item"><input type="checkbox" id="chk-exhaust" checked> Exhaust/Emmission Valve Clear</label>
+                <label class="checkbox-item"><input type="checkbox" id="chk-exhaust" checked> Exhaust Valve Clear</label>
                 <label class="checkbox-item"><input type="checkbox" id="chk-ppe" checked> Crew Wearing Heat Gloves & Respirators</label>
               </div>
             </div>
@@ -522,7 +550,7 @@
 
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Quality Control Standard</span>
+            <span class="panel-title">Quality Control Standards</span>
           </div>
           <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
             <p><strong>Target Moisture:</strong> &le; 8.0%</p>
@@ -535,7 +563,7 @@
 
       <div class="panel full-width">
         <div class="panel-header">
-          <span class="panel-title">Recent Furnace Run History</span>
+          <span class="panel-title">Recent Carbonization History</span>
         </div>
         <div class="table-container">
           <table>
@@ -548,29 +576,27 @@
                 <th>Yield Output</th>
                 <th>Yield %</th>
                 <th>Peak Temp</th>
-                <th>Safety Check</th>
+                <th>Safety Status</th>
                 <th>Operator</th>
               </tr>
             </thead>
-            <tbody id="tbl-furnace">
-              <!-- JS Populated -->
-            </tbody>
+            <tbody id="tbl-furnace"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 3: LOGISTICS (INBOUND / OUTBOUND) ================= -->
+    <!-- TAB 3: LOGISTICS (INBOUND / OUTBOUND) -->
     <div id="logistics" class="tab-pane">
       <div class="content-grid">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Log Logistics Ticket (Inbound / Outbound)</span>
+            <span class="panel-title">Log Logistics Ticket (Supplier Pickup / Delivery)</span>
           </div>
           <form onsubmit="handleLogisticsLog(event)">
             <div class="form-grid">
               <div class="form-group">
-                <label>Type</label>
+                <label>Ticket Type</label>
                 <select id="log-type" class="form-control">
                   <option value="SUPPLIER_PICKUP">Supplier Raw Material Pickup / Inbound</option>
                   <option value="CUSTOMER_DELIVERY">Customer Finished Goods Delivery / Outbound</option>
@@ -594,7 +620,7 @@
                 <input type="number" id="log-qty" class="form-control" placeholder="2500" required>
               </div>
               <div class="form-group">
-                <label>Total Price / Freight Cost (₱)</label>
+                <label>Total Price / Amount (₱)</label>
                 <input type="number" id="log-amount" class="form-control" placeholder="12500" required>
               </div>
               <div class="form-group">
@@ -602,7 +628,7 @@
                 <input type="text" id="log-driver" class="form-control" placeholder="Tacloban Trucking (ABC-123)" required>
               </div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">Record Logistics Movement</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">Record Logistics Ticket</button>
           </form>
         </div>
       </div>
@@ -624,15 +650,13 @@
                 <th>Transport Info</th>
               </tr>
             </thead>
-            <tbody id="tbl-logistics">
-              <!-- JS Populated -->
-            </tbody>
+            <tbody id="tbl-logistics"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 4: INVENTORY TRACKING ================= -->
+    <!-- TAB 4: INVENTORY TRACKING -->
     <div id="inventory" class="tab-pane">
       <div class="panel full-width">
         <div class="panel-header">
@@ -650,15 +674,13 @@
                 <th>Stock Status</th>
               </tr>
             </thead>
-            <tbody id="tbl-inventory">
-              <!-- Dynamic Updates -->
-            </tbody>
+            <tbody id="tbl-inventory"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 5: OPERATIONS DOWNTIME ================= -->
+    <!-- TAB 5: OPERATIONS DOWNTIME -->
     <div id="downtime" class="tab-pane">
       <div class="content-grid">
         <div class="panel">
@@ -687,7 +709,7 @@
               </div>
               <div class="form-group">
                 <label>Action Taken</label>
-                <input type="text" id="dt-action" class="form-control" placeholder="Switched to diesel generator backup" required>
+                <input type="text" id="dt-action" class="form-control" placeholder="Switched to generator backup" required>
               </div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">Log Downtime</button>
@@ -705,25 +727,23 @@
               <tr>
                 <th>Log ID</th>
                 <th>Date/Time</th>
-                <th>Category / Reason</th>
+                <th>Reason</th>
                 <th>Duration (mins)</th>
                 <th>Action Taken</th>
               </tr>
             </thead>
-            <tbody id="tbl-downtime">
-              <!-- JS Populated -->
-            </tbody>
+            <tbody id="tbl-downtime"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 6: SECURITY & SAFETY ================= -->
+    <!-- TAB 6: SECURITY & SAFETY -->
     <div id="safety" class="tab-pane">
       <div class="content-grid">
         <div class="panel">
           <div class="panel-header">
-            <span class="panel-title">Log Safety Check or Security Incident</span>
+            <span class="panel-title">Log Safety Audit or Incident</span>
           </div>
           <form onsubmit="handleSafetyLog(event)">
             <div class="form-grid">
@@ -768,15 +788,13 @@
                 <th>Observations / Status</th>
               </tr>
             </thead>
-            <tbody id="tbl-safety">
-              <!-- JS Populated -->
-            </tbody>
+            <tbody id="tbl-safety"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 7: HR, ATTENDANCE & PAYROLL ================= -->
+    <!-- TAB 7: CREW ATTENDANCE & PAYROLL -->
     <div id="hr" class="tab-pane">
       <div class="content-grid">
         <div class="panel">
@@ -856,21 +874,19 @@
                 <th>Net Pay Out (₱)</th>
               </tr>
             </thead>
-            <tbody id="tbl-payroll">
-              <!-- JS Auto Calculated -->
-            </tbody>
+            <tbody id="tbl-payroll"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ================= TAB 8: CONTACT LOOKUP ================= -->
+    <!-- TAB 8: CONTACT DIRECTORY -->
     <div id="contacts" class="tab-pane">
       <div class="panel full-width">
         <div class="panel-header">
           <span class="panel-title">Directory (Suppliers, Customers & Crew)</span>
         </div>
-        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts by name, role, location...">
+        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts by name, location, role...">
         <div class="table-container">
           <table>
             <thead>
@@ -879,7 +895,7 @@
                 <th>Category</th>
                 <th>Phone Number</th>
                 <th>Location</th>
-                <th>Primary Product / Service</th>
+                <th>Primary Material / Service</th>
               </tr>
             </thead>
             <tbody id="tbl-contacts">
@@ -891,7 +907,7 @@
                 <td>Spiny Bamboo Bulk Feeds</td>
               </tr>
               <tr>
-                <td>Leyte Shell Collectors Union</td>
+                <td>Barugo Coconut Shell Collectors</td>
                 <td><span class="badge badge-pass">Supplier</span></td>
                 <td>0918-987-6543</td>
                 <td>Barugo, Leyte</td>
@@ -902,14 +918,14 @@
                 <td><span class="badge badge-warn">Customer</span></td>
                 <td>0920-555-0192</td>
                 <td>Tacloban City, Leyte</td>
-                <td>Premium Biochar Soil Amendment</td>
+                <td>Biochar Soil Amendment</td>
               </tr>
               <tr>
                 <td>Visayas Industrial Energy Corp</td>
                 <td><span class="badge badge-warn">Customer</span></td>
                 <td>0919-444-2211</td>
                 <td>Cebu City, Visayas</td>
-                <td>High-Calorie Charcoal Briquettes</td>
+                <td>Charcoal Briquettes</td>
               </tr>
               <tr>
                 <td>Juan Cruz</td>
@@ -926,9 +942,11 @@
 
   </main>
 
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC & LOCAL DATA ENGINE
+       ========================================================================== -->
   <script>
-    // System Data State (Persisted via localStorage)
-    const STORAGE_KEY = 'biocarbon_master_state_v2';
+    const STORAGE_KEY = 'biocarbon_master_state_v3';
 
     const defaultState = {
       inventory: [
@@ -947,7 +965,7 @@
         { id: "LOG-502", type: "CUSTOMER_DELIVERY", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 1200, amount: 48000, transport: "Driver: Tacloban Express" }
       ],
       downtime: [
-        { id: "DT-01", date: "2026-08-05 10:15", reason: "Grid Power Outage", duration: 45, action: "Engaged diesel generator backup" }
+        { id: "DT-01", date: "2026-08-05 10:15", reason: "Grid Power Outage", duration: 45, action: "Engaged generator backup" }
       ],
       safety: [
         { id: "SF-01", date: "2026-08-08 07:00", type: "Routine Safety Audit", officer: "Mark Santos", notes: "Furnace temperature gauges calibrated; PPE verified." }
@@ -970,7 +988,6 @@
 
     const state = loadState();
 
-    // Tab Navigation
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
@@ -991,7 +1008,6 @@
       document.getElementById('page-title-text').innerText = titleMap[tabId];
     }
 
-    // Handlers for Forms
     function handleFurnaceLog(e) {
       e.preventDefault();
       const feedstock = document.getElementById('fn-feedstock').value;
@@ -1001,7 +1017,6 @@
       const operator = document.getElementById('fn-operator').value;
       const dateVal = document.getElementById('fn-date').value.replace('T', ' ');
 
-      // Deduct raw material and add finished goods
       const rawItem = state.inventory.find(i => i.name === feedstock);
       if (rawItem) rawItem.stock = Math.max(0, rawItem.stock - inputKg);
 
@@ -1010,8 +1025,7 @@
 
       state.furnace.unshift({
         id: `PROD-${Date.now().toString().slice(-3)}`,
-        date: dateVal,
-        feedstock, input: inputKg, yield: yieldKg, temp, safety: "PASS", operator
+        date: dateVal, feedstock, input: inputKg, yield: yieldKg, temp, safety: "PASS", operator
       });
 
       saveState();
@@ -1028,7 +1042,6 @@
       const amount = parseFloat(document.getElementById('log-amount').value);
       const transport = document.getElementById('log-driver').value;
 
-      // Update inventory stock balances
       const invItem = state.inventory.find(i => i.name === item);
       if (invItem) {
         if (type === 'SUPPLIER_PICKUP') invItem.stock += qty;
@@ -1103,9 +1116,7 @@
       const amount = parseFloat(document.getElementById('ca-amount').value);
 
       const emp = state.employees.find(e => e.name === empName);
-      if (emp) {
-        emp.advance += amount;
-      }
+      if (emp) emp.advance += amount;
 
       saveState();
       renderAll();
@@ -1116,14 +1127,12 @@
       const q = document.getElementById('contact-search').value.toLowerCase();
       const rows = document.querySelectorAll('#tbl-contacts tr');
       rows.forEach(r => {
-        const text = r.innerText.toLowerCase();
-        r.style.display = text.includes(q) ? '' : 'none';
+        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
       });
     }
 
-    // Render Functions
     function renderAll() {
-      // 1. Inventory
+      // 1. Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -1197,7 +1206,7 @@
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => {
         const otPay = e.otHours * (e.rate / 8) * 1.25;
         const grossPay = (e.daysWorked * e.rate) + otPay;
-        const deductions = grossPay * 0.05; // 5% mandatory SSS/PagIBIG contribution
+        const deductions = grossPay * 0.05;
         const netPay = grossPay - e.advance - deductions;
 
         return `
@@ -1214,7 +1223,7 @@
         `;
       }).join('');
 
-      // Dashboard KPI recalculations
+      // Recalculate KPIs
       const totalYield = state.furnace.reduce((a, b) => a + b.yield, 0);
       const totalRev = state.logistics.filter(l => l.type === 'CUSTOMER_DELIVERY').reduce((a, b) => a + b.amount, 0);
       const totalDowntime = state.downtime.reduce((a, b) => a + b.duration, 0) / 60;
@@ -1224,9 +1233,7 @@
       document.getElementById('kpi-downtime').innerText = `${totalDowntime.toFixed(1)} hrs`;
     }
 
-    // Initialize Chart.js Graphs
     function initCharts() {
-      // Production Chart
       const ctxProd = document.getElementById('chart-production').getContext('2d');
       new Chart(ctxProd, {
         type: 'bar',
@@ -1247,7 +1254,6 @@
         }
       });
 
-      // Temperature Trend Chart
       const ctxTemp = document.getElementById('chart-temp').getContext('2d');
       new Chart(ctxTemp, {
         type: 'line',
@@ -1273,7 +1279,6 @@
       });
     }
 
-    // Set default datetime pickers
     window.onload = function() {
       const now = new Date().toISOString().slice(0, 16);
       if(document.getElementById('fn-date')) document.getElementById('fn-date').value = now;
