@@ -13,25 +13,21 @@
        BRAND PALETTE & CSS CUSTOM VARIABLES
        ========================================================================== */
     :root {
-      /* Primary Brand Palette */
-      --brand-green: #00e676;         /* Accent highlights & primary action buttons */
-      --brand-green-hover: #00c853;   /* Button hover states */
+      --brand-green: #00e676;
+      --brand-green-hover: #00c853;
       --brand-green-glow: rgba(0, 230, 118, 0.25);
       
-      /* Dark Canvas & Card Shades */
-      --bg-main: #0d1117;             /* Main app canvas background */
-      --bg-card: #161b22;             /* Sidebar, panels, and container background */
-      --bg-input: #21262d;            /* Form fields, search bars, and table headers */
-      --border-color: #30363d;        /* Dividers and container borders */
+      --bg-main: #0d1117;
+      --bg-card: #161b22;
+      --bg-input: #21262d;
+      --border-color: #30363d;
       
-      /* Operational Accent Palette */
-      --brand-gold: #ffc107;          /* Pending states & temperature alerts */
-      --brand-danger: #ff5252;        /* Downtime, safety risks & low-stock alerts */
-      --brand-blue: #29b6f6;          /* Logistics & information badges */
+      --brand-gold: #ffc107;
+      --brand-danger: #ff5252;
+      --brand-blue: #29b6f6;
       
-      /* Typography Colors */
-      --text-main: #f0f6fc;           /* Primary text */
-      --text-muted: #8b949e;          /* Subtitles, labels, and metadata */
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
       --sidebar-width: 260px;
     }
 
@@ -173,15 +169,9 @@
       box-shadow: 0 0 8px var(--brand-green);
     }
 
-    /* Tab Panes */
-    .tab-pane {
-      display: none;
-    }
-    .tab-pane.active {
-      display: block;
-    }
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
 
-    /* KPI Cards Grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -220,7 +210,6 @@
     .text-danger { color: var(--brand-danger); }
     .text-blue { color: var(--brand-blue); }
 
-    /* Layout Grids & Panels */
     .content-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -228,9 +217,7 @@
       margin-bottom: 24px;
     }
 
-    .full-width {
-      grid-column: 1 / -1;
-    }
+    .full-width { grid-column: 1 / -1; }
 
     .panel {
       background-color: var(--bg-card);
@@ -254,7 +241,6 @@
       font-weight: 600;
     }
 
-    /* Forms & Inputs */
     .form-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -314,11 +300,23 @@
       border: 1px solid var(--border-color);
     }
 
-    .btn-secondary:hover {
-      background-color: var(--border-color);
+    .btn-secondary:hover { background-color: var(--border-color); }
+
+    .btn-danger {
+      background-color: rgba(255, 82, 82, 0.2);
+      color: var(--brand-danger);
+      border: 1px solid var(--brand-danger);
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
-    /* Tables & Badges */
+    .btn-danger:hover {
+      background-color: var(--brand-danger);
+      color: #000;
+    }
+
     .table-container {
       width: 100%;
       overflow-x: auto;
@@ -346,9 +344,7 @@
       white-space: nowrap;
     }
 
-    tr:hover {
-      background-color: rgba(255, 255, 255, 0.02);
-    }
+    tr:hover { background-color: rgba(255, 255, 255, 0.02); }
 
     .badge {
       display: inline-block;
@@ -379,14 +375,8 @@
       cursor: pointer;
     }
 
-    .checkbox-item input {
-      accent-color: var(--brand-green);
-    }
-
-    .search-box {
-      margin-bottom: 16px;
-      max-width: 320px;
-    }
+    .checkbox-item input { accent-color: var(--brand-green); }
+    .search-box { margin-bottom: 16px; max-width: 320px; }
 
     @media (max-width: 900px) {
       .content-grid { grid-template-columns: 1fr; }
@@ -402,7 +392,6 @@
        ========================================================================== -->
   <aside class="sidebar">
     <div class="brand-header">
-      <!-- Self-Contained SVG Logo Mark -->
       <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="100" height="100" rx="20" fill="url(#brandGrad)"/>
         <path d="M30 68 C22 55 22 35 38 25 C52 16 68 22 72 38 C75 52 65 68 50 72 C42 74 34 72 30 68 Z" stroke="#000" stroke-width="6" fill="none"/>
@@ -430,6 +419,9 @@
       <li class="nav-item"><a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a></li>
       <li class="nav-item"><a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a></li>
       <li class="nav-item"><a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory</a></li>
+      <li class="nav-item" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 8px;">
+        <a class="nav-link" onclick="switchTab('settings', this)"><span style="color: var(--brand-gold);">⚙️</span> Master Data Manager</a>
+      </li>
     </ul>
   </aside>
 
@@ -451,18 +443,18 @@
       <div class="kpi-grid">
         <div class="kpi-card">
           <div class="kpi-label">Monthly Biochar Yield</div>
-          <div class="kpi-value text-green" id="kpi-yield">14,280 kg</div>
+          <div class="kpi-value text-green" id="kpi-yield">0 kg</div>
           <div class="kpi-sub text-muted">Avg Conversion: <span class="text-green">34.2%</span></div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Monthly Revenue</div>
-          <div class="kpi-value text-green" id="kpi-revenue">₱428,400</div>
-          <div class="kpi-sub text-muted">Outbound Dispatches: <span class="text-blue">18 trips</span></div>
+          <div class="kpi-value text-green" id="kpi-revenue">₱0</div>
+          <div class="kpi-sub text-muted">Outbound Dispatches</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Plant Downtime</div>
-          <div class="kpi-value text-gold" id="kpi-downtime">4.5 hrs</div>
-          <div class="kpi-sub text-muted">Plant Availability: <span class="text-green">98.1%</span></div>
+          <div class="kpi-value text-gold" id="kpi-downtime">0 hrs</div>
+          <div class="kpi-sub text-muted">Plant Availability</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Safety Record</div>
@@ -502,11 +494,7 @@
               </div>
               <div class="form-group">
                 <label>Feedstock Type</label>
-                <select id="fn-feedstock" class="form-control">
-                  <option value="Spiny Bamboo">Spiny Bamboo</option>
-                  <option value="Coconut Shell">Coconut Shell</option>
-                  <option value="Rice Husk">Rice Husk</option>
-                </select>
+                <select id="fn-feedstock" class="form-control"></select>
               </div>
               <div class="form-group">
                 <label>Raw Feed Weight (kg)</label>
@@ -522,10 +510,7 @@
               </div>
               <div class="form-group">
                 <label>Operator In-Charge</label>
-                <select id="fn-operator" class="form-control">
-                  <option value="Juan Cruz">Juan Cruz</option>
-                  <option value="Pedro Reyes">Pedro Reyes</option>
-                </select>
+                <select id="fn-operator" class="form-control"></select>
               </div>
             </div>
 
@@ -573,6 +558,7 @@
                 <th>Peak Temp</th>
                 <th>Safety Status</th>
                 <th>Operator</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="tbl-furnace"></tbody>
@@ -599,16 +585,11 @@
               </div>
               <div class="form-group">
                 <label>Party / Contact Name</label>
-                <input type="text" id="log-party" class="form-control" placeholder="e.g. Carigara Bamboo Co-Op" required>
+                <select id="log-party-select" class="form-control"></select>
               </div>
               <div class="form-group">
                 <label>Item Description</label>
-                <select id="log-item" class="form-control">
-                  <option value="Spiny Bamboo">Spiny Bamboo (Raw Feed)</option>
-                  <option value="Coconut Shell">Coconut Shell (Raw Feed)</option>
-                  <option value="Charcoal Briquettes">Charcoal Briquettes (Finished)</option>
-                  <option value="Fine Biochar Powder">Fine Biochar Powder (Finished)</option>
-                </select>
+                <select id="log-item" class="form-control"></select>
               </div>
               <div class="form-group">
                 <label>Weight / Quantity (kg)</label>
@@ -643,6 +624,7 @@
                 <th>Quantity</th>
                 <th>Amount (₱)</th>
                 <th>Transport Info</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="tbl-logistics"></tbody>
@@ -725,6 +707,7 @@
                 <th>Reason</th>
                 <th>Duration (mins)</th>
                 <th>Action Taken</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="tbl-downtime"></tbody>
@@ -781,6 +764,7 @@
                 <th>Type</th>
                 <th>Inspector</th>
                 <th>Observations / Status</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="tbl-safety"></tbody>
@@ -800,11 +784,7 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Employee Name</label>
-                <select id="hr-emp" class="form-control">
-                  <option value="Juan Cruz">Juan Cruz (Furnace Lead)</option>
-                  <option value="Pedro Reyes">Pedro Reyes (Briquetting Tech)</option>
-                  <option value="Mark Santos">Mark Santos (Yard Security)</option>
-                </select>
+                <select id="hr-emp" class="form-control"></select>
               </div>
               <div class="form-group">
                 <label>Date</label>
@@ -835,11 +815,7 @@
             <div class="form-grid">
               <div class="form-group">
                 <label>Employee</label>
-                <select id="ca-emp" class="form-control">
-                  <option value="Juan Cruz">Juan Cruz</option>
-                  <option value="Pedro Reyes">Pedro Reyes</option>
-                  <option value="Mark Santos">Mark Santos</option>
-                </select>
+                <select id="ca-emp" class="form-control"></select>
               </div>
               <div class="form-group">
                 <label>Advance Amount (₱)</label>
@@ -881,7 +857,7 @@
         <div class="panel-header">
           <span class="panel-title">Directory (Suppliers, Customers & Crew)</span>
         </div>
-        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts by name, location, role...">
+        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts...">
         <div class="table-container">
           <table>
             <thead>
@@ -893,44 +869,89 @@
                 <th>Primary Material / Service</th>
               </tr>
             </thead>
-            <tbody id="tbl-contacts">
-              <tr>
-                <td>Carigara Bamboo Farmers Co-Op</td>
-                <td><span class="badge badge-pass">Supplier</span></td>
-                <td>0917-123-4567</td>
-                <td>Carigara, Leyte</td>
-                <td>Spiny Bamboo Bulk Feeds</td>
-              </tr>
-              <tr>
-                <td>Barugo Coconut Shell Collectors</td>
-                <td><span class="badge badge-pass">Supplier</span></td>
-                <td>0918-987-6543</td>
-                <td>Barugo, Leyte</td>
-                <td>Raw Coconut Shells</td>
-              </tr>
-              <tr>
-                <td>AgriGrow Biomass Distributors</td>
-                <td><span class="badge badge-warn">Customer</span></td>
-                <td>0920-555-0192</td>
-                <td>Tacloban City, Leyte</td>
-                <td>Biochar Soil Amendment</td>
-              </tr>
-              <tr>
-                <td>Visayas Industrial Energy Corp</td>
-                <td><span class="badge badge-warn">Customer</span></td>
-                <td>0919-444-2211</td>
-                <td>Cebu City, Visayas</td>
-                <td>Charcoal Briquettes</td>
-              </tr>
-              <tr>
-                <td>Juan Cruz</td>
-                <td><span class="badge badge-fail">Plant Crew</span></td>
-                <td>0916-547-7329</td>
-                <td>Manloy, Carigara</td>
-                <td>Furnace Operations Lead</td>
-              </tr>
-            </tbody>
+            <tbody id="tbl-contacts"></tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 9: MASTER DATA MANAGER & SETTINGS -->
+    <div id="settings" class="tab-pane">
+      <div class="content-grid">
+        
+        <!-- ADD/MANAGE EMPLOYEES -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Add / Manage Plant Crew</span>
+          </div>
+          <form onsubmit="handleAddEmployee(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Employee Full Name</label>
+                <input type="text" id="new-emp-name" class="form-control" placeholder="e.g. Lisa Combinido" required>
+              </div>
+              <div class="form-group">
+                <label>Daily Rate (₱)</label>
+                <input type="number" id="new-emp-rate" class="form-control" placeholder="600" required>
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 12px;">Add Employee to System</button>
+          </form>
+          <div class="table-container" style="margin-top: 16px;">
+            <table>
+              <thead><tr><th>Name</th><th>Daily Rate</th><th>Action</th></tr></thead>
+              <tbody id="tbl-manage-emp"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ADD/MANAGE CONTACTS -->
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Add / Manage Contact Directory</span>
+          </div>
+          <form onsubmit="handleAddContact(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Entity / Person Name</label>
+                <input type="text" id="new-con-name" class="form-control" placeholder="e.g. Carigara Bamboo Farmers" required>
+              </div>
+              <div class="form-group">
+                <label>Category</label>
+                <select id="new-con-type" class="form-control">
+                  <option value="Supplier">Supplier</option>
+                  <option value="Customer">Customer</option>
+                  <option value="Plant Crew">Plant Crew</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="new-con-phone" class="form-control" placeholder="0917-000-0000" required>
+              </div>
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="new-con-loc" class="form-control" placeholder="Carigara, Leyte" required>
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 12px;">Add Contact</button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- SYSTEM BACKUP / EXPORT / IMPORT -->
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">System Backup & Data Control</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+          Export your entire operational database to JSON for Excel/offline archiving, or restore data anytime.
+        </p>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <button onclick="exportData()" class="btn">📥 Export System Data (JSON Backup)</button>
+          <button onclick="document.getElementById('file-import').click()" class="btn btn-secondary">📤 Import System Data Backup</button>
+          <input type="file" id="file-import" style="display: none;" onchange="importData(event)">
+          <button onclick="resetSystemData()" class="btn btn-danger">⚠️ Reset System to Default State</button>
         </div>
       </div>
     </div>
@@ -938,10 +959,10 @@
   </main>
 
   <!-- ==========================================================================
-       JAVASCRIPT LOGIC & LOCAL DATA ENGINE
+       JAVASCRIPT DATA & CONTROL ENGINE
        ========================================================================== -->
   <script>
-    const STORAGE_KEY = 'biocarbon_master_state_v4';
+    const STORAGE_KEY = 'biocarbon_master_state_v5';
 
     const defaultState = {
       inventory: [
@@ -952,12 +973,10 @@
         { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1800, min: 500 }
       ],
       furnace: [
-        { id: "PROD-101", date: "2026-08-08 08:30", feedstock: "Spiny Bamboo", input: 1500, yield: 510, temp: 550, safety: "PASS", operator: "Juan Cruz" },
-        { id: "PROD-102", date: "2026-08-07 14:00", feedstock: "Coconut Shell", input: 2000, yield: 720, temp: 580, safety: "PASS", operator: "Pedro Reyes" }
+        { id: "PROD-101", date: "2026-08-08 08:30", feedstock: "Spiny Bamboo", input: 1500, yield: 510, temp: 550, safety: "PASS", operator: "Juan Cruz" }
       ],
       logistics: [
-        { id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500, transport: "Plate: ABC-123" },
-        { id: "LOG-502", type: "CUSTOMER_DELIVERY", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 1200, amount: 48000, transport: "Driver: Tacloban Express" }
+        { id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500, transport: "Plate: ABC-123" }
       ],
       downtime: [
         { id: "DT-01", date: "2026-08-05 10:15", reason: "Grid Power Outage", duration: 45, action: "Engaged generator backup" }
@@ -969,6 +988,11 @@
         { name: "Juan Cruz", rate: 650, daysWorked: 12, otHours: 4, advance: 1000 },
         { name: "Pedro Reyes", rate: 600, daysWorked: 12, otHours: 2, advance: 500 },
         { name: "Mark Santos", rate: 550, daysWorked: 10, otHours: 0, advance: 0 }
+      ],
+      contacts: [
+        { name: "Carigara Bamboo Farmers Co-Op", type: "Supplier", phone: "0917-123-4567", location: "Carigara, Leyte", material: "Spiny Bamboo Feeds" },
+        { name: "Barugo Coconut Shell Collectors", type: "Supplier", phone: "0918-987-6543", location: "Barugo, Leyte", material: "Raw Coconut Shells" },
+        { name: "AgriGrow Biomass Distributors", type: "Customer", phone: "0920-555-0192", location: "Tacloban City", material: "Biochar Amendment" }
       ]
     };
 
@@ -981,7 +1005,7 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }
 
-    const state = loadState();
+    let state = loadState();
 
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -998,9 +1022,56 @@
         'downtime': 'Plant Downtime & Maintenance Tracker',
         'safety': 'Security & Safety Audit Logs',
         'hr': 'Crew Attendance & Payroll System',
-        'contacts': 'Contact Lookup Directory'
+        'contacts': 'Contact Lookup Directory',
+        'settings': 'Master Data Manager & System Controls'
       };
       document.getElementById('page-title-text').innerText = titleMap[tabId];
+    }
+
+    /* ADD/REMOVE LOGIC */
+    function handleAddEmployee(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-emp-name').value.trim();
+      const rate = parseFloat(document.getElementById('new-emp-rate').value);
+
+      if (state.employees.some(emp => emp.name === name)) {
+        alert("Employee already exists!");
+        return;
+      }
+
+      state.employees.push({ name, rate, daysWorked: 0, otHours: 0, advance: 0 });
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function deleteEmployee(index) {
+      if (confirm(`Remove ${state.employees[index].name} from active staff list?`)) {
+        state.employees.splice(index, 1);
+        saveState();
+        renderAll();
+      }
+    }
+
+    function handleAddContact(e) {
+      e.preventDefault();
+      const name = document.getElementById('new-con-name').value.trim();
+      const type = document.getElementById('new-con-type').value;
+      const phone = document.getElementById('new-con-phone').value.trim();
+      const location = document.getElementById('new-con-loc').value.trim();
+
+      state.contacts.push({ name, type, phone, location, material: type === 'Supplier' ? 'Raw Materials' : 'Finished Goods' });
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function deleteLogEntry(type, index) {
+      if (confirm("Are you sure you want to delete this log record?")) {
+        state[type].splice(index, 1);
+        saveState();
+        renderAll();
+      }
     }
 
     function handleFurnaceLog(e) {
@@ -1031,7 +1102,7 @@
     function handleLogisticsLog(e) {
       e.preventDefault();
       const type = document.getElementById('log-type').value;
-      const party = document.getElementById('log-party').value;
+      const party = document.getElementById('log-party-select').value;
       const item = document.getElementById('log-item').value;
       const qty = parseFloat(document.getElementById('log-qty').value);
       const amount = parseFloat(document.getElementById('log-amount').value);
@@ -1126,8 +1197,51 @@
       });
     }
 
+    /* EXPORT / IMPORT ENGINE */
+    function exportData() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `biocarbon_backup_${new Date().toISOString().slice(0,10)}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+    }
+
+    function importData(event) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          state = JSON.parse(e.target.result);
+          saveState();
+          renderAll();
+          alert("Backup successfully restored!");
+        } catch (err) {
+          alert("Invalid backup JSON file.");
+        }
+      };
+      reader.readAsText(event.target.files[0]);
+    }
+
+    function resetSystemData() {
+      if (confirm("Reset system back to original factory defaults? All manual entries will be erased.")) {
+        localStorage.removeItem(STORAGE_KEY);
+        state = defaultState;
+        saveState();
+        renderAll();
+      }
+    }
+
     function renderAll() {
-      // 1. Inventory Table
+      // Dynamic Dropdowns
+      document.getElementById('fn-feedstock').innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      document.getElementById('fn-operator').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
+      document.getElementById('log-party-select').innerHTML = state.contacts.map(c => `<option value="${c.name}">${c.name} (${c.type})</option>`).join('');
+      document.getElementById('log-item').innerHTML = state.inventory.map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      document.getElementById('hr-emp').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
+      document.getElementById('ca-emp').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
+
+      // Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -1135,16 +1249,12 @@
           <td>${i.name}</td>
           <td><strong>${i.stock.toLocaleString()} kg</strong></td>
           <td>${i.min.toLocaleString()} kg</td>
-          <td>
-            <span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">
-              ${i.stock >= i.min ? 'OK' : 'LOW STOCK ALERT'}
-            </span>
-          </td>
+          <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'OK' : 'LOW STOCK ALERT'}</span></td>
         </tr>
       `).join('');
 
-      // 2. Furnace Table
-      document.getElementById('tbl-furnace').innerHTML = state.furnace.map(f => `
+      // Furnace Table
+      document.getElementById('tbl-furnace').innerHTML = state.furnace.map((f, idx) => `
         <tr>
           <td><strong>${f.id}</strong></td>
           <td>${f.date}</td>
@@ -1155,49 +1265,49 @@
           <td>${f.temp}°C</td>
           <td><span class="badge badge-pass">${f.safety}</span></td>
           <td>${f.operator}</td>
+          <td><button onclick="deleteLogEntry('furnace', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
 
-      // 3. Logistics Table
-      document.getElementById('tbl-logistics').innerHTML = state.logistics.map(l => `
+      // Logistics Table
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
-          <td>
-            <span class="badge ${l.type === 'SUPPLIER_PICKUP' ? 'badge-warn' : 'badge-pass'}">
-              ${l.type === 'SUPPLIER_PICKUP' ? 'Inbound Pickup' : 'Outbound Delivery'}
-            </span>
-          </td>
+          <td><span class="badge ${l.type === 'SUPPLIER_PICKUP' ? 'badge-warn' : 'badge-pass'}">${l.type === 'SUPPLIER_PICKUP' ? 'Inbound' : 'Outbound'}</span></td>
           <td>${l.party}</td>
           <td>${l.item}</td>
           <td>${l.qty.toLocaleString()} kg</td>
           <td>₱${l.amount.toLocaleString()}</td>
           <td>${l.transport}</td>
+          <td><button onclick="deleteLogEntry('logistics', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
 
-      // 4. Downtime Table
-      document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `
+      // Downtime Table
+      document.getElementById('tbl-downtime').innerHTML = state.downtime.map((d, idx) => `
         <tr>
           <td><strong>${d.id}</strong></td>
           <td>${d.date}</td>
           <td><span class="text-gold">${d.reason}</span></td>
           <td>${d.duration} mins</td>
           <td>${d.action}</td>
+          <td><button onclick="deleteLogEntry('downtime', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
 
-      // 5. Safety Table
-      document.getElementById('tbl-safety').innerHTML = state.safety.map(s => `
+      // Safety Table
+      document.getElementById('tbl-safety').innerHTML = state.safety.map((s, idx) => `
         <tr>
           <td><strong>${s.id}</strong></td>
           <td>${s.date}</td>
           <td>${s.type}</td>
           <td>${s.officer}</td>
           <td>${s.notes}</td>
+          <td><button onclick="deleteLogEntry('safety', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
 
-      // 6. Payroll Table
+      // Payroll Table
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => {
         const otPay = e.otHours * (e.rate / 8) * 1.25;
         const grossPay = (e.daysWorked * e.rate) + otPay;
@@ -1217,6 +1327,26 @@
           </tr>
         `;
       }).join('');
+
+      // Contacts Table
+      document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
+        <tr>
+          <td><strong>${c.name}</strong></td>
+          <td><span class="badge ${c.type === 'Supplier' ? 'badge-pass' : 'badge-warn'}">${c.type}</span></td>
+          <td>${c.phone}</td>
+          <td>${c.location}</td>
+          <td>${c.material}</td>
+        </tr>
+      `).join('');
+
+      // Manage Employees Table
+      document.getElementById('tbl-manage-emp').innerHTML = state.employees.map((e, idx) => `
+        <tr>
+          <td><strong>${e.name}</strong></td>
+          <td>₱${e.rate}</td>
+          <td><button onclick="deleteEmployee(${idx})" class="btn-danger">Remove</button></td>
+        </tr>
+      `).join('');
 
       // Recalculate KPIs
       const totalYield = state.furnace.reduce((a, b) => a + b.yield, 0);
