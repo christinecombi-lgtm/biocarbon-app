@@ -5,25 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Combinido Biocarbon Operations Dashboard</title>
   
+  <!-- Chart.js CDN for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     /* ==========================================================================
        COMBINIDO BRAND SYSTEM & COLOR PALETTE
        ========================================================================== */
     :root {
-      --header-bg: #1a1816;         /* Dark Charcoal Top Header */
+      --header-bg: #1a1816;         /* Dark Charcoal Header */
       --canvas-bg: #f3f4f6;         /* Light Canvas Background */
       --card-bg: #ffffff;           /* Clean White Card Surface */
+      --sidebar-bg: #1e293b;        /* Dark Sidebar Background */
       --border-light: #e5e7eb;      /* Soft Card Border */
       
       --brand-orange: #f26522;      /* Primary Brand Orange Accent */
       --brand-green: #10b981;       /* Operational Green */
       --brand-green-bg: #ecfdf5;    /* Light Green Alert Fill */
       --brand-blue: #0284c7;        /* Analytical Blue Accent */
-      --brand-dark-blue: #1e293b;   /* Active Filter Pill Background */
+      --brand-gold: #f59e0b;        /* Warning/Pending Accent */
+      --brand-danger: #ef4444;      /* Alert Red */
       
       --text-main: #0f172a;         /* High-Contrast Main Text */
       --text-muted: #64748b;       /* Muted Subtitles & Labels */
-      --text-header-sub: #94a3b8;   /* Header Subtext */
+      --sidebar-width: 260px;
     }
 
     * {
@@ -52,6 +57,7 @@
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 101;
     }
 
     .brand-container {
@@ -60,7 +66,6 @@
       gap: 16px;
     }
 
-    /* 3-Shape Brand Symbol */
     .brand-shapes {
       display: flex;
       align-items: center;
@@ -90,11 +95,6 @@
       border-radius: 3px;
     }
 
-    .brand-text {
-      display: flex;
-      flex-direction: column;
-    }
-
     .brand-text h1 {
       font-size: 1.6rem;
       font-weight: 800;
@@ -109,6 +109,7 @@
       text-transform: uppercase;
       color: #cbd5e1;
       margin-top: 3px;
+      display: block;
     }
 
     .header-meta {
@@ -124,14 +125,13 @@
       color: var(--brand-orange);
       font-size: 0.95rem;
       font-weight: 600;
-      letter-spacing: 0.2px;
     }
 
     .ops-subtitle {
       font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 1px;
-      color: var(--text-header-sub);
+      color: #94a3b8;
       text-transform: uppercase;
     }
 
@@ -167,24 +167,63 @@
       font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
-      transition: opacity 0.2s;
-    }
-
-    .btn-refresh:hover {
-      opacity: 0.9;
     }
 
     /* ==========================================================================
-       MAIN CONTENT CONTAINER
+       APP LAYOUT (SIDEBAR + CONTENT)
        ========================================================================== */
-    main {
-      padding: 24px 32px;
-      max-width: 1400px;
-      margin: 0 auto;
-      width: 100%;
+    .app-body {
+      display: flex;
+      flex: 1;
     }
 
-    /* Period Filter Row */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      color: #ffffff;
+      padding: 20px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      box-shadow: 2px 0 6px rgba(0,0,0,0.05);
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      color: #94a3b8;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    .nav-link.active {
+      border-left: 4px solid var(--brand-orange);
+    }
+
+    .main-content {
+      flex: 1;
+      padding: 28px 36px;
+      max-width: calc(100vw - var(--sidebar-width));
+      overflow-x: hidden;
+    }
+
+    .tab-pane { display: none; }
+    .tab-pane.active { display: block; }
+
+    /* ==========================================================================
+       CARDS & METRICS
+       ========================================================================== */
     .filter-bar {
       display: flex;
       justify-content: space-between;
@@ -198,12 +237,6 @@
       gap: 12px;
     }
 
-    .period-label {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
     .btn-pill {
       background-color: transparent;
       border: 1px solid #cbd5e1;
@@ -213,21 +246,14 @@
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
     }
 
     .btn-pill.active {
-      background-color: var(--brand-dark-blue);
+      background-color: var(--sidebar-bg);
       color: #ffffff;
-      border-color: var(--brand-dark-blue);
+      border-color: var(--sidebar-bg);
     }
 
-    .filter-note {
-      font-size: 0.78rem;
-      color: #94a3b8;
-    }
-
-    /* Top KPI Cards Grid */
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -241,14 +267,9 @@
       padding: 20px 24px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       border-left: 4px solid var(--brand-green);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
 
-    .kpi-card.blue-accent {
-      border-left-color: var(--brand-blue);
-    }
+    .kpi-card.blue-accent { border-left-color: var(--brand-blue); }
 
     .kpi-title {
       font-size: 0.78rem;
@@ -263,46 +284,8 @@
       font-weight: 800;
       color: var(--text-main);
       margin: 8px 0 2px 0;
-      line-height: 1;
     }
 
-    .kpi-main-val span {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .kpi-subtext {
-      font-size: 0.82rem;
-      color: #94a3b8;
-    }
-
-    /* ==========================================================================
-       FURNACE WATCH SECTION
-       ========================================================================== */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-size: 1rem;
-      font-weight: 800;
-      color: #334155;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .section-subtext {
-      font-size: 0.75rem;
-      color: #94a3b8;
-    }
-
-    /* Green Alert Status Banner */
     .status-banner {
       background-color: var(--brand-green-bg);
       border: 1px solid #a7f3d0;
@@ -313,18 +296,13 @@
       font-weight: 700;
       font-size: 1rem;
       margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    /* Furnace Watch Sub-Cards Row */
     .furnace-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .furnace-card {
@@ -333,9 +311,6 @@
       padding: 14px 12px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       border-top: 3px solid var(--brand-orange);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       min-height: 90px;
     }
 
@@ -344,8 +319,6 @@
       font-weight: 800;
       color: #94a3b8;
       text-transform: uppercase;
-      letter-spacing: 0.4px;
-      line-height: 1.2;
     }
 
     .furnace-card-val {
@@ -355,56 +328,128 @@
       margin-top: 6px;
     }
 
-    .furnace-card-val.green-text {
-      color: var(--brand-green);
+    /* ==========================================================================
+       PANELS, FORMS & TABLES
+       ========================================================================== */
+    .panel {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      margin-bottom: 24px;
+      border: 1px solid var(--border-light);
     }
 
-    .furnace-card-val.temp-text {
-      font-size: 1.3rem;
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-light);
     }
 
-    .furnace-card-val.temp-text span {
-      font-size: 0.85rem;
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
       font-weight: 600;
       color: var(--text-muted);
     }
 
-    .legend-row {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #94a3b8;
-      margin-top: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
+    .form-control {
+      padding: 9px 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      font-size: 0.88rem;
+      outline: none;
     }
 
-    .legend-item {
+    .btn {
+      background-color: var(--brand-orange);
+      color: #ffffff;
+      font-weight: 700;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.88rem;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 8px;
     }
 
-    .legend-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
+    .btn-danger {
+      background-color: #fee2e2;
+      color: var(--brand-danger);
+      border: 1px solid var(--brand-danger);
+      padding: 4px 8px;
+      font-size: 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
     }
+
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-pass { background: #d1fae5; color: #047857; }
+    .badge-fail { background: #fee2e2; color: #b91c1c; }
+    .badge-warn { background: #fef3c7; color: #b45309; }
 
     @media (max-width: 1024px) {
       .kpi-grid { grid-template-columns: 1fr; }
       .furnace-grid { grid-template-columns: repeat(2, 1fr); }
-      header { flex-direction: column; gap: 16px; align-items: flex-start; }
-      .header-meta { align-items: flex-start; text-align: left; }
+      .app-body { flex-direction: column; }
+      .sidebar { width: 100%; }
+      .main-content { max-width: 100vw; padding: 16px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ==========================================================================
-       TOP BRAND HEADER
-       ========================================================================== -->
+  <!-- TOP BRAND HEADER -->
   <header>
     <div class="brand-container">
       <div class="brand-shapes">
@@ -426,130 +471,299 @@
           <div class="status-dot"></div>
           <strong id="live-date">8 August 2026</strong>
         </div>
-        <span style="font-size: 0.78rem; color: #94a3b8;" id="live-timestamp">Live · read 8 Aug 2026, 4:13 PM</span>
+        <span style="font-size: 0.78rem; color: #94a3b8;" id="live-timestamp">Live · read 8 Aug 2026, 4:18 PM</span>
         <button class="btn-refresh" onclick="refreshDashboard()">Refresh now</button>
       </div>
     </div>
   </header>
 
-  <!-- ==========================================================================
-       MAIN CONTENT DASHBOARD
-       ========================================================================== -->
-  <main>
-    
-    <!-- Filter Controls -->
-    <div class="filter-bar">
-      <div class="period-controls">
-        <span class="period-label">Period:</span>
-        <button class="btn-pill" onclick="setPeriod(this)">Last 3 months</button>
-        <button class="btn-pill" onclick="setPeriod(this)">Last 6 months</button>
-        <button class="btn-pill active" onclick="setPeriod(this)">All time</button>
-      </div>
-      <div class="filter-note">
-        Inventory below is always the current snapshot (not affected by the period filter)
-      </div>
-    </div>
+  <div class="app-body">
+    <!-- NAVIGATION SIDEBAR -->
+    <aside class="sidebar">
+      <a class="nav-link active" onclick="switchTab('dashboard', this)"><span>📊</span> Operations Overview</a>
+      <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Open/Close Log</a>
+      <a class="nav-link" onclick="switchTab('furnace1', this)"><span>🔥</span> Furnace 1 Watch</a>
+      <a class="nav-link" onclick="switchTab('furnace2', this)"><span>🔥</span> Furnace 2 Watch</a>
+      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Logistics</a>
+      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Inventory Tracking</a>
+      <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Operations Downtime</a>
+      <a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a>
+      <a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a>
+      <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory</a>
+      <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
+    </aside>
 
-    <!-- Top KPI Cards -->
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-title">NEEDS ACTION</div>
-        <div class="kpi-main-val" id="val-needs-action">0</div>
-        <div class="kpi-subtext">inventory all healthy</div>
-      </div>
+    <!-- MAIN CONTENT AREA -->
+    <main class="main-content">
 
-      <div class="kpi-card">
-        <div class="kpi-title">TOTAL OUTPUT</div>
-        <div class="kpi-main-val" id="val-total-output">15740 <span>kg</span></div>
-        <div class="kpi-subtext" id="val-batches">57 batches logged</div>
-      </div>
+      <!-- TAB 1: OVERVIEW -->
+      <div id="dashboard" class="tab-pane active">
+        <div class="filter-bar">
+          <div class="period-controls">
+            <span style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted);">Period:</span>
+            <button class="btn-pill" onclick="setPeriod(this)">Last 3 months</button>
+            <button class="btn-pill" onclick="setPeriod(this)">Last 6 months</button>
+            <button class="btn-pill active" onclick="setPeriod(this)">All time</button>
+          </div>
+          <span style="font-size: 0.78rem; color: #94a3b8;">Inventory below is always the current snapshot</span>
+        </div>
 
-      <div class="kpi-card blue-accent">
-        <div class="kpi-title">AVG YIELD</div>
-        <div class="kpi-main-val" id="val-avg-yield">55.0<span>%</span></div>
-        <div class="kpi-subtext">output ÷ feedstock</div>
-      </div>
-    </div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-title">NEEDS ACTION</div>
+            <div class="kpi-main-val">0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">inventory all healthy</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-title">TOTAL OUTPUT</div>
+            <div class="kpi-main-val">15,740 <span style="font-size: 1.1rem;">kg</span></div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">57 batches logged</div>
+          </div>
+          <div class="kpi-card blue-accent">
+            <div class="kpi-title">AVG YIELD</div>
+            <div class="kpi-main-val">55.0<span style="font-size: 1.1rem;">%</span></div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">output ÷ feedstock</div>
+          </div>
+        </div>
 
-    <!-- Furnace Watch Section -->
-    <div class="section-header">
-      <div class="section-title">
-        🔥 FURNACE WATCH
-      </div>
-      <div class="section-subtext">keep it monitored</div>
-    </div>
+        <div style="font-size: 1rem; font-weight: 800; color: #334155; margin-bottom: 12px;">🔥 FURNACE WATCH</div>
+        <div class="status-banner">✅ Furnace not running — all clear.</div>
 
-    <!-- Status Banner -->
-    <div class="status-banner" id="furnace-status-banner">
-      ✅ Furnace not running — all clear.
-    </div>
-
-    <!-- Furnace Metrics Row -->
-    <div class="furnace-grid">
-      <div class="furnace-card">
-        <div class="furnace-card-label">FURNACE RUNNING NOW?</div>
-        <div class="furnace-card-val green-text" id="fc-running">No</div>
-      </div>
-
-      <div class="furnace-card">
-        <div class="furnace-card-label">TURNED ON</div>
-        <div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-turned-on">Wed 8:00 AM · Jul 01</div>
-      </div>
-
-      <div class="furnace-card">
-        <div class="furnace-card-label">LAST CHECK</div>
-        <div class="furnace-card-val" style="font-size: 0.95rem;" id="fc-last-check">Wed 8:00 AM · Jul 01</div>
+        <div class="furnace-grid">
+          <div class="furnace-card"><div class="furnace-card-label">RUNNING NOW?</div><div class="furnace-card-val" style="color: var(--brand-green);">No</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">TURNED ON</div><div class="furnace-card-val" style="font-size: 0.95rem;">Wed 8:00 AM · Jul 01</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">LAST CHECK</div><div class="furnace-card-val" style="font-size: 0.95rem;">Wed 8:00 AM · Jul 01</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">CHECK DEADLINE</div><div class="furnace-card-val" style="color: var(--brand-green); font-size: 1rem;">Not running</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">LATEST TEMP</div><div class="furnace-card-val">68 °C</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">CHECKS TODAY</div><div class="furnace-card-val">0</div></div>
+          <div class="furnace-card"><div class="furnace-card-label">FAILS TODAY</div><div class="furnace-card-val" style="color: var(--brand-green);">0</div></div>
+        </div>
       </div>
 
-      <div class="furnace-card">
-        <div class="furnace-card-label">CHECK DEADLINE</div>
-        <div class="furnace-card-val green-text" style="font-size: 1rem;" id="fc-deadline">Not running</div>
+      <!-- TAB 2: FACTORY OPEN/CLOSE LOG -->
+      <div id="openclose" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Daily Operations — Open & Close Log (Pagbukas ug Pagsara)</div>
+          <form onsubmit="handleOpenCloseLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Date</label><input type="date" id="oc-date" class="form-control" required></div>
+              <div class="form-group"><label>Opened By</label><select id="oc-opened-by" class="form-control"></select></div>
+              <div class="form-group"><label>Time In</label><input type="time" id="oc-time-in" class="form-control" required></div>
+              <div class="form-group"><label>Machines OK?</label><select id="oc-mach-ok" class="form-control"><option value="OK">OK</option><option value="ISSUE">ISSUE</option></select></div>
+              <div class="form-group"><label>Closed By</label><select id="oc-closed-by" class="form-control"></select></div>
+              <div class="form-group"><label>Time Out</label><input type="time" id="oc-time-out" class="form-control"></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 16px;">Save Shift Log</button>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Factory Daily Operations Ledger</div>
+          <div class="table-container"><table><thead><tr><th>Date</th><th>Day</th><th>Opened By</th><th>In</th><th>Machines OK</th><th>Closed By</th><th>Out</th><th>Action</th></tr></thead><tbody id="tbl-openclose"></tbody></table></div>
+        </div>
       </div>
 
-      <div class="furnace-card">
-        <div class="furnace-card-label">LATEST TEMPERATURE</div>
-        <div class="furnace-card-val temp-text" id="fc-temp">68<span>°C</span></div>
+      <!-- TAB 3: FURNACE 1 WATCH -->
+      <div id="furnace1" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Furnace 1 Hourly Check Log</div>
+          <form onsubmit="handleFurnaceWatchLog(event, 1)">
+            <div class="form-grid">
+              <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="f1-datetime" class="form-control" required></div>
+              <div class="form-group"><label>Attendant</label><select id="f1-attendant" class="form-control"></select></div>
+              <div class="form-group"><label>Temp (°C)</label><input type="number" id="f1-temp" class="form-control" required></div>
+              <div class="form-group"><label>Ventilation/CO OK?</label><select id="f1-vent-ok" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 1 Check</button>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Furnace 1 Watch Ledger</div>
+          <div class="table-container"><table><thead><tr><th>Date</th><th>Time</th><th>Attendant</th><th>Temp °C</th><th>Ventilation OK</th><th>Action</th></tr></thead><tbody id="tbl-furnace1"></tbody></table></div>
+        </div>
       </div>
 
-      <div class="furnace-card">
-        <div class="furnace-card-label">CHECKS LOGGED TODAY</div>
-        <div class="furnace-card-val" id="fc-checks-today">0</div>
+      <!-- TAB 4: FURNACE 2 WATCH -->
+      <div id="furnace2" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Furnace 2 Hourly Check Log</div>
+          <form onsubmit="handleFurnaceWatchLog(event, 2)">
+            <div class="form-grid">
+              <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="f2-datetime" class="form-control" required></div>
+              <div class="form-group"><label>Attendant</label><select id="f2-attendant" class="form-control"></select></div>
+              <div class="form-group"><label>Temp (°C)</label><input type="number" id="f2-temp" class="form-control" required></div>
+              <div class="form-group"><label>Ventilation/CO OK?</label><select id="f2-vent-ok" class="form-control"><option value="Yes">Yes</option><option value="No">No</option></select></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace 2 Check</button>
+          </form>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Furnace 2 Watch Ledger</div>
+          <div class="table-container"><table><thead><tr><th>Date</th><th>Time</th><th>Attendant</th><th>Temp °C</th><th>Ventilation OK</th><th>Action</th></tr></thead><tbody id="tbl-furnace2"></tbody></table></div>
+        </div>
       </div>
 
-      <div class="furnace-card">
-        <div class="furnace-card-label">VENT / FIRE-WATCH FAILS TODAY</div>
-        <div class="furnace-card-val green-text" id="fc-fails-today">0</div>
+      <!-- TAB 5: LOGISTICS -->
+      <div id="logistics" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Logistics & Deliveries Ledger</div>
+          <div class="table-container"><table><thead><tr><th>ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity</th><th>Amount</th></tr></thead><tbody id="tbl-logistics"></tbody></table></div>
+        </div>
       </div>
-    </div>
 
-    <!-- Footer Legend -->
-    <div class="legend-row">
-      <span>Deadline colour counts down live from the last logged check —</span>
-      <span class="legend-item"><span class="legend-dot" style="background-color: var(--brand-green);"></span> within the hour</span>
-      <span class="legend-item"><span class="legend-dot" style="background-color: #f59e0b;"></span> last 15 min</span>
-      <span class="legend-item"><span class="legend-dot" style="background-color: #ef4444;"></span> flashing once overdue.</span>
-      <span id="footer-live-time">Read live from the Furnace Watch log at 8 Aug 2026, 4:13 PM.</span>
-    </div>
+      <!-- TAB 6: INVENTORY -->
+      <div id="inventory" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Real-Time Inventory Balances</div>
+          <div class="table-container"><table><thead><tr><th>SKU</th><th>Category</th><th>Item Name</th><th>Stock (kg)</th><th>Status</th></tr></thead><tbody id="tbl-inventory"></tbody></table></div>
+        </div>
+      </div>
 
-  </main>
+      <!-- TAB 7: DOWNTIME -->
+      <div id="downtime" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Operations Downtime Tracker</div>
+          <div class="table-container"><table><thead><tr><th>ID</th><th>Date</th><th>Reason</th><th>Duration</th></tr></thead><tbody id="tbl-downtime"></tbody></table></div>
+        </div>
+      </div>
 
-  <!-- ==========================================================================
-       DASHBOARD INTERACTION ENGINE
-       ========================================================================== -->
+      <!-- TAB 8: SAFETY -->
+      <div id="safety" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Security & Safety Audit Logs</div>
+          <div class="table-container"><table><thead><tr><th>ID</th><th>Date</th><th>Type</th><th>Inspector</th></tr></thead><tbody id="tbl-safety"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- TAB 9: CREW & PAYROLL -->
+      <div id="hr" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Crew Attendance & Automated Payroll</div>
+          <div class="table-container"><table><thead><tr><th>Employee</th><th>Daily Rate</th><th>Days Worked</th><th>Gross Pay</th><th>Net Pay Out</th></tr></thead><tbody id="tbl-payroll"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- TAB 10: CONTACTS -->
+      <div id="contacts" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Contact Directory</div>
+          <div class="table-container"><table><thead><tr><th>Name</th><th>Category</th><th>Phone</th><th>Location</th></tr></thead><tbody id="tbl-contacts"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- TAB 11: SETTINGS / MASTER DATA MANAGER -->
+      <div id="settings" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Add Plant Crew</div>
+          <form onsubmit="handleAddEmployee(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Full Name</label><input type="text" id="new-emp-name" class="form-control" required></div>
+              <div class="form-group"><label>Daily Rate (₱)</label><input type="number" id="new-emp-rate" class="form-control" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 12px;">Add Crew Member</button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
   <script>
-    function setPeriod(buttonEl) {
-      document.querySelectorAll('.btn-pill').forEach(btn => btn.classList.remove('active'));
-      buttonEl.classList.add('active');
+    const STORAGE_KEY = 'cbcm_master_state_v9';
+    const defaultState = {
+      openclose: [{ date: "2026-06-29", day: "Mon", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "23:40" }],
+      furnace1Watch: [{ date: "06/24", time: "10:34 AM", attendant: "Amber", temp: 260, ventOk: "Yes" }],
+      furnace2Watch: [{ date: "06/26", time: "09:00 AM", attendant: "Beryl", temp: 310, ventOk: "Yes" }],
+      inventory: [
+        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800 },
+        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200 },
+        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 2400 }
+      ],
+      logistics: [{ id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500 }],
+      downtime: [{ id: "DT-01", date: "2026-08-05", reason: "Grid Power Outage", duration: 45 }],
+      safety: [{ id: "SF-01", date: "2026-08-08", type: "Routine Safety Audit", officer: "Mark Santos" }],
+      employees: [
+        { name: "Amber", rate: 650, daysWorked: 12, otHours: 4, advance: 1000 },
+        { name: "Beryl", rate: 600, daysWorked: 12, otHours: 2, advance: 500 }
+      ],
+      contacts: [{ name: "Carigara Bamboo Farmers Co-Op", type: "Supplier", phone: "0917-123-4567", location: "Carigara, Leyte" }]
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : defaultState;
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+    }
+
+    function setPeriod(btn) {
+      document.querySelectorAll('.btn-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function handleOpenCloseLog(e) {
+      e.preventDefault();
+      const dateVal = document.getElementById('oc-date').value;
+      state.openclose.unshift({
+        date: dateVal, day: 'Mon', openedBy: document.getElementById('oc-opened-by').value,
+        timeIn: document.getElementById('oc-time-in').value, machOk: document.getElementById('oc-mach-ok').value,
+        closedBy: document.getElementById('oc-closed-by').value, timeOut: document.getElementById('oc-time-out').value
+      });
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    function handleFurnaceWatchLog(e, num) {
+      e.preventDefault();
+      const target = num === 1 ? state.furnace1Watch : state.furnace2Watch;
+      target.unshift({
+        date: "08/08", time: "04:00 PM", attendant: document.getElementById(`f${num}-attendant`).value,
+        temp: document.getElementById(`f${num}-temp`).value, ventOk: document.getElementById(`f${num}-vent-ok`).value
+      });
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    function handleAddEmployee(e) {
+      e.preventDefault();
+      state.employees.push({ name: document.getElementById('new-emp-name').value, rate: parseFloat(document.getElementById('new-emp-rate').value), daysWorked: 0, otHours: 0, advance: 0 });
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    function renderAll() {
+      const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
+      if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
+      if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
+      if(document.getElementById('f1-attendant')) document.getElementById('f1-attendant').innerHTML = empOpts;
+      if(document.getElementById('f2-attendant')) document.getElementById('f2-attendant').innerHTML = empOpts;
+
+      document.getElementById('tbl-openclose').innerHTML = state.openclose.map(o => `<tr><td>${o.date}</td><td>${o.day}</td><td>${o.openedBy}</td><td>${o.timeIn}</td><td><span class="badge badge-pass">${o.machOk}</span></td><td>${o.closedBy}</td><td>${o.timeOut}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
+      document.getElementById('tbl-furnace1').innerHTML = state.furnace1Watch.map(f => `<tr><td>${f.date}</td><td>${f.time}</td><td>${f.attendant}</td><td>${f.temp} °C</td><td>${f.ventOk}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
+      document.getElementById('tbl-furnace2').innerHTML = state.furnace2Watch.map(f => `<tr><td>${f.date}</td><td>${f.time}</td><td>${f.attendant}</td><td>${f.temp} °C</td><td>${f.ventOk}</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
+      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `<tr><td>${i.id}</td><td>${i.category}</td><td>${i.name}</td><td>${i.stock} kg</td><td><span class="badge badge-pass">OK</span></td></tr>`).join('');
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map(l => `<tr><td>${l.id}</td><td>${l.type}</td><td>${l.party}</td><td>${l.item}</td><td>${l.qty} kg</td><td>₱${l.amount}</td></tr>`).join('');
+      document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.date}</td><td>${d.reason}</td><td>${d.duration} mins</td></tr>`).join('');
+      document.getElementById('tbl-safety').innerHTML = state.safety.map(s => `<tr><td>${s.id}</td><td>${s.date}</td><td>${s.type}</td><td>${s.officer}</td></tr>`).join('');
+      document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => `<tr><td>${e.name}</td><td>₱${e.rate}</td><td>${e.daysWorked}</td><td>₱${e.daysWorked * e.rate}</td><td><strong style="color: var(--brand-green);">₱${(e.daysWorked * e.rate) - e.advance}</strong></td></tr>`).join('');
+      document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `<tr><td>${c.name}</td><td>${c.type}</td><td>${c.phone}</td><td>${c.location}</td></tr>`).join('');
     }
 
     function refreshDashboard() {
       const now = new Date();
-      const dateStr = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
-      const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
-
-      document.getElementById('live-timestamp').innerText = `Live · read ${dateStr}, ${timeStr}`;
-      document.getElementById('footer-live-time').innerText = `Read live from the Furnace Watch log at ${dateStr}, ${timeStr}.`;
+      document.getElementById('live-timestamp').innerText = `Live · read ${now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}, ${now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
     }
+
+    window.onload = function() {
+      renderAll();
+    };
   </script>
 </body>
 </html>
