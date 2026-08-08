@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Combinido Biocarbon - Operational Management System</title>
+  <!-- Chart.js CDN for Analytics & Business Health -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --bg-main: #0d1117;
+      --bg-card: #161b22;
+      --bg-input: #21262d;
+      --border-color: #30363d;
+      --brand-green: #00e676;
+      --brand-green-hover: #00c853;
+      --brand-gold: #ffc107;
+      --brand-danger: #ff5252;
+      --brand-blue: #29b6f6;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+      --sidebar-width: 250px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-card);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+    }
+
+    .brand-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo-mark {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--brand-green), #004d40);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      color: #000;
+      font-size: 1.2rem;
+      letter-spacing: -1px;
+      box-shadow: 0 0 12px rgba(0,230,118,0.3);
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .brand-title span {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--brand-green);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .nav-menu {
+      list-style: none;
+      padding: 12px 8px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .nav-item {
+      margin-bottom: 4px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background-color: var(--bg-input);
+      color: var(--brand-green);
+    }
+
+    .nav-link.active {
+      border-left: 3px solid var(--brand-green);
+    }
+
+    /* Main Area */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      padding: 24px 32px;
+      max-width: calc(100vw - var(--sidebar-width));
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .plant-status-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-card);
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      font-size: 0.82rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--brand-green);
+      box-shadow: 0 0 8px var(--brand-green);
+    }
+
+    /* Tab Panes */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* KPI Cards Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px 20px;
+      position: relative;
+    }
+
+    .kpi-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .kpi-sub {
+      font-size: 0.78rem;
+      margin-top: 4px;
+    }
+
+    .text-green { color: var(--brand-green); }
+    .text-gold { color: var(--brand-gold); }
+    .text-danger { color: var(--brand-danger); }
+    .text-blue { color: var(--brand-blue); }
+
+    /* Layout Sections & Forms */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .panel {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .panel-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    /* Forms */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .form-control {
+      background-color: var(--bg-input);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 9px 12px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--brand-green);
+    }
+
+    .btn {
+      background-color: var(--brand-green);
+      color: #000;
+      font-weight: 700;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      background-color: var(--brand-green-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-input);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--border-color);
+    }
+
+    /* Data Tables */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background-color: var(--bg-input);
+      color: var(--text-muted);
+      padding: 12px 14px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .badge-pass { background: rgba(0, 230, 118, 0.15); color: var(--brand-green); }
+    .badge-fail { background: rgba(255, 82, 82, 0.15); color: var(--brand-danger); }
+    .badge-warn { background: rgba(255, 193, 7, 0.15); color: var(--brand-gold); }
+
+    /* Checkbox Group */
+    .checkbox-group {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 8px 0;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      cursor: pointer;
+    }
+
+    .checkbox-item input {
+      accent-color: var(--brand-green);
+    }
+
+    /* Search bar */
+    .search-box {
+      margin-bottom: 16px;
+      max-width: 320px;
+    }
+
+    @media (max-width: 900px) {
+      .content-grid { grid-template-columns: 1fr; }
+      .main-content { padding: 16px; max-width: 100vw; margin-left: 0; }
+      .sidebar { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand-header">
+      <div class="brand-logo-mark">CB</div>
+      <div class="brand-title">
+        COMBINIDO
+        <span>Biocarbon Charcoal</span>
+      </div>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a class="nav-link active" onclick="switchTab('dashboard', this)"><span>📊</span> Business Health</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('furnace', this)"><span>🔥</span> Furnace & Production</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Logistics</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Inventory Tracking</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Operations Downtime</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('safety', this)"><span>🛡️</span> Security & Safety</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('hr', this)"><span>👥</span> Crew & Payroll</a></li>
+      <li class="nav-item"><a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Lookup</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+    
+    <div class="header-bar">
+      <h1 class="page-title" id="page-title-text">Business Health & KPI Scorecard</h1>
+      <div class="plant-status-pill">
+        <div class="status-dot"></div>
+        <span>Plant Status: <strong>OPERATIONAL (Gongyi/Leyte Line)</strong></span>
+      </div>
+    </div>
+
+    <!-- ================= TAB 1: BUSINESS HEALTH & KPIS ================= -->
+    <div id="dashboard" class="tab-pane active">
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Monthly Biochar Yield</div>
+          <div class="kpi-value text-green" id="kpi-yield">14,280 kg</div>
+          <div class="kpi-sub text-muted">Avg Conversion: <span class="text-green">34.2%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Monthly Revenue</div>
+          <div class="kpi-value text-green" id="kpi-revenue">₱428,400</div>
+          <div class="kpi-sub text-muted">Outbound Dispatches: <span class="text-blue">18 trips</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Plant Downtime</div>
+          <div class="kpi-value text-gold" id="kpi-downtime">4.5 hrs</div>
+          <div class="kpi-sub text-muted">Availability: <span class="text-green">98.1%</span></div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Safety Record</div>
+          <div class="kpi-value text-green">0 Incidents</div>
+          <div class="kpi-sub text-muted">Days Incident Free: <span class="text-green">142 Days</span></div>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Production Yield vs. Sales Dispatches (Monthly)</span>
+          </div>
+          <canvas id="chart-production" height="110"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Furnace Operating Temperature Trend (°C)</span>
+          </div>
+          <canvas id="chart-temp" height="230"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 2: FURNACE & BATCH LOGS ================= -->
+    <div id="furnace" class="tab-pane">
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Log Carbonization Batch & Monitor Furnace</span>
+          </div>
+          <form onsubmit="handleFurnaceLog(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Shift Date & Time</label>
+                <input type="datetime-local" id="fn-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Feedstock Type</label>
+                <select id="fn-feedstock" class="form-control">
+                  <option value="Spiny Bamboo">Spiny Bamboo</option>
+                  <option value="Coconut Shell">Coconut Shell</option>
+                  <option value="Rice Husk">Rice Husk</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Raw Feed Weight (kg)</label>
+                <input type="number" id="fn-input-kg" class="form-control" placeholder="1200" required>
+              </div>
+              <div class="form-group">
+                <label>Furnace Peak Temp (°C)</label>
+                <input type="number" id="fn-temp" class="form-control" placeholder="550" required>
+              </div>
+              <div class="form-group">
+                <label>Briquette/Char Yield (kg)</label>
+                <input type="number" id="fn-yield-kg" class="form-control" placeholder="410" required>
+              </div>
+              <div class="form-group">
+                <label>Operator In-Charge</label>
+                <select id="fn-operator" class="form-control">
+                  <option value="Juan Cruz">Juan Cruz</option>
+                  <option value="Pedro Reyes">Pedro Reyes</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top: 14px;">
+              <label style="font-size: 0.8rem; color: var(--text-muted);">Furnace Safety Check Sequence</label>
+              <div class="checkbox-group">
+                <label class="checkbox-item"><input type="checkbox" id="chk-vfd" checked> VFD Motor Drives Normal</label>
+                <label class="checkbox-item"><input type="checkbox" id="chk-plc" checked> PLC Controller Operational</label>
+                <label class="checkbox-item"><input type="checkbox" id="chk-exhaust" checked> Exhaust/Emmission Valve Clear</label>
+                <label class="checkbox-item"><input type="checkbox" id="chk-ppe" checked> Crew Wearing Heat Gloves & Respirators</label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn" style="margin-top: 14px;">Log Furnace Batch</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Quality Control Standard</span>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+            <p><strong>Target Moisture:</strong> &le; 8.0%</p>
+            <p><strong>Fixed Carbon:</strong> &ge; 75.0%</p>
+            <p><strong>Ash Content:</strong> &le; 5.0%</p>
+            <p><strong>Shatter Test:</strong> Pass 3x 1.8m drop test</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Recent Furnace Run History</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Batch ID</th>
+                <th>Date/Time</th>
+                <th>Feedstock</th>
+                <th>Raw Feed</th>
+                <th>Yield Output</th>
+                <th>Yield %</th>
+                <th>Peak Temp</th>
+                <th>Safety Check</th>
+                <th>Operator</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-furnace">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 3: LOGISTICS (INBOUND / OUTBOUND) ================= -->
+    <div id="logistics" class="tab-pane">
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Log Logistics Ticket (Inbound / Outbound)</span>
+          </div>
+          <form onsubmit="handleLogisticsLog(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Type</label>
+                <select id="log-type" class="form-control">
+                  <option value="SUPPLIER_PICKUP">Supplier Raw Material Pickup / Inbound</option>
+                  <option value="CUSTOMER_DELIVERY">Customer Finished Goods Delivery / Outbound</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Party / Contact Name</label>
+                <input type="text" id="log-party" class="form-control" placeholder="e.g. Carigara Bamboo Co-Op" required>
+              </div>
+              <div class="form-group">
+                <label>Item Description</label>
+                <select id="log-item" class="form-control">
+                  <option value="Spiny Bamboo">Spiny Bamboo (Raw Feed)</option>
+                  <option value="Coconut Shell">Coconut Shell (Raw Feed)</option>
+                  <option value="Charcoal Briquettes">Charcoal Briquettes (Finished)</option>
+                  <option value="Fine Biochar Powder">Fine Biochar Powder (Finished)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Weight / Quantity (kg)</label>
+                <input type="number" id="log-qty" class="form-control" placeholder="2500" required>
+              </div>
+              <div class="form-group">
+                <label>Total Price / Freight Cost (₱)</label>
+                <input type="number" id="log-amount" class="form-control" placeholder="12500" required>
+              </div>
+              <div class="form-group">
+                <label>Driver / Plate No.</label>
+                <input type="text" id="log-driver" class="form-control" placeholder="Tacloban Trucking (ABC-123)" required>
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Record Logistics Movement</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Deliveries & Supplier Pickup Ledger</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Type</th>
+                <th>Party / Contact</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Amount (₱)</th>
+                <th>Transport Info</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-logistics">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 4: INVENTORY TRACKING ================= -->
+    <div id="inventory" class="tab-pane">
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Real-Time Inventory Balances & Thresholds</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU ID</th>
+                <th>Category</th>
+                <th>Item Name</th>
+                <th>Current Stock (kg)</th>
+                <th>Min Safety Threshold (kg)</th>
+                <th>Stock Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-inventory">
+              <!-- Dynamic Updates -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 5: OPERATIONS DOWNTIME ================= -->
+    <div id="downtime" class="tab-pane">
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Log Operations Downtime Incident</span>
+          </div>
+          <form onsubmit="handleDowntimeLog(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Date & Time</label>
+                <input type="datetime-local" id="dt-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Downtime Reason</label>
+                <select id="dt-reason" class="form-control">
+                  <option value="Grid Power Outage">Grid Power Outage</option>
+                  <option value="VFD Motor Overheat">VFD Motor Overheat</option>
+                  <option value="Furnace Refractory Inspection">Furnace Refractory Inspection</option>
+                  <option value="Binder Mixer Jam">Binder Mixer Jam</option>
+                  <option value="Scheduled Maintenance">Scheduled Maintenance</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Duration (Minutes)</label>
+                <input type="number" id="dt-duration" class="form-control" placeholder="45" required>
+              </div>
+              <div class="form-group">
+                <label>Action Taken</label>
+                <input type="text" id="dt-action" class="form-control" placeholder="Switched to diesel generator backup" required>
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Log Downtime</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Plant Downtime Log</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Log ID</th>
+                <th>Date/Time</th>
+                <th>Category / Reason</th>
+                <th>Duration (mins)</th>
+                <th>Action Taken</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-downtime">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 6: SECURITY & SAFETY ================= -->
+    <div id="safety" class="tab-pane">
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Log Safety Check or Security Incident</span>
+          </div>
+          <form onsubmit="handleSafetyLog(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Date & Time</label>
+                <input type="datetime-local" id="sf-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Log Category</label>
+                <select id="sf-type" class="form-control">
+                  <option value="ROUTINE_SAFETY_CHECK">Routine Plant Safety Audit</option>
+                  <option value="SECURITY_PATROL">Perimeter / Gate Patrol</option>
+                  <option value="NEAR_MISS">Near Miss / Hazard Identified</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Inspector / Officer</label>
+                <input type="text" id="sf-officer" class="form-control" placeholder="Mark Santos" required>
+              </div>
+              <div class="form-group">
+                <label>Notes / Observations</label>
+                <input type="text" id="sf-notes" class="form-control" placeholder="All fire extinguishers inspected; pressure OK." required>
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Save Safety Entry</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Safety & Security Audit Log</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Log ID</th>
+                <th>Date/Time</th>
+                <th>Type</th>
+                <th>Inspector</th>
+                <th>Observations / Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-safety">
+              <!-- JS Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 7: HR, ATTENDANCE & PAYROLL ================= -->
+    <div id="hr" class="tab-pane">
+      <div class="content-grid">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Log Daily Attendance & Overtime</span>
+          </div>
+          <form onsubmit="handleAttendanceLog(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Employee Name</label>
+                <select id="hr-emp" class="form-control">
+                  <option value="Juan Cruz">Juan Cruz (Furnace Lead)</option>
+                  <option value="Pedro Reyes">Pedro Reyes (Briquetting Tech)</option>
+                  <option value="Mark Santos">Mark Santos (Yard Security)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="hr-date" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                <select id="hr-status" class="form-control">
+                  <option value="PRESENT">Present</option>
+                  <option value="ABSENT">Absent</option>
+                  <option value="HALF_DAY">Half Day</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Overtime Hours</label>
+                <input type="number" id="hr-ot" class="form-control" value="0" step="0.5">
+              </div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">Log Timecard</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <span class="panel-title">Issue Cash Advance (Vale)</span>
+          </div>
+          <form onsubmit="handleCashAdvance(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Employee</label>
+                <select id="ca-emp" class="form-control">
+                  <option value="Juan Cruz">Juan Cruz</option>
+                  <option value="Pedro Reyes">Pedro Reyes</option>
+                  <option value="Mark Santos">Mark Santos</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Advance Amount (₱)</label>
+                <input type="number" id="ca-amount" class="form-control" placeholder="1000" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-secondary" style="margin-top: 14px;">Record Advance</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Automated Payroll Calculations (% Deductions applied)</span>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee Name</th>
+                <th>Daily Rate (₱)</th>
+                <th>Days Worked</th>
+                <th>OT Pay (₱)</th>
+                <th>Gross Pay (₱)</th>
+                <th>Cash Advances (₱)</th>
+                <th>Deductions (% SSS/PagIBIG)</th>
+                <th>Net Pay Out (₱)</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-payroll">
+              <!-- JS Auto Calculated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= TAB 8: CONTACT LOOKUP ================= -->
+    <div id="contacts" class="tab-pane">
+      <div class="panel full-width">
+        <div class="panel-header">
+          <span class="panel-title">Directory (Suppliers, Customers & Crew)</span>
+        </div>
+        <input type="text" class="form-control search-box" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search contacts by name, role, location...">
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Name / Entity</th>
+                <th>Category</th>
+                <th>Phone Number</th>
+                <th>Location</th>
+                <th>Primary Product / Service</th>
+              </tr>
+            </thead>
+            <tbody id="tbl-contacts">
+              <tr>
+                <td>Carigara Bamboo Farmers Co-Op</td>
+                <td><span class="badge badge-pass">Supplier</span></td>
+                <td>0917-123-4567</td>
+                <td>Carigara, Leyte</td>
+                <td>Spiny Bamboo Bulk Feeds</td>
+              </tr>
+              <tr>
+                <td>Leyte Shell Collectors Union</td>
+                <td><span class="badge badge-pass">Supplier</span></td>
+                <td>0918-987-6543</td>
+                <td>Barugo, Leyte</td>
+                <td>Raw Coconut Shells</td>
+              </tr>
+              <tr>
+                <td>AgriGrow Biomass Distributors</td>
+                <td><span class="badge badge-warn">Customer</span></td>
+                <td>0920-555-0192</td>
+                <td>Tacloban City, Leyte</td>
+                <td>Premium Biochar Soil Amendment</td>
+              </tr>
+              <tr>
+                <td>Visayas Industrial Energy Corp</td>
+                <td><span class="badge badge-warn">Customer</span></td>
+                <td>0919-444-2211</td>
+                <td>Cebu City, Visayas</td>
+                <td>High-Calorie Charcoal Briquettes</td>
+              </tr>
+              <tr>
+                <td>Juan Cruz</td>
+                <td><span class="badge badge-fail">Plant Crew</span></td>
+                <td>0916-547-7329</td>
+                <td>Manloy, Carigara</td>
+                <td>Furnace Operations Lead</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // System Data State (Persisted via localStorage)
+    const STORAGE_KEY = 'biocarbon_master_state_v2';
+
+    const defaultState = {
+      inventory: [
+        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800, min: 1500 },
+        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 2000 },
+        { id: "RAW-03", category: "Raw Feed", name: "Rice Husk", stock: 3100, min: 1000 },
+        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 2400, min: 800 },
+        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1800, min: 500 }
+      ],
+      furnace: [
+        { id: "PROD-101", date: "2026-08-08 08:30", feedstock: "Spiny Bamboo", input: 1500, yield: 510, temp: 550, safety: "PASS", operator: "Juan Cruz" },
+        { id: "PROD-102", date: "2026-08-07 14:00", feedstock: "Coconut Shell", input: 2000, yield: 720, temp: 580, safety: "PASS", operator: "Pedro Reyes" }
+      ],
+      logistics: [
+        { id: "LOG-501", type: "SUPPLIER_PICKUP", party: "Carigara Bamboo Co-Op", item: "Spiny Bamboo", qty: 2500, amount: 12500, transport: "Plate: ABC-123" },
+        { id: "LOG-502", type: "CUSTOMER_DELIVERY", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 1200, amount: 48000, transport: "Driver: Tacloban Express" }
+      ],
+      downtime: [
+        { id: "DT-01", date: "2026-08-05 10:15", reason: "Grid Power Outage", duration: 45, action: "Engaged diesel generator backup" }
+      ],
+      safety: [
+        { id: "SF-01", date: "2026-08-08 07:00", type: "Routine Safety Audit", officer: "Mark Santos", notes: "Furnace temperature gauges calibrated; PPE verified." }
+      ],
+      employees: [
+        { name: "Juan Cruz", rate: 650, daysWorked: 12, otHours: 4, advance: 1000 },
+        { name: "Pedro Reyes", rate: 600, daysWorked: 12, otHours: 2, advance: 500 },
+        { name: "Mark Santos", rate: 550, daysWorked: 10, otHours: 0, advance: 0 }
+      ]
+    };
+
+    function loadState() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : defaultState;
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    const state = loadState();
+
+    // Tab Navigation
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+
+      const titleMap = {
+        'dashboard': 'Business Health & KPI Scorecard',
+        'furnace': 'Furnace Carbonization & Operational Logs',
+        'logistics': 'Deliveries & Supplier Pickup Management',
+        'inventory': 'Real-Time Inventory Ledger',
+        'downtime': 'Plant Downtime & Maintenance Tracker',
+        'safety': 'Security & Safety Audit Logs',
+        'hr': 'Crew Attendance & Payroll System',
+        'contacts': 'Contact Lookup Directory'
+      };
+      document.getElementById('page-title-text').innerText = titleMap[tabId];
+    }
+
+    // Handlers for Forms
+    function handleFurnaceLog(e) {
+      e.preventDefault();
+      const feedstock = document.getElementById('fn-feedstock').value;
+      const inputKg = parseFloat(document.getElementById('fn-input-kg').value);
+      const yieldKg = parseFloat(document.getElementById('fn-yield-kg').value);
+      const temp = parseInt(document.getElementById('fn-temp').value);
+      const operator = document.getElementById('fn-operator').value;
+      const dateVal = document.getElementById('fn-date').value.replace('T', ' ');
+
+      // Deduct raw material and add finished goods
+      const rawItem = state.inventory.find(i => i.name === feedstock);
+      if (rawItem) rawItem.stock = Math.max(0, rawItem.stock - inputKg);
+
+      const finishItem = state.inventory.find(i => i.name === 'Charcoal Briquettes');
+      if (finishItem) finishItem.stock += yieldKg;
+
+      state.furnace.unshift({
+        id: `PROD-${Date.now().toString().slice(-3)}`,
+        date: dateVal,
+        feedstock, input: inputKg, yield: yieldKg, temp, safety: "PASS", operator
+      });
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function handleLogisticsLog(e) {
+      e.preventDefault();
+      const type = document.getElementById('log-type').value;
+      const party = document.getElementById('log-party').value;
+      const item = document.getElementById('log-item').value;
+      const qty = parseFloat(document.getElementById('log-qty').value);
+      const amount = parseFloat(document.getElementById('log-amount').value);
+      const transport = document.getElementById('log-driver').value;
+
+      // Update inventory stock balances
+      const invItem = state.inventory.find(i => i.name === item);
+      if (invItem) {
+        if (type === 'SUPPLIER_PICKUP') invItem.stock += qty;
+        if (type === 'CUSTOMER_DELIVERY') invItem.stock = Math.max(0, invItem.stock - qty);
+      }
+
+      state.logistics.unshift({
+        id: `LOG-${Date.now().toString().slice(-3)}`,
+        type, party, item, qty, amount, transport
+      });
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function handleDowntimeLog(e) {
+      e.preventDefault();
+      const reason = document.getElementById('dt-reason').value;
+      const duration = parseInt(document.getElementById('dt-duration').value);
+      const action = document.getElementById('dt-action').value;
+      const dateVal = document.getElementById('dt-date').value.replace('T', ' ');
+
+      state.downtime.unshift({
+        id: `DT-${Date.now().toString().slice(-2)}`,
+        date: dateVal, reason, duration, action
+      });
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function handleSafetyLog(e) {
+      e.preventDefault();
+      const type = document.getElementById('sf-type').value;
+      const officer = document.getElementById('sf-officer').value;
+      const notes = document.getElementById('sf-notes').value;
+      const dateVal = document.getElementById('sf-date').value.replace('T', ' ');
+
+      state.safety.unshift({
+        id: `SF-${Date.now().toString().slice(-2)}`,
+        date: dateVal, type, officer, notes
+      });
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function handleAttendanceLog(e) {
+      e.preventDefault();
+      const empName = document.getElementById('hr-emp').value;
+      const status = document.getElementById('hr-status').value;
+      const ot = parseFloat(document.getElementById('hr-ot').value);
+
+      const emp = state.employees.find(e => e.name === empName);
+      if (emp) {
+        if (status === 'PRESENT') emp.daysWorked += 1;
+        if (status === 'HALF_DAY') emp.daysWorked += 0.5;
+        emp.otHours += ot;
+      }
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function handleCashAdvance(e) {
+      e.preventDefault();
+      const empName = document.getElementById('ca-emp').value;
+      const amount = parseFloat(document.getElementById('ca-amount').value);
+
+      const emp = state.employees.find(e => e.name === empName);
+      if (emp) {
+        emp.advance += amount;
+      }
+
+      saveState();
+      renderAll();
+      e.target.reset();
+    }
+
+    function filterContacts() {
+      const q = document.getElementById('contact-search').value.toLowerCase();
+      const rows = document.querySelectorAll('#tbl-contacts tr');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+
+    // Render Functions
+    function renderAll() {
+      // 1. Inventory
+      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
+        <tr>
+          <td><strong>${i.id}</strong></td>
+          <td>${i.category}</td>
+          <td>${i.name}</td>
+          <td><strong>${i.stock.toLocaleString()} kg</strong></td>
+          <td>${i.min.toLocaleString()} kg</td>
+          <td>
+            <span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">
+              ${i.stock >= i.min ? 'OK' : 'LOW STOCK ALERT'}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      // 2. Furnace Table
+      document.getElementById('tbl-furnace').innerHTML = state.furnace.map(f => `
+        <tr>
+          <td><strong>${f.id}</strong></td>
+          <td>${f.date}</td>
+          <td>${f.feedstock}</td>
+          <td>${f.input.toLocaleString()} kg</td>
+          <td>${f.yield.toLocaleString()} kg</td>
+          <td><strong class="text-green">${((f.yield / f.input)*100).toFixed(1)}%</strong></td>
+          <td>${f.temp}°C</td>
+          <td><span class="badge badge-pass">${f.safety}</span></td>
+          <td>${f.operator}</td>
+        </tr>
+      `).join('');
+
+      // 3. Logistics Table
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map(l => `
+        <tr>
+          <td><strong>${l.id}</strong></td>
+          <td>
+            <span class="badge ${l.type === 'SUPPLIER_PICKUP' ? 'badge-warn' : 'badge-pass'}">
+              ${l.type === 'SUPPLIER_PICKUP' ? 'Inbound Pickup' : 'Outbound Delivery'}
+            </span>
+          </td>
+          <td>${l.party}</td>
+          <td>${l.item}</td>
+          <td>${l.qty.toLocaleString()} kg</td>
+          <td>₱${l.amount.toLocaleString()}</td>
+          <td>${l.transport}</td>
+        </tr>
+      `).join('');
+
+      // 4. Downtime Table
+      document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `
+        <tr>
+          <td><strong>${d.id}</strong></td>
+          <td>${d.date}</td>
+          <td><span class="text-gold">${d.reason}</span></td>
+          <td>${d.duration} mins</td>
+          <td>${d.action}</td>
+        </tr>
+      `).join('');
+
+      // 5. Safety Table
+      document.getElementById('tbl-safety').innerHTML = state.safety.map(s => `
+        <tr>
+          <td><strong>${s.id}</strong></td>
+          <td>${s.date}</td>
+          <td>${s.type}</td>
+          <td>${s.officer}</td>
+          <td>${s.notes}</td>
+        </tr>
+      `).join('');
+
+      // 6. Payroll Table
+      document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => {
+        const otPay = e.otHours * (e.rate / 8) * 1.25;
+        const grossPay = (e.daysWorked * e.rate) + otPay;
+        const deductions = grossPay * 0.05; // 5% mandatory SSS/PagIBIG contribution
+        const netPay = grossPay - e.advance - deductions;
+
+        return `
+          <tr>
+            <td><strong>${e.name}</strong></td>
+            <td>₱${e.rate.toLocaleString()}</td>
+            <td>${e.daysWorked} days</td>
+            <td>₱${otPay.toFixed(2)}</td>
+            <td>₱${grossPay.toFixed(2)}</td>
+            <td>₱${e.advance.toLocaleString()}</td>
+            <td>₱${deductions.toFixed(2)}</td>
+            <td><strong class="text-green">₱${Math.max(0, netPay).toFixed(2)}</strong></td>
+          </tr>
+        `;
+      }).join('');
+
+      // Dashboard KPI recalculations
+      const totalYield = state.furnace.reduce((a, b) => a + b.yield, 0);
+      const totalRev = state.logistics.filter(l => l.type === 'CUSTOMER_DELIVERY').reduce((a, b) => a + b.amount, 0);
+      const totalDowntime = state.downtime.reduce((a, b) => a + b.duration, 0) / 60;
+
+      document.getElementById('kpi-yield').innerText = `${totalYield.toLocaleString()} kg`;
+      document.getElementById('kpi-revenue').innerText = `₱${totalRev.toLocaleString()}`;
+      document.getElementById('kpi-downtime').innerText = `${totalDowntime.toFixed(1)} hrs`;
+    }
+
+    // Initialize Chart.js Graphs
+    function initCharts() {
+      // Production Chart
+      const ctxProd = document.getElementById('chart-production').getContext('2d');
+      new Chart(ctxProd, {
+        type: 'bar',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [
+            { label: 'Biochar Produced (kg)', data: [3200, 4100, 3800, 4500], backgroundColor: '#00e676' },
+            { label: 'Customer Dispatches (kg)', data: [2800, 3500, 3900, 4200], backgroundColor: '#29b6f6' }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#8b949e' } } },
+          scales: {
+            x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
+            y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } }
+          }
+        }
+      });
+
+      // Temperature Trend Chart
+      const ctxTemp = document.getElementById('chart-temp').getContext('2d');
+      new Chart(ctxTemp, {
+        type: 'line',
+        data: {
+          labels: ['Run 1', 'Run 2', 'Run 3', 'Run 4', 'Run 5', 'Run 6'],
+          datasets: [{
+            label: 'Furnace Temp (°C)',
+            data: [520, 550, 540, 580, 560, 575],
+            borderColor: '#ffc107',
+            backgroundColor: 'rgba(255, 193, 7, 0.1)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: '#8b949e' } } },
+          scales: {
+            x: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } },
+            y: { ticks: { color: '#8b949e' }, grid: { color: '#21262d' } }
+          }
+        }
+      });
+    }
+
+    // Set default datetime pickers
+    window.onload = function() {
+      const now = new Date().toISOString().slice(0, 16);
+      if(document.getElementById('fn-date')) document.getElementById('fn-date').value = now;
+      if(document.getElementById('dt-date')) document.getElementById('dt-date').value = now;
+      if(document.getElementById('sf-date')) document.getElementById('sf-date').value = now;
+      if(document.getElementById('hr-date')) document.getElementById('hr-date').value = new Date().toISOString().slice(0, 10);
+
+      renderAll();
+      initCharts();
+    };
+  </script>
+</body>
+</html>
