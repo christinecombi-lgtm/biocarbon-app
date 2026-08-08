@@ -3,32 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon - Operational Management System</title>
+  <title>Combinido Biocarbon Charcoal Manufacturing (CBCM)</title>
   
   <!-- Chart.js CDN for Analytics & Business Health -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* ==========================================================================
-       BRAND PALETTE & CSS CUSTOM VARIABLES
+       COMBINIDO BIOCARBON CHARCOAL MANUFACTURING (CBCM) BRAND PALETTE
        ========================================================================== */
     :root {
-      --brand-green: #00e676;
-      --brand-green-hover: #00c853;
+      --brand-green: #00e676;         /* Neon Brand Accent & Success Indicators */
+      --brand-green-hover: #00c853;   /* Interactive Hover State */
       --brand-green-glow: rgba(0, 230, 118, 0.25);
       
-      --bg-main: #0d1117;
-      --bg-card: #161b22;
-      --bg-input: #21262d;
-      --border-color: #30363d;
+      --bg-main: #0d1117;             /* Dark Canvas Background */
+      --bg-card: #161b22;             /* Panel & Navigation Card Background */
+      --bg-input: #21262d;            /* Inputs, Search Bars & Table Headers */
+      --border-color: #30363d;        /* Container Dividers & Borders */
       
-      --brand-gold: #ffc107;
-      --brand-danger: #ff5252;
-      --brand-blue: #29b6f6;
+      --brand-gold: #ffc107;          /* Furnace Heat & Pending Alerts */
+      --brand-danger: #ff5252;        /* Downtime & Safety Alerts */
+      --brand-blue: #29b6f6;          /* Logistics Badges */
       
-      --text-main: #f0f6fc;
-      --text-muted: #8b949e;
-      --sidebar-width: 260px;
+      --text-main: #f0f6fc;           /* High-Contrast Primary Text */
+      --text-muted: #8b949e;          /* Subtitles & Labels */
+      --sidebar-width: 270px;
     }
 
     * {
@@ -71,21 +71,23 @@
     }
 
     .brand-logo-svg {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       flex-shrink: 0;
+      filter: drop-shadow(0 0 6px var(--brand-green-glow));
     }
 
     .brand-title {
-      font-size: 0.92rem;
-      font-weight: 700;
+      font-size: 0.85rem;
+      font-weight: 800;
       color: var(--text-main);
-      line-height: 1.2;
+      line-height: 1.25;
+      letter-spacing: 0.3px;
     }
 
     .brand-title span {
       display: block;
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       color: var(--brand-green);
       font-weight: 600;
       text-transform: uppercase;
@@ -146,7 +148,7 @@
     }
 
     .page-title {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 700;
     }
 
@@ -392,12 +394,14 @@
        ========================================================================== -->
   <aside class="sidebar">
     <div class="brand-header">
+      <!-- Embedded CBCM Vector Brand Logo -->
       <svg class="brand-logo-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100" height="100" rx="20" fill="url(#brandGrad)"/>
-        <path d="M30 68 C22 55 22 35 38 25 C52 16 68 22 72 38 C75 52 65 68 50 72 C42 74 34 72 30 68 Z" stroke="#000" stroke-width="6" fill="none"/>
-        <path d="M42 58 C38 50 38 38 48 32 C56 28 65 32 68 42 C70 50 64 60 54 62 Z" fill="#000"/>
+        <rect width="100" height="100" rx="22" fill="url(#cbcmGrad)"/>
+        <path d="M50 15 C30 30 20 50 30 75 C45 90 75 80 80 60 C85 40 70 20 50 15 Z" fill="#0d1117" opacity="0.4"/>
+        <path d="M45 25 C32 38 28 55 35 72 C48 82 68 75 72 58 C76 42 62 28 45 25 Z" fill="#00e676"/>
+        <path d="M50 30 L50 70 M35 45 L65 55" stroke="#0d1117" stroke-width="4" stroke-linecap="round"/>
         <defs>
-          <linearGradient id="brandGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+          <linearGradient id="cbcmGrad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
             <stop stop-color="#00e676"/>
             <stop offset="1" stop-color="#004d40"/>
           </linearGradient>
@@ -405,8 +409,8 @@
       </svg>
       
       <div class="brand-title">
-        COMBINIDO
-        <span>Biocarbon Charcoal</span>
+        COMBINIDO BIOCARBON
+        <span>Charcoal Manufacturing</span>
       </div>
     </div>
 
@@ -434,7 +438,7 @@
       <h1 class="page-title" id="page-title-text">Business Health & KPI Scorecard</h1>
       <div class="plant-status-pill">
         <div class="status-dot"></div>
-        <span>Plant Status: <strong>OPERATIONAL (Manloy, Leyte Plant)</strong></span>
+        <span>Plant Status: <strong>OPERATIONAL (Manloy, Carigara, Leyte)</strong></span>
       </div>
     </div>
 
@@ -444,17 +448,17 @@
         <div class="kpi-card">
           <div class="kpi-label">Monthly Biochar Yield</div>
           <div class="kpi-value text-green" id="kpi-yield">0 kg</div>
-          <div class="kpi-sub text-muted">Avg Conversion: <span class="text-green">34.2%</span></div>
+          <div class="kpi-sub text-muted">Avg Yield Conversion Ratio</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-label">Monthly Revenue</div>
+          <div class="kpi-label">Monthly Sales Revenue</div>
           <div class="kpi-value text-green" id="kpi-revenue">₱0</div>
           <div class="kpi-sub text-muted">Outbound Dispatches</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Plant Downtime</div>
           <div class="kpi-value text-gold" id="kpi-downtime">0 hrs</div>
-          <div class="kpi-sub text-muted">Plant Availability</div>
+          <div class="kpi-sub text-muted">Plant Availability Metric</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-label">Safety Record</div>
@@ -879,7 +883,6 @@
     <div id="settings" class="tab-pane">
       <div class="content-grid">
         
-        <!-- ADD/MANAGE EMPLOYEES -->
         <div class="panel">
           <div class="panel-header">
             <span class="panel-title">Add / Manage Plant Crew</span>
@@ -905,7 +908,6 @@
           </div>
         </div>
 
-        <!-- ADD/MANAGE CONTACTS -->
         <div class="panel">
           <div class="panel-header">
             <span class="panel-title">Add / Manage Contact Directory</span>
@@ -939,7 +941,6 @@
 
       </div>
 
-      <!-- SYSTEM BACKUP / EXPORT / IMPORT -->
       <div class="panel full-width">
         <div class="panel-header">
           <span class="panel-title">System Backup & Data Control</span>
@@ -959,10 +960,10 @@
   </main>
 
   <!-- ==========================================================================
-       JAVASCRIPT DATA & CONTROL ENGINE
+       JAVASCRIPT DATA ENGINE
        ========================================================================== -->
   <script>
-    const STORAGE_KEY = 'biocarbon_master_state_v5';
+    const STORAGE_KEY = 'cbcm_master_state_v6';
 
     const defaultState = {
       inventory: [
@@ -1028,7 +1029,6 @@
       document.getElementById('page-title-text').innerText = titleMap[tabId];
     }
 
-    /* ADD/REMOVE LOGIC */
     function handleAddEmployee(e) {
       e.preventDefault();
       const name = document.getElementById('new-emp-name').value.trim();
@@ -1197,12 +1197,11 @@
       });
     }
 
-    /* EXPORT / IMPORT ENGINE */
     function exportData() {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
-      downloadAnchor.setAttribute("download", `biocarbon_backup_${new Date().toISOString().slice(0,10)}.json`);
+      downloadAnchor.setAttribute("download", `cbcm_backup_${new Date().toISOString().slice(0,10)}.json`);
       document.body.appendChild(downloadAnchor);
       downloadAnchor.click();
       downloadAnchor.remove();
@@ -1233,7 +1232,6 @@
     }
 
     function renderAll() {
-      // Dynamic Dropdowns
       document.getElementById('fn-feedstock').innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
       document.getElementById('fn-operator').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
       document.getElementById('log-party-select').innerHTML = state.contacts.map(c => `<option value="${c.name}">${c.name} (${c.type})</option>`).join('');
@@ -1241,7 +1239,6 @@
       document.getElementById('hr-emp').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
       document.getElementById('ca-emp').innerHTML = state.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join('');
 
-      // Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -1253,7 +1250,6 @@
         </tr>
       `).join('');
 
-      // Furnace Table
       document.getElementById('tbl-furnace').innerHTML = state.furnace.map((f, idx) => `
         <tr>
           <td><strong>${f.id}</strong></td>
@@ -1269,7 +1265,6 @@
         </tr>
       `).join('');
 
-      // Logistics Table
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -1283,7 +1278,6 @@
         </tr>
       `).join('');
 
-      // Downtime Table
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map((d, idx) => `
         <tr>
           <td><strong>${d.id}</strong></td>
@@ -1295,7 +1289,6 @@
         </tr>
       `).join('');
 
-      // Safety Table
       document.getElementById('tbl-safety').innerHTML = state.safety.map((s, idx) => `
         <tr>
           <td><strong>${s.id}</strong></td>
@@ -1307,7 +1300,6 @@
         </tr>
       `).join('');
 
-      // Payroll Table
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => {
         const otPay = e.otHours * (e.rate / 8) * 1.25;
         const grossPay = (e.daysWorked * e.rate) + otPay;
@@ -1328,7 +1320,6 @@
         `;
       }).join('');
 
-      // Contacts Table
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
         <tr>
           <td><strong>${c.name}</strong></td>
@@ -1339,7 +1330,6 @@
         </tr>
       `).join('');
 
-      // Manage Employees Table
       document.getElementById('tbl-manage-emp').innerHTML = state.employees.map((e, idx) => `
         <tr>
           <td><strong>${e.name}</strong></td>
@@ -1348,7 +1338,6 @@
         </tr>
       `).join('');
 
-      // Recalculate KPIs
       const totalYield = state.furnace.reduce((a, b) => a + b.yield, 0);
       const totalRev = state.logistics.filter(l => l.type === 'CUSTOMER_DELIVERY').reduce((a, b) => a + b.amount, 0);
       const totalDowntime = state.downtime.reduce((a, b) => a + b.duration, 0) / 60;
