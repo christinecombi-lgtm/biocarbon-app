@@ -113,10 +113,8 @@
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-group label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); }
     .form-control { padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.88rem; outline: none; }
-    .form-control:focus { border-color: var(--brand-orange); }
 
     .btn { background-color: var(--brand-orange); color: #ffffff; font-weight: 700; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-secondary { background-color: #334155; color: #ffffff; }
     .btn-danger { background-color: #fee2e2; color: var(--brand-danger); border: 1px solid var(--brand-danger); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
 
     .search-input { padding: 10px 16px; width: 100%; max-width: 360px; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.88rem; outline: none; }
@@ -131,16 +129,26 @@
     .badge-fail { background: #fee2e2; color: #b91c1c; }
     .badge-warn { background: #fef3c7; color: #b45309; }
 
-    /* Calendar Grid Styling */
+    /* Interactive Calendar Styling */
     .cal-header-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
-    .cal-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .cal-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 6px 2px; }
-    .cal-day-num { font-weight: 700; font-size: 0.75rem; }
     .cal-day-sun { background-color: #f1f5f9; color: #94a3b8; }
     .cal-day-sat { background-color: #e0f2fe; color: #0369a1; font-weight: bold; }
-    .cal-day-hol { background-color: #fef2f2; color: #b91c1c; font-weight: bold; }
+    .cal-day-hol { background-color: #fee2e2; color: #b91c1c; font-weight: bold; }
 
-    /* Voucher & Receipt Print Layout */
+    /* Interactive Attendance Toggle Cell */
+    .att-toggle {
+      cursor: pointer;
+      font-weight: 800;
+      padding: 4px 0;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .att-toggle.p { background-color: #d1fae5; color: #047857; }
+    .att-toggle.a { background-color: #fee2e2; color: #b91c1c; }
+    .att-toggle.h { background-color: #fef3c7; color: #b45309; }
+
     .printable-document {
       background: #ffffff;
       border: 2px dashed #000000;
@@ -284,7 +292,7 @@
       <!-- TAB 3: BATCH CARBONIZATION CYCLES -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Log Granular Batch Pyrolysis Lifecycle (Tracks Across Shifts)</div>
+          <div class="panel-title">Log 6-8 Hour Batch Pyrolysis Lifecycle</div>
           <form onsubmit="handleProcessBatch(event)">
             <div class="form-grid">
               <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
@@ -292,32 +300,25 @@
               <div class="form-group"><label>Finished Item Produced</label><select id="proc-fin-item" class="form-control"></select></div>
               <div class="form-group"><label>Finished Yield Output (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="550" required></div>
               
-              <div class="form-group"><label>Loading Start Time</label><input type="datetime-local" id="proc-t-load" class="form-control" required></div>
-              <div class="form-group"><label>Loading Attendant</label><select id="proc-op-load" class="form-control"></select></div>
+              <div class="form-group"><label>Cook / Ignition Start Time</label><input type="datetime-local" id="proc-t-cook-start" class="form-control" required></div>
+              <div class="form-group"><label>Cook Start Duty (Loader & Igniter)</label><select id="proc-op-start" class="form-control"></select></div>
 
-              <div class="form-group"><label>Cook / Ignition Start</label><input type="datetime-local" id="proc-t-cook-start" class="form-control" required></div>
-              <div class="form-group"><label>Cook / Ignition Operator</label><select id="proc-op-cook-start" class="form-control"></select></div>
-
-              <div class="form-group"><label>Cook End Time (6-8 hrs later)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
-              <div class="form-group"><label>Cook End Operator (Duty Shift)</label><select id="proc-op-cook-end" class="form-control"></select></div>
-
-              <div class="form-group"><label>Cooling End Time</label><input type="datetime-local" id="proc-t-cool-end" class="form-control" required></div>
-              <div class="form-group"><label>Unloading End Time</label><input type="datetime-local" id="proc-t-unload" class="form-control" required></div>
-              <div class="form-group"><label>Unloading Crew Lead</label><select id="proc-op-unload" class="form-control"></select></div>
+              <div class="form-group"><label>Cook End / Unload Time (6-8 hrs later)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
+              <div class="form-group"><label>Cook End Duty (Cooler & Unloader)</label><select id="proc-op-end" class="form-control"></select></div>
 
               <div class="form-group"><label>Peak Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="580" required></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Multi-Shift Batch Lifecycle & Update Stock</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Batch Lifecycle & Update Stock</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Batch Lifecycle Ledger & Shift Staffing</div>
+          <div class="panel-title">Batch Lifecycle Ledger & Shift Duty Handover</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Loading (Staff)</th><th>Cook Start (Staff)</th><th>Cook End (Staff)</th><th>Unload (Staff)</th><th>Peak Temp</th><th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Start Duty (Loader & Igniter)</th><th>End Duty (Cooler & Unloader)</th><th>Peak Temp</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -359,11 +360,11 @@
         </div>
       </div>
 
-      <!-- TAB 5: PHILIPPINE CREW ATTENDANCE CALENDAR -->
+      <!-- TAB 5: CREW ATTENDANCE CALENDAR (INTERACTIVE CLICKER) -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
-            <span>Philippine Factory Attendance Calendar</span>
+            <span>Philippine Factory Interactive Attendance Grid</span>
             <div class="cal-header-bar">
               <select id="cal-month" class="form-control" onchange="renderAttendanceCalendar()">
                 <option value="0">January</option><option value="1">February</option><option value="2">March</option>
@@ -377,9 +378,12 @@
             </div>
           </div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
-            Calendar Logic: <span class="badge" style="background:#e0f2fe; color:#0369a1;">Saturdays = Payday</span> | 
-            <span class="badge" style="background:#f1f5f9; color:#64748b;">Sundays = Rest Day</span> | 
-            <span class="badge badge-fail">Red = PH National Holiday</span>
+            💡 <strong>Click any attendance cell to toggle status:</strong> 
+            <span class="badge badge-pass">P = Present (1.0)</span> | 
+            <span class="badge badge-warn">H = Half-Day (0.5)</span> | 
+            <span class="badge badge-fail">A = Absent (0.0)</span> | 
+            <span class="badge" style="background:#e0f2fe; color:#0369a1;">Saturdays = Payday</span> | 
+            <span class="badge" style="background:#f1f5f9; color:#64748b;">Sundays = Rest Day</span>
           </p>
           <div id="calendar-table-container"></div>
         </div>
@@ -415,7 +419,7 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Automated Payroll Ledger & Year-To-Date (YTD) Summary</div>
+          <div class="panel-title">Automated Payroll Ledger Summary</div>
           <div class="table-container">
             <table>
               <thead>
@@ -423,10 +427,10 @@
                   <th>Employee Name</th>
                   <th>Daily Rate</th>
                   <th>Days Worked (Period)</th>
-                  <th>YTD Days Present</th>
+                  <th>Monthly Total Days</th>
+                  <th>Lifetime Total Days</th>
                   <th>Gross Pay</th>
-                  <th>Outstanding Vale Balance</th>
-                  <th>Vale Deduction</th>
+                  <th>Outstanding Vale</th>
                   <th>Net Payable</th>
                   <th>Action</th>
                 </tr>
@@ -436,7 +440,6 @@
           </div>
         </div>
 
-        <!-- Printable Document Area -->
         <div id="printable-area" style="display: none;"></div>
       </div>
 
@@ -587,14 +590,22 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v14';
+    const STORAGE_KEY = 'cbcm_master_suite_v16';
 
-    // Philippine Statutory Holidays Key Reference (Month-Day)
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
     const phHolidays = {
-      '0-1': 'New Year', '3-9': 'Araw ng Kagitingan', '4-1': 'Labor Day',
-      '5-12': 'Independence Day', '7-31': 'National Heroes', '10-1': 'All Saints',
-      '10-2': 'All Souls', '10-30': 'Bonifacio Day', '11-8': 'Immaculate Concep',
-      '11-25': 'Christmas Day', '11-30': 'Rizal Day'
+      '0-1': 'New Year\'s Day',
+      '3-9': 'Araw ng Kagitingan',
+      '4-1': 'Labor Day',
+      '5-12': 'Independence Day',
+      '7-31': 'National Heroes Day',
+      '10-1': 'All Saints\' Day',
+      '10-2': 'All Souls\' Day',
+      '10-30': 'Bonifacio Day',
+      '11-8': 'Immaculate Conception',
+      '11-25': 'Christmas Day',
+      '11-30': 'Rizal Day'
     };
 
     const defaultState = {
@@ -607,7 +618,7 @@
       batches: [
         {
           id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550,
-          opLoad: "Amber", opCookStart: "Amber", opCookEnd: "Beryl", opUnload: "Beryl", maxTemp: 580
+          opStart: "Amber", opEnd: "Beryl", maxTemp: 580
         }
       ],
       furnaceWatch: [
@@ -623,8 +634,8 @@
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
-        { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", daysWorked: 12, ytdPresentDays: 142, valeBalance: 1000, ytdNetSalary: 92300 },
-        { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", daysWorked: 12, ytdPresentDays: 138, valeBalance: 0, ytdNetSalary: 82800 }
+        { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, valeBalance: 1000, ytdNetSalary: 92300, attendance: {} },
+        { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", lifetimePresentDays: 295, valeBalance: 0, ytdNetSalary: 82800, attendance: {} }
       ],
       contacts: [
         { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
@@ -695,10 +706,8 @@
       state.batches.unshift({
         id: `BATCH-${Date.now().toString().slice(-3)}`,
         rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty,
-        opLoad: document.getElementById('proc-op-load').value,
-        opCookStart: document.getElementById('proc-op-cook-start').value,
-        opCookEnd: document.getElementById('proc-op-cook-end').value,
-        opUnload: document.getElementById('proc-op-unload').value,
+        opStart: document.getElementById('proc-op-start').value,
+        opEnd: document.getElementById('proc-op-end').value,
         maxTemp: parseInt(document.getElementById('proc-temp').value)
       });
 
@@ -785,7 +794,7 @@
         phone: empPhone, email: empEmail,
         emName: document.getElementById('m-emp-em-name').value,
         emPhone: document.getElementById('m-emp-em-phone').value,
-        daysWorked: 0, ytdPresentDays: 0, valeBalance: 0, ytdNetSalary: 0
+        lifetimePresentDays: 0, valeBalance: 0, ytdNetSalary: 0, attendance: {}
       });
 
       state.contacts.push({
@@ -810,12 +819,52 @@
       saveState(); renderAll(); e.target.reset();
     }
 
+    function toggleAttendanceCell(empName, dateKey) {
+      const emp = state.employees.find(e => e.name === empName);
+      if (!emp) return;
+
+      if (!emp.attendance) emp.attendance = {};
+      const current = emp.attendance[dateKey] || 'P';
+      
+      // Cycle P -> A -> H -> P
+      if (current === 'P') emp.attendance[dateKey] = 'A';
+      else if (current === 'A') emp.attendance[dateKey] = 'H';
+      else emp.attendance[dateKey] = 'P';
+
+      saveState();
+      renderAll();
+    }
+
+    function calculateEmployeeMonthlyPresent(emp, month, year) {
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let total = 0;
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayOfWeek = new Date(year, month, d).getDay();
+        const holKey = `${month}-${d}`;
+        const dateKey = `${year}-${month}-${d}`;
+
+        if (dayOfWeek === 0) continue; // Sunday rest day
+
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (phHolidays[holKey] ? 'HOL' : 'P');
+
+        if (status === 'P' || status === 'PAY') total += 1.0;
+        else if (status === 'H') total += 0.5;
+      }
+      return total;
+    }
+
     function printPaystub(empIndex) {
+      const month = parseInt(document.getElementById('cal-month').value);
+      const year = parseInt(document.getElementById('cal-year').value);
       const emp = state.employees[empIndex];
-      const gross = emp.daysWorked * emp.rate;
+      const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
+
+      const gross = monthlyDays * emp.rate;
       const valeDeduct = Math.min(emp.valeBalance || 0, gross);
       const netPay = gross - valeDeduct;
       const remainingVale = (emp.valeBalance || 0) - valeDeduct;
+      const lifetimeDays = (emp.lifetimePresentDays || 0) + monthlyDays;
 
       const stubHtml = `
         <div class="printable-document">
@@ -825,10 +874,10 @@
           <p><strong>Employee Name:</strong> ${emp.name}</p>
           <p><strong>Job Title / Position:</strong> ${emp.pos}</p>
           <p><strong>Daily Wage Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
-          <p><strong>Days Present (This Period):</strong> ${emp.daysWorked} days</p>
-          <p><strong>YTD Total Days Present:</strong> ${emp.ytdPresentDays + emp.daysWorked} days</p>
+          <p><strong>Monthly Days Present:</strong> ${monthlyDays} days</p>
+          <p><strong>Lifetime Total Days Worked:</strong> ${lifetimeDays} days</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Gross Pay (Days Worked x Rate): ₱${gross.toLocaleString()}</p>
+          <p>Gross Pay (${monthlyDays} days x ₱${emp.rate}): ₱${gross.toLocaleString()}</p>
           <p>Vale (Cash Advance) Deduction: -₱${valeDeduct.toLocaleString()}</p>
           <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET PAYOUT AMOUNT: ₱${netPay.toLocaleString()}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
@@ -896,37 +945,52 @@
       const year = parseInt(document.getElementById('cal-year').value);
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      let tableHtml = `<table class="cal-table"><thead><tr><th>Employee</th>`;
+      let tableHtml = `<table class="cal-table"><thead><tr><th>Employee Name</th>`;
 
       for (let d = 1; d <= daysInMonth; d++) {
-        const dayOfWeek = new Date(year, month, d).getDay(); // 0 = Sun, 6 = Sat
+        const dayIdx = new Date(year, month, d).getDay(); // 0 = Sun, 6 = Sat
+        const dayLabel = dayNames[dayIdx];
         const holKey = `${month}-${d}`;
         let colClass = '';
-        if (dayOfWeek === 0) colClass = 'cal-day-sun';
-        else if (dayOfWeek === 6) colClass = 'cal-day-sat';
+
+        if (dayIdx === 0) colClass = 'cal-day-sun';
+        else if (dayIdx === 6) colClass = 'cal-day-sat';
         if (phHolidays[holKey]) colClass = 'cal-day-hol';
 
-        tableHtml += `<th class="${colClass}">${d}<br><span style="font-size: 0.65rem;">${dayOfWeek === 0 ? 'Sun' : dayOfWeek === 6 ? 'Sat' : 'Wk'}</span></th>`;
+        const titleAttr = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
+
+        tableHtml += `<th class="${colClass}" ${titleAttr}>${d}<br><span style="font-size: 0.65rem;">${dayLabel}</span></th>`;
       }
-      tableHtml += `</tr></thead><tbody>`;
+
+      tableHtml += `<th>Monthly Total Days</th><th>Lifetime Total Days</th></tr></thead><tbody>`;
 
       state.employees.forEach(emp => {
+        let monthlyTotal = 0;
         tableHtml += `<tr><td><strong>${emp.name}</strong></td>`;
-        for (let d = 1; d <= daysInMonth; d++) {
-          const dayOfWeek = new Date(year, month, d).getDay();
-          const holKey = `${month}-${d}`;
 
-          if (dayOfWeek === 0) {
-            tableHtml += `<td class="cal-day-sun">OFF</td>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dayIdx = new Date(year, month, d).getDay();
+          const holKey = `${month}-${d}`;
+          const dateKey = `${year}-${month}-${d}`;
+
+          if (dayIdx === 0) {
+            tableHtml += `<td class="cal-day-sun" title="Sunday Rest Day">OFF</td>`;
           } else if (phHolidays[holKey]) {
             tableHtml += `<td class="cal-day-hol" title="${phHolidays[holKey]}">HOL</td>`;
-          } else if (dayOfWeek === 6) {
-            tableHtml += `<td class="cal-day-sat">PAY</td>`;
           } else {
-            tableHtml += `<td style="color: var(--brand-green); font-weight: bold;">P</td>`;
+            const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : 'P';
+
+            if (status === 'P') monthlyTotal += 1.0;
+            else if (status === 'H') monthlyTotal += 0.5;
+
+            tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" onclick="toggleAttendanceCell('${emp.name}', '${dateKey}')">${status}</div></td>`;
           }
         }
-        tableHtml += `</tr>`;
+
+        const lifetimeTotal = (emp.lifetimePresentDays || 0) + monthlyTotal;
+
+        tableHtml += `<td><strong style="color: var(--brand-blue);">${monthlyTotal} days</strong></td>`;
+        tableHtml += `<td><strong style="color: var(--brand-green);">${lifetimeTotal} days</strong></td></tr>`;
       });
 
       tableHtml += `</tbody></table>`;
@@ -934,13 +998,14 @@
     }
 
     function renderAll() {
+      const month = parseInt(document.getElementById('cal-month').value || 7);
+      const year = parseInt(document.getElementById('cal-year').value || 2026);
+
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
       if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
-      if(document.getElementById('proc-op-load')) document.getElementById('proc-op-load').innerHTML = empOpts;
-      if(document.getElementById('proc-op-cook-start')) document.getElementById('proc-op-cook-start').innerHTML = empOpts;
-      if(document.getElementById('proc-op-cook-end')) document.getElementById('proc-op-cook-end').innerHTML = empOpts;
-      if(document.getElementById('proc-op-unload')) document.getElementById('proc-op-unload').innerHTML = empOpts;
+      if(document.getElementById('proc-op-start')) document.getElementById('proc-op-start').innerHTML = empOpts;
+      if(document.getElementById('proc-op-end')) document.getElementById('proc-op-end').innerHTML = empOpts;
       if(document.getElementById('fw-attendant')) document.getElementById('fw-attendant').innerHTML = empOpts;
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
 
@@ -966,17 +1031,15 @@
         </tr>
       `).join('');
 
-      // Batch Table
+      // Batch Table with 2 Duty Roles
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
           <td>${b.rawItem} (${b.consumedKg} kg)</td>
           <td><strong>${b.yieldKg} kg (${b.finItem})</strong></td>
           <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
-          <td>${b.opLoad}</td>
-          <td>${b.opCookStart}</td>
-          <td>${b.opCookEnd}</td>
-          <td>${b.opUnload}</td>
+          <td>${b.opStart}</td>
+          <td>${b.opEnd}</td>
           <td><strong>${b.maxTemp} °C</strong></td>
           <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
@@ -996,7 +1059,7 @@
         </tr>
       `).join('');
 
-      // Vale Receipt Voucher Table
+      // Vale Voucher Table
       document.getElementById('tbl-vale-vouchers').innerHTML = state.valeVouchers.map((v, idx) => `
         <tr>
           <td><strong>${v.id}</strong></td>
@@ -1008,23 +1071,24 @@
         </tr>
       `).join('');
 
-      // Payroll Ledger with YTD Days Present & Paystub Print Button
+      // Payroll Ledger Summary
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
-        const gross = e.daysWorked * e.rate;
+        const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
+        const gross = monthlyDays * e.rate;
         const vale = e.valeBalance || 0;
         const valeDeduct = Math.min(vale, gross);
         const net = gross - valeDeduct;
-        const ytdPresent = (e.ytdPresentDays || 0) + e.daysWorked;
+        const lifetimeDays = (e.lifetimePresentDays || 0) + monthlyDays;
 
         return `
           <tr>
             <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
             <td>₱${e.rate}</td>
-            <td>${e.daysWorked} days</td>
-            <td><strong>${ytdPresent} days</strong></td>
+            <td>${monthlyDays} days</td>
+            <td><strong style="color: var(--brand-blue);">${monthlyDays} days</strong></td>
+            <td><strong style="color: var(--brand-green);">${lifetimeDays} days</strong></td>
             <td>₱${gross.toLocaleString()}</td>
             <td><strong style="color: var(--brand-gold);">₱${vale.toLocaleString()}</strong></td>
-            <td>₱${valeDeduct.toLocaleString()}</td>
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString()}</strong></td>
             <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Paystub Slip</button></td>
           </tr>
@@ -1071,7 +1135,7 @@
 
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
 
-      // Executive Indicators
+      // Executive Metrics
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
       const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
       const totalFin = state.batches.reduce((s, b) => s + b.yieldKg, 0);
