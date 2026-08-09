@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon Operations & Decision Suite</title>
+  <title>Combinido Biocarbon Plant Manager & Decision Suite</title>
   
   <style>
     :root {
@@ -80,11 +80,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 11px 14px;
+      padding: 10px 12px;
       color: #94a3b8;
       text-decoration: none;
       border-radius: 8px;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
@@ -130,7 +130,6 @@
     .badge-warn { background: #fef3c7; color: #b45309; }
     .badge-blue { background: #e0f2fe; color: #0369a1; }
 
-    /* Interactive Calendar Styling */
     .cal-header-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
     .cal-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 6px 2px; }
@@ -205,12 +204,14 @@
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
       <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle</a>
       <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
+      <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
+      <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
       <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
       <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Payroll, Vale & Paystubs</a>
       <a class="nav-link" onclick="switchTab('gov-remittances', this)"><span>🏛️</span> Government Remittances</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
       <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory Balances</a>
-      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Sales Tickets</a>
+      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Official Receipts</a>
       <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Downtime & Bottlenecks</a>
       <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
     </aside>
@@ -247,7 +248,7 @@
           <div class="panel-title">Operational Health & Owner Action Recommendations</div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-orange);">1. Feedstock Inventory Buffer</h4>
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-orange);">1. Feedstock Inventory & Quality Buffer</h4>
               <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-stock-text">Analyzing stock levels...</p>
             </div>
             <div>
@@ -363,7 +364,72 @@
         </div>
       </div>
 
-      <!-- TAB 5: CREW ATTENDANCE CALENDAR (EDITABLE SUNDAYS) -->
+      <!-- TAB 5: FURNACE & KILN MAINTENANCE LOGS -->
+      <div id="furnace-maint" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Record Furnace & Kiln Maintenance Service</div>
+          <form onsubmit="handleMaintenanceLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Service Date</label><input type="date" id="maint-date" class="form-control" required></div>
+              <div class="form-group"><label>Equipment Unit</label><select id="maint-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option><option value="Blower & VFD Drive">Blower & VFD Drive</option><option value="Exhaust Stack">Exhaust Stack</option></select></div>
+              <div class="form-group"><label>Maintenance Category</label><select id="maint-cat" class="form-control"><option value="Preventive">Preventive Maintenance</option><option value="Refractory Brick Repair">Refractory Brick Repair</option><option value="Damper / Vent Seal">Damper / Vent Seal Service</option><option value="Blower Motor Service">Blower Motor / Electrical</option></select></div>
+              <div class="form-group"><label>Lead Technician / Staff</label><select id="maint-tech" class="form-control"></select></div>
+              <div class="form-group"><label>Parts / Service Cost (₱)</label><input type="number" id="maint-cost" class="form-control" placeholder="2500" required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Work Performed & Condition Notes</label><input type="text" id="maint-notes" class="form-control" placeholder="Replaced ceramic refractory seal on damper gate; re-calibrated VFD" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔧 Save Maintenance Record</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Furnace & Kiln Maintenance History</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Log ID</th><th>Date</th><th>Equipment</th><th>Category</th><th>Technician</th><th>Service Cost</th><th>Work Summary & Notes</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-maint-history"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: FEEDSTOCK WEIGHBRIDGE & MOISTURE LOG -->
+      <div id="weighbridge" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Record Feedstock Intake Weighbridge & Moisture Content (MC%)</div>
+          <form onsubmit="handleWeighbridgeLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Ticket Date</label><input type="date" id="wb-date" class="form-control" required></div>
+              <div class="form-group"><label>Feedstock Material</label><select id="wb-item" class="form-control"></select></div>
+              <div class="form-group"><label>Supplier / Source</label><select id="wb-supplier" class="form-control"></select></div>
+              <div class="form-group"><label>Gross Weight (kg)</label><input type="number" id="wb-gross" class="form-control" placeholder="2500" required></div>
+              <div class="form-group"><label>Tare Weight (kg)</label><input type="number" id="wb-tare" class="form-control" placeholder="500" required></div>
+              <div class="form-group"><label>Moisture Content (MC %)</label><input type="number" step="0.1" id="wb-mc" class="form-control" placeholder="18.5" required></div>
+              <div class="form-group"><label>Intake Inspector</label><select id="wb-inspector" class="form-control"></select></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">⚖️ Save Feedstock Quality Intake & Inventory</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Feedstock Intake Quality Ledger</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ticket ID</th><th>Date</th><th>Feedstock</th><th>Supplier</th><th>Net Weight</th><th>Moisture %</th><th>Dry-Basis Weight</th><th>Quality Status</th><th>Inspector</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-weighbridge-history"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: CREW ATTENDANCE CALENDAR -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -392,7 +458,7 @@
         </div>
       </div>
 
-      <!-- TAB 6: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE PAYSTUBS -->
+      <!-- TAB 8: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
@@ -448,7 +514,7 @@
         <div id="printable-area" style="display: none;"></div>
       </div>
 
-      <!-- TAB 7: GOVERNMENT REMITTANCES (DEDICATED STATUTORY TAB) -->
+      <!-- TAB 9: GOVERNMENT REMITTANCES -->
       <div id="gov-remittances" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -481,7 +547,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: CONTACT DIRECTORY -->
+      <!-- TAB 10: CONTACT DIRECTORY -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -501,7 +567,7 @@
         </div>
       </div>
 
-      <!-- TAB 9: INVENTORY BALANCES -->
+      <!-- TAB 11: INVENTORY BALANCES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Real-Time Inventory Balances</div>
@@ -518,10 +584,10 @@
         </div>
       </div>
 
-      <!-- TAB 10: LOGISTICS TICKETS -->
+      <!-- TAB 12: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Record Delivery Ticket</div>
+          <div class="panel-title">Record Delivery Ticket & Invoice</div>
           <form onsubmit="handleLogisticsTicket(event)">
             <div class="form-grid">
               <div class="form-group">
@@ -541,7 +607,7 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Logistics & Deliveries Ledger</div>
+          <div class="panel-title">Logistics Tickets & Official Sales Receipts</div>
           <div class="table-container">
             <table>
               <thead>
@@ -555,7 +621,7 @@
         </div>
       </div>
 
-      <!-- TAB 11: DOWNTIME -->
+      <!-- TAB 13: DOWNTIME -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
@@ -583,7 +649,7 @@
         </div>
       </div>
 
-      <!-- TAB 12: MASTER DATA MANAGER -->
+      <!-- TAB 14: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Register Employee Profile (Regular vs Contractual)</div>
@@ -635,7 +701,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v17';
+    const STORAGE_KEY = 'cbcm_master_suite_v18';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -653,20 +719,17 @@
       '11-30': 'Rizal Day'
     };
 
-    // Statutory Calculations Engine (2025/2026 Philippine Law)
     function computeSSS(monthlySalary) {
       if (monthlySalary <= 0) return { ee: 0, er: 0, ec: 0 };
-      // 2025/2026 SSS: MSC floor P5,000, ceiling P35,000. Total rate 15%: 5% EE, 10% ER.
       let msc = Math.max(5000, Math.min(35000, monthlySalary));
       let ee = msc * 0.05;
       let er = msc * 0.10;
-      let ec = msc >= 15000 ? 30 : 10; // EC Fee paid by ER
+      let ec = msc >= 15000 ? 30 : 10;
       return { ee, er, ec };
     }
 
     function computePhilHealth(monthlySalary) {
       if (monthlySalary <= 0) return { ee: 0, er: 0 };
-      // 2025/2026 PhilHealth: 5% total (2.5% EE, 2.5% ER). Floor P10k, Ceiling P100k.
       let base = Math.max(10000, Math.min(100000, monthlySalary));
       let ee = base * 0.025;
       let er = base * 0.025;
@@ -675,7 +738,6 @@
 
     function computePagIBIG(monthlySalary) {
       if (monthlySalary <= 0) return { ee: 0, er: 0 };
-      // 2025/2026 Pag-IBIG: 2% EE (max P200), 2% ER (max P200) based on max P10,000 cap.
       let ee = Math.min(200, monthlySalary * 0.02);
       let er = Math.min(200, monthlySalary * 0.02);
       return { ee, er };
@@ -689,13 +751,16 @@
         { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300 }
       ],
       batches: [
-        {
-          id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550,
-          opStart: "Amber", opEnd: "Beryl", maxTemp: 580
-        }
+        { id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" }
+      ],
+      maintenanceLogs: [
+        { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
+      ],
+      weighbridgeLogs: [
+        { id: "WB-301", date: "2026-08-05", item: "Spiny Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, inspector: "Amber" }
       ],
       valeVouchers: [
         { id: "VALE-901", date: "2026-08-01", empName: "Amber", amount: 1000, notes: "Emergency medical expense" }
@@ -803,6 +868,43 @@
       saveState(); renderAll(); e.target.reset();
     }
 
+    function handleMaintenanceLog(e) {
+      e.preventDefault();
+      state.maintenanceLogs.unshift({
+        id: `MNT-${Date.now().toString().slice(-3)}`,
+        date: document.getElementById('maint-date').value,
+        unit: document.getElementById('maint-unit').value,
+        cat: document.getElementById('maint-cat').value,
+        tech: document.getElementById('maint-tech').value,
+        cost: parseFloat(document.getElementById('maint-cost').value),
+        notes: document.getElementById('maint-notes').value
+      });
+      saveState(); renderAll(); e.target.reset();
+    }
+
+    function handleWeighbridgeLog(e) {
+      e.preventDefault();
+      const itemName = document.getElementById('wb-item').value;
+      const grossKg = parseFloat(document.getElementById('wb-gross').value);
+      const tareKg = parseFloat(document.getElementById('wb-tare').value);
+      const netKg = Math.max(0, grossKg - tareKg);
+
+      const invItem = state.inventory.find(i => i.name === itemName);
+      if (invItem) invItem.stock += netKg;
+
+      state.weighbridgeLogs.unshift({
+        id: `WB-${Date.now().toString().slice(-3)}`,
+        date: document.getElementById('wb-date').value,
+        item: itemName,
+        supplier: document.getElementById('wb-supplier').value,
+        grossKg, tareKg,
+        mcPct: parseFloat(document.getElementById('wb-mc').value),
+        inspector: document.getElementById('wb-inspector').value
+      });
+
+      saveState(); renderAll(); e.target.reset();
+    }
+
     function handleLogVale(e) {
       e.preventDefault();
       const empName = document.getElementById('vale-emp').value;
@@ -899,17 +1001,14 @@
       if (!emp) return;
 
       if (!emp.attendance) emp.attendance = {};
-
       const current = emp.attendance[dateKey] || (isSunday ? 'OFF' : 'P');
       
-      // Cycle order: P -> H -> A -> OFF -> P
       if (current === 'P') emp.attendance[dateKey] = 'H';
       else if (current === 'H') emp.attendance[dateKey] = 'A';
       else if (current === 'A') emp.attendance[dateKey] = 'OFF';
       else emp.attendance[dateKey] = 'P';
 
-      saveState();
-      renderAll();
+      saveState(); renderAll();
     }
 
     function calculateEmployeeMonthlyPresent(emp, month, year) {
@@ -923,13 +1022,42 @@
 
         const isSunday = (dayOfWeek === 0);
         const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
-
         const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
 
         if (status === 'P' || status === 'PAY') total += 1.0;
         else if (status === 'H') total += 0.5;
       }
       return total;
+    }
+
+    function printSalesInvoice(ticketIndex) {
+      const t = state.logistics[ticketIndex];
+      const invoiceHtml = `
+        <div class="printable-document">
+          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · BIR Registered Official Sales Receipt</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          <p><strong>Receipt / Invoice No:</strong> INV-${t.id}</p>
+          <p><strong>Customer Name:</strong> ${t.party}</p>
+          <p><strong>Product Delivered:</strong> ${t.item}</p>
+          <p><strong>Quantity Dispatched:</strong> ${t.qty.toLocaleString()} kg</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL AMOUNT PAID: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 0.75rem;">Received in good order and condition. Thank you for supporting sustainable Philippine biochar.</p>
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>___________________<br>Customer Received By</div>
+            <div>___________________<br>Authorized Plant Cashier</div>
+          </div>
+        </div>
+      `;
+
+      const area = document.getElementById('printable-area');
+      area.innerHTML = invoiceHtml;
+      area.style.display = 'block';
+      window.print();
+      area.style.display = 'none';
     }
 
     function printPaystub(empIndex) {
@@ -940,7 +1068,6 @@
 
       const gross = monthlyDays * emp.rate;
 
-      // Statutory deductions (Regular vs Contractual)
       let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
       if (emp.type === 'Regular') {
         sss = computeSSS(gross);
@@ -1042,7 +1169,7 @@
       let tableHtml = `<table class="cal-table"><thead><tr><th>Employee Name</th><th>Type</th>`;
 
       for (let d = 1; d <= daysInMonth; d++) {
-        const dayIdx = new Date(year, month, d).getDay(); // 0 = Sun, 6 = Sat
+        const dayIdx = new Date(year, month, d).getDay();
         const dayLabel = dayNames[dayIdx];
         const holKey = `${month}-${d}`;
         let colClass = '';
@@ -1052,7 +1179,6 @@
         if (phHolidays[holKey]) colClass = 'cal-day-hol';
 
         const titleAttr = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
-
         tableHtml += `<th class="${colClass}" ${titleAttr}>${d}<br><span style="font-size: 0.65rem;">${dayLabel}</span></th>`;
       }
 
@@ -1077,12 +1203,10 @@
           else if (status === 'H') monthlyTotal += 0.5;
 
           const holTitle = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
-
           tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" ${holTitle} onclick="toggleAttendanceCell('${emp.name}', '${dateKey}', ${isSunday})">${status}</div></td>`;
         }
 
         const lifetimeTotal = (emp.lifetimePresentDays || 0) + monthlyTotal;
-
         tableHtml += `<td><strong style="color: var(--brand-blue);">${monthlyTotal} days</strong></td>`;
         tableHtml += `<td><strong style="color: var(--brand-green);">${lifetimeTotal} days</strong></td></tr>`;
       });
@@ -1101,11 +1225,19 @@
       if(document.getElementById('proc-op-start')) document.getElementById('proc-op-start').innerHTML = empOpts;
       if(document.getElementById('proc-op-end')) document.getElementById('proc-op-end').innerHTML = empOpts;
       if(document.getElementById('fw-attendant')) document.getElementById('fw-attendant').innerHTML = empOpts;
+      if(document.getElementById('maint-tech')) document.getElementById('maint-tech').innerHTML = empOpts;
+      if(document.getElementById('wb-inspector')) document.getElementById('wb-inspector').innerHTML = empOpts;
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
 
-      document.getElementById('proc-raw-item').innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail)</option>`).join('');
-      document.getElementById('proc-fin-item').innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
-      document.getElementById('log-party').innerHTML = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
+      const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail)</option>`).join('');
+      if(document.getElementById('proc-raw-item')) document.getElementById('proc-raw-item').innerHTML = rawOpts;
+      if(document.getElementById('wb-item')) document.getElementById('wb-item').innerHTML = rawOpts;
+
+      if(document.getElementById('proc-fin-item')) document.getElementById('proc-fin-item').innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+      
+      const supplierOpts = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
+      if(document.getElementById('log-party')) document.getElementById('log-party').innerHTML = supplierOpts;
+      if(document.getElementById('wb-supplier')) document.getElementById('wb-supplier').innerHTML = supplierOpts;
       
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
@@ -1125,7 +1257,7 @@
         </tr>
       `).join('');
 
-      // Batch Table with 2 Duty Roles
+      // Batch Table
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
@@ -1152,6 +1284,41 @@
           <td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
+
+      // Maintenance Logs Table
+      document.getElementById('tbl-maint-history').innerHTML = (state.maintenanceLogs || []).map((m, idx) => `
+        <tr>
+          <td><strong>${m.id}</strong></td>
+          <td>${m.date}</td>
+          <td>${m.unit}</td>
+          <td><span class="badge badge-blue">${m.cat}</span></td>
+          <td>${m.tech}</td>
+          <td>₱${m.cost.toLocaleString()}</td>
+          <td>${m.notes}</td>
+          <td><button onclick="deleteEntry('maintenanceLogs', ${idx})" class="btn-danger">Delete</button></td>
+        </tr>
+      `).join('');
+
+      // Weighbridge Logs Table
+      document.getElementById('tbl-weighbridge-history').innerHTML = (state.weighbridgeLogs || []).map((w, idx) => {
+        const net = Math.max(0, w.grossKg - w.tareKg);
+        const dry = (net * (1 - (w.mcPct / 100))).toFixed(1);
+        const isPass = w.mcPct <= 20.0;
+        return `
+          <tr>
+            <td><strong>${w.id}</strong></td>
+            <td>${w.date}</td>
+            <td>${w.item}</td>
+            <td>${w.supplier}</td>
+            <td><strong>${net.toLocaleString()} kg</strong></td>
+            <td>${w.mcPct}%</td>
+            <td>${dry} kg</td>
+            <td><span class="badge ${isPass ? 'badge-pass' : 'badge-warn'}">${isPass ? 'PASS (&le;20%)' : 'HIGH MOISTURE'}</span></td>
+            <td>${w.inspector}</td>
+            <td><button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button></td>
+          </tr>
+        `;
+      }).join('');
 
       // Vale Voucher Table
       document.getElementById('tbl-vale-vouchers').innerHTML = state.valeVouchers.map((v, idx) => `
@@ -1246,7 +1413,7 @@
         </tr>
       `).join('');
 
-      // Logistics Ledger
+      // Logistics Tickets Ledger with Printable Sales Receipts
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -1255,7 +1422,10 @@
           <td>${l.item}</td>
           <td>${l.qty.toLocaleString()} kg</td>
           <td>₱${l.amount.toLocaleString()}</td>
-          <td><button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button></td>
+          <td>
+            ${l.type === 'OUTBOUND_CUSTOMER' ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 Official Receipt</button>` : ''}
+            <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
+          </td>
         </tr>
       `).join('');
 
