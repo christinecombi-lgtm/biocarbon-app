@@ -128,26 +128,28 @@
     .badge-pass { background: #d1fae5; color: #047857; }
     .badge-fail { background: #fee2e2; color: #b91c1c; }
     .badge-warn { background: #fef3c7; color: #b45309; }
+    .badge-blue { background: #e0f2fe; color: #0369a1; }
 
     /* Interactive Calendar Styling */
     .cal-header-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
     .cal-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
     .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 6px 2px; }
-    .cal-day-sun { background-color: #f1f5f9; color: #94a3b8; }
+    .cal-day-sun { background-color: #fef3c7; color: #b45309; font-weight: bold; }
     .cal-day-sat { background-color: #e0f2fe; color: #0369a1; font-weight: bold; }
     .cal-day-hol { background-color: #fee2e2; color: #b91c1c; font-weight: bold; }
 
-    /* Interactive Attendance Toggle Cell */
     .att-toggle {
       cursor: pointer;
       font-weight: 800;
       padding: 4px 0;
       user-select: none;
       transition: background 0.15s;
+      border-radius: 3px;
     }
     .att-toggle.p { background-color: #d1fae5; color: #047857; }
     .att-toggle.a { background-color: #fee2e2; color: #b91c1c; }
     .att-toggle.h { background-color: #fef3c7; color: #b45309; }
+    .att-toggle.off { background-color: #f1f5f9; color: #94a3b8; }
 
     .printable-document {
       background: #ffffff;
@@ -205,6 +207,7 @@
       <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
       <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
       <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Payroll, Vale & Paystubs</a>
+      <a class="nav-link" onclick="switchTab('gov-remittances', this)"><span>🏛️</span> Government Remittances</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
       <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory Balances</a>
       <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Sales Tickets</a>
@@ -360,7 +363,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: CREW ATTENDANCE CALENDAR (INTERACTIVE CLICKER) -->
+      <!-- TAB 5: CREW ATTENDANCE CALENDAR (EDITABLE SUNDAYS) -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -378,18 +381,18 @@
             </div>
           </div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
-            💡 <strong>Click any attendance cell to toggle status:</strong> 
+            💡 <strong>Click any cell (including Sundays) to toggle status:</strong> 
             <span class="badge badge-pass">P = Present (1.0)</span> | 
             <span class="badge badge-warn">H = Half-Day (0.5)</span> | 
             <span class="badge badge-fail">A = Absent (0.0)</span> | 
-            <span class="badge" style="background:#e0f2fe; color:#0369a1;">Saturdays = Payday</span> | 
-            <span class="badge" style="background:#f1f5f9; color:#64748b;">Sundays = Rest Day</span>
+            <span class="badge" style="background:#f1f5f9; color:#64748b;">OFF = Rest Day</span> | 
+            <span class="badge badge-blue">Saturdays = Payday</span>
           </p>
           <div id="calendar-table-container"></div>
         </div>
       </div>
 
-      <!-- TAB 6: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE RECEIPTS/PAYSTUBS -->
+      <!-- TAB 6: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
@@ -419,18 +422,20 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Automated Payroll Ledger Summary</div>
+          <div class="panel-title">Automated Payroll Ledger (With SSS, PhilHealth, Pag-IBIG Deductions for Regular Staff)</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
                   <th>Employee Name</th>
+                  <th>Type</th>
                   <th>Daily Rate</th>
-                  <th>Days Worked (Period)</th>
-                  <th>Monthly Total Days</th>
-                  <th>Lifetime Total Days</th>
+                  <th>Days Present</th>
                   <th>Gross Pay</th>
-                  <th>Outstanding Vale</th>
+                  <th>SSS (EE)</th>
+                  <th>PhilHealth (EE)</th>
+                  <th>Pag-IBIG (EE)</th>
+                  <th>Vale Deduct</th>
                   <th>Net Payable</th>
                   <th>Action</th>
                 </tr>
@@ -443,7 +448,40 @@
         <div id="printable-area" style="display: none;"></div>
       </div>
 
-      <!-- TAB 7: CONTACT DIRECTORY -->
+      <!-- TAB 7: GOVERNMENT REMITTANCES (DEDICATED STATUTORY TAB) -->
+      <div id="gov-remittances" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">
+            <span>Philippine Government Statutory Remittances Summary (2025/2026 Schedule)</span>
+          </div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
+            Statutory Rates Applied: <strong>SSS</strong> (15% Total: 5% Employee, 10% Employer + EC); <strong>PhilHealth</strong> (5% Total: 2.5% Employee, 2.5% Employer); <strong>Pag-IBIG</strong> (2% Employee capped ₱200, 2% Employer capped ₱200). Contractual employees are exempt from contributions.
+          </p>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>Type</th>
+                  <th>Monthly Salary Base</th>
+                  <th>SSS EE</th>
+                  <th>SSS ER (+EC)</th>
+                  <th>PH EE</th>
+                  <th>PH ER</th>
+                  <th>Pag-IBIG EE</th>
+                  <th>Pag-IBIG ER</th>
+                  <th>Total EE Share</th>
+                  <th>Total ER Share</th>
+                  <th>Total Remittance</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-gov-remittances"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 8: CONTACT DIRECTORY -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -463,7 +501,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: INVENTORY BALANCES -->
+      <!-- TAB 9: INVENTORY BALANCES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Real-Time Inventory Balances</div>
@@ -480,7 +518,7 @@
         </div>
       </div>
 
-      <!-- TAB 9: LOGISTICS TICKETS -->
+      <!-- TAB 10: LOGISTICS TICKETS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Delivery Ticket</div>
@@ -517,7 +555,7 @@
         </div>
       </div>
 
-      <!-- TAB 10: DOWNTIME -->
+      <!-- TAB 11: DOWNTIME -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
@@ -545,14 +583,21 @@
         </div>
       </div>
 
-      <!-- TAB 11: MASTER DATA MANAGER -->
+      <!-- TAB 12: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Register Employee (With Emergency Contact Info)</div>
+          <div class="panel-title">Register Employee Profile (Regular vs Contractual)</div>
           <form onsubmit="handleAddEmployee(event)">
             <div class="form-grid">
               <div class="form-group"><label>Full Name</label><input type="text" id="m-emp-name" class="form-control" placeholder="Amber" required></div>
               <div class="form-group"><label>Job Title / Position</label><input type="text" id="m-emp-pos" class="form-control" placeholder="Furnace Lead Operator" required></div>
+              <div class="form-group">
+                <label>Employment Type</label>
+                <select id="m-emp-type" class="form-control">
+                  <option value="Regular">Regular (With SSS, PhilHealth, Pag-IBIG)</option>
+                  <option value="Contractual">Contractual (No Statutory Deductions)</option>
+                </select>
+              </div>
               <div class="form-group"><label>Daily Rate (₱)</label><input type="number" id="m-emp-rate" class="form-control" placeholder="650" required></div>
               <div class="form-group"><label>Phone Number</label><input type="text" id="m-emp-phone" class="form-control" placeholder="0917-111-2222" required></div>
               <div class="form-group"><label>Email Address</label><input type="email" id="m-emp-email" class="form-control" placeholder="amber@cbcm.ph"></div>
@@ -590,7 +635,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v16';
+    const STORAGE_KEY = 'cbcm_master_suite_v17';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -607,6 +652,34 @@
       '11-25': 'Christmas Day',
       '11-30': 'Rizal Day'
     };
+
+    // Statutory Calculations Engine (2025/2026 Philippine Law)
+    function computeSSS(monthlySalary) {
+      if (monthlySalary <= 0) return { ee: 0, er: 0, ec: 0 };
+      // 2025/2026 SSS: MSC floor P5,000, ceiling P35,000. Total rate 15%: 5% EE, 10% ER.
+      let msc = Math.max(5000, Math.min(35000, monthlySalary));
+      let ee = msc * 0.05;
+      let er = msc * 0.10;
+      let ec = msc >= 15000 ? 30 : 10; // EC Fee paid by ER
+      return { ee, er, ec };
+    }
+
+    function computePhilHealth(monthlySalary) {
+      if (monthlySalary <= 0) return { ee: 0, er: 0 };
+      // 2025/2026 PhilHealth: 5% total (2.5% EE, 2.5% ER). Floor P10k, Ceiling P100k.
+      let base = Math.max(10000, Math.min(100000, monthlySalary));
+      let ee = base * 0.025;
+      let er = base * 0.025;
+      return { ee, er };
+    }
+
+    function computePagIBIG(monthlySalary) {
+      if (monthlySalary <= 0) return { ee: 0, er: 0 };
+      // 2025/2026 Pag-IBIG: 2% EE (max P200), 2% ER (max P200) based on max P10,000 cap.
+      let ee = Math.min(200, monthlySalary * 0.02);
+      let er = Math.min(200, monthlySalary * 0.02);
+      return { ee, er };
+    }
 
     const defaultState = {
       inventory: [
@@ -634,8 +707,9 @@
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
-        { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, valeBalance: 1000, ytdNetSalary: 92300, attendance: {} },
-        { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", lifetimePresentDays: 295, valeBalance: 0, ytdNetSalary: 82800, attendance: {} }
+        { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, valeBalance: 1000, ytdNetSalary: 92300, attendance: {} },
+        { name: "Beryl", pos: "Plant Shift Supervisor", type: "Regular", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", lifetimePresentDays: 295, valeBalance: 0, ytdNetSalary: 82800, attendance: {} },
+        { name: "Carlos", pos: "Seasonal Sorter", type: "Contractual", rate: 500, phone: "0920-333-4444", email: "carlos@cbcm.ph", emName: "Ana Gomez", emPhone: "0921-555-6666", lifetimePresentDays: 45, valeBalance: 0, ytdNetSalary: 22500, attendance: {} }
       ],
       contacts: [
         { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
@@ -785,11 +859,12 @@
       e.preventDefault();
       const empName = document.getElementById('m-emp-name').value;
       const empPos = document.getElementById('m-emp-pos').value;
+      const empType = document.getElementById('m-emp-type').value;
       const empPhone = document.getElementById('m-emp-phone').value;
       const empEmail = document.getElementById('m-emp-email').value || '-';
 
       state.employees.push({
-        name: empName, pos: empPos,
+        name: empName, pos: empPos, type: empType,
         rate: parseFloat(document.getElementById('m-emp-rate').value),
         phone: empPhone, email: empEmail,
         emName: document.getElementById('m-emp-em-name').value,
@@ -819,16 +894,18 @@
       saveState(); renderAll(); e.target.reset();
     }
 
-    function toggleAttendanceCell(empName, dateKey) {
+    function toggleAttendanceCell(empName, dateKey, isSunday) {
       const emp = state.employees.find(e => e.name === empName);
       if (!emp) return;
 
       if (!emp.attendance) emp.attendance = {};
-      const current = emp.attendance[dateKey] || 'P';
+
+      const current = emp.attendance[dateKey] || (isSunday ? 'OFF' : 'P');
       
-      // Cycle P -> A -> H -> P
-      if (current === 'P') emp.attendance[dateKey] = 'A';
-      else if (current === 'A') emp.attendance[dateKey] = 'H';
+      // Cycle order: P -> H -> A -> OFF -> P
+      if (current === 'P') emp.attendance[dateKey] = 'H';
+      else if (current === 'H') emp.attendance[dateKey] = 'A';
+      else if (current === 'A') emp.attendance[dateKey] = 'OFF';
       else emp.attendance[dateKey] = 'P';
 
       saveState();
@@ -844,9 +921,10 @@
         const holKey = `${month}-${d}`;
         const dateKey = `${year}-${month}-${d}`;
 
-        if (dayOfWeek === 0) continue; // Sunday rest day
+        const isSunday = (dayOfWeek === 0);
+        const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
 
-        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (phHolidays[holKey] ? 'HOL' : 'P');
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
 
         if (status === 'P' || status === 'PAY') total += 1.0;
         else if (status === 'H') total += 0.5;
@@ -861,8 +939,18 @@
       const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
 
       const gross = monthlyDays * emp.rate;
-      const valeDeduct = Math.min(emp.valeBalance || 0, gross);
-      const netPay = gross - valeDeduct;
+
+      // Statutory deductions (Regular vs Contractual)
+      let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
+      if (emp.type === 'Regular') {
+        sss = computeSSS(gross);
+        ph = computePhilHealth(gross);
+        pagibig = computePagIBIG(gross);
+      }
+
+      const totalDeductions = sss.ee + ph.ee + pagibig.ee;
+      const valeDeduct = Math.min(emp.valeBalance || 0, gross - totalDeductions);
+      const netPay = Math.max(0, gross - totalDeductions - valeDeduct);
       const remainingVale = (emp.valeBalance || 0) - valeDeduct;
       const lifetimeDays = (emp.lifetimePresentDays || 0) + monthlyDays;
 
@@ -871,15 +959,21 @@
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
           <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Official Payroll Paystub</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          <p><strong>Employee Name:</strong> ${emp.name}</p>
+          <p><strong>Employee Name:</strong> ${emp.name} (${emp.type || 'Regular'})</p>
           <p><strong>Job Title / Position:</strong> ${emp.pos}</p>
           <p><strong>Daily Wage Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
           <p><strong>Monthly Days Present:</strong> ${monthlyDays} days</p>
           <p><strong>Lifetime Total Days Worked:</strong> ${lifetimeDays} days</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Gross Pay (${monthlyDays} days x ₱${emp.rate}): ₱${gross.toLocaleString()}</p>
-          <p>Vale (Cash Advance) Deduction: -₱${valeDeduct.toLocaleString()}</p>
-          <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET PAYOUT AMOUNT: ₱${netPay.toLocaleString()}</p>
+          <p>Gross Earnings (${monthlyDays} days x ₱${emp.rate}): ₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <br>
+          <p style="font-weight: bold;">Statutory Government Deductions:</p>
+          <p> · SSS Contribution (EE Share): -₱${sss.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · PhilHealth Premium (EE Share): -₱${ph.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · Pag-IBIG Fund (EE Share): -₱${pagibig.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · Cash Advance (Vale) Deduction: -₱${valeDeduct.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 1.1rem; font-weight: bold;">NET PAYOUT AMOUNT: ₱${netPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
           <p>Remaining Outstanding Vale Balance: ₱${remainingVale.toLocaleString()}</p>
           <p>Year-To-Date (YTD) Cumulative Net Earnings: ₱${(emp.ytdNetSalary + netPay).toLocaleString()}</p>
@@ -945,7 +1039,7 @@
       const year = parseInt(document.getElementById('cal-year').value);
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-      let tableHtml = `<table class="cal-table"><thead><tr><th>Employee Name</th>`;
+      let tableHtml = `<table class="cal-table"><thead><tr><th>Employee Name</th><th>Type</th>`;
 
       for (let d = 1; d <= daysInMonth; d++) {
         const dayIdx = new Date(year, month, d).getDay(); // 0 = Sun, 6 = Sat
@@ -966,25 +1060,25 @@
 
       state.employees.forEach(emp => {
         let monthlyTotal = 0;
-        tableHtml += `<tr><td><strong>${emp.name}</strong></td>`;
+        tableHtml += `<tr>
+          <td><strong>${emp.name}</strong></td>
+          <td><span class="badge ${emp.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${emp.type || 'Regular'}</span></td>`;
 
         for (let d = 1; d <= daysInMonth; d++) {
           const dayIdx = new Date(year, month, d).getDay();
+          const isSunday = (dayIdx === 0);
           const holKey = `${month}-${d}`;
           const dateKey = `${year}-${month}-${d}`;
 
-          if (dayIdx === 0) {
-            tableHtml += `<td class="cal-day-sun" title="Sunday Rest Day">OFF</td>`;
-          } else if (phHolidays[holKey]) {
-            tableHtml += `<td class="cal-day-hol" title="${phHolidays[holKey]}">HOL</td>`;
-          } else {
-            const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : 'P';
+          const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
+          const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
 
-            if (status === 'P') monthlyTotal += 1.0;
-            else if (status === 'H') monthlyTotal += 0.5;
+          if (status === 'P') monthlyTotal += 1.0;
+          else if (status === 'H') monthlyTotal += 0.5;
 
-            tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" onclick="toggleAttendanceCell('${emp.name}', '${dateKey}')">${status}</div></td>`;
-          }
+          const holTitle = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
+
+          tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" ${holTitle} onclick="toggleAttendanceCell('${emp.name}', '${dateKey}', ${isSunday})">${status}</div></td>`;
         }
 
         const lifetimeTotal = (emp.lifetimePresentDays || 0) + monthlyTotal;
@@ -1001,7 +1095,7 @@
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
 
-      const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
+      const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
       if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
       if(document.getElementById('proc-op-start')) document.getElementById('proc-op-start').innerHTML = empOpts;
@@ -1075,22 +1169,67 @@
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const gross = monthlyDays * e.rate;
+
+        let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
+        if (e.type === 'Regular') {
+          sss = computeSSS(gross);
+          ph = computePhilHealth(gross);
+          pagibig = computePagIBIG(gross);
+        }
+
+        const totalStatutory = sss.ee + ph.ee + pagibig.ee;
         const vale = e.valeBalance || 0;
-        const valeDeduct = Math.min(vale, gross);
-        const net = gross - valeDeduct;
-        const lifetimeDays = (e.lifetimePresentDays || 0) + monthlyDays;
+        const valeDeduct = Math.min(vale, gross - totalStatutory);
+        const net = Math.max(0, gross - totalStatutory - valeDeduct);
 
         return `
           <tr>
             <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
+            <td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type || 'Regular'}</span></td>
             <td>₱${e.rate}</td>
-            <td>${monthlyDays} days</td>
-            <td><strong style="color: var(--brand-blue);">${monthlyDays} days</strong></td>
-            <td><strong style="color: var(--brand-green);">${lifetimeDays} days</strong></td>
-            <td>₱${gross.toLocaleString()}</td>
-            <td><strong style="color: var(--brand-gold);">₱${vale.toLocaleString()}</strong></td>
-            <td><strong style="color: var(--brand-green);">₱${net.toLocaleString()}</strong></td>
+            <td><strong>${monthlyDays} days</strong></td>
+            <td>₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td>-₱${sss.ee.toFixed(2)}</td>
+            <td>-₱${ph.ee.toFixed(2)}</td>
+            <td>-₱${pagibig.ee.toFixed(2)}</td>
+            <td><strong style="color: var(--brand-gold);">₱${valeDeduct.toFixed(2)}</strong></td>
+            <td><strong style="color: var(--brand-green);">₱${net.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
             <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Paystub Slip</button></td>
+          </tr>
+        `;
+      }).join('');
+
+      // Government Statutory Remittances Summary Table
+      document.getElementById('tbl-gov-remittances').innerHTML = state.employees.map(e => {
+        const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
+        const gross = monthlyDays * e.rate;
+
+        let sss = { ee: 0, er: 0, ec: 0 }, ph = { ee: 0, er: 0 }, pagibig = { ee: 0, er: 0 };
+        if (e.type === 'Regular') {
+          sss = computeSSS(gross);
+          ph = computePhilHealth(gross);
+          pagibig = computePagIBIG(gross);
+        }
+
+        const sssErTotal = sss.er + sss.ec;
+        const totalEE = sss.ee + ph.ee + pagibig.ee;
+        const totalER = sssErTotal + ph.er + pagibig.er;
+        const totalRemit = totalEE + totalER;
+
+        return `
+          <tr>
+            <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
+            <td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type || 'Regular'}</span></td>
+            <td>₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td>₱${sss.ee.toFixed(2)}</td>
+            <td>₱${sssErTotal.toFixed(2)}</td>
+            <td>₱${ph.ee.toFixed(2)}</td>
+            <td>₱${ph.er.toFixed(2)}</td>
+            <td>₱${pagibig.ee.toFixed(2)}</td>
+            <td>₱${pagibig.er.toFixed(2)}</td>
+            <td><strong style="color: var(--brand-blue);">₱${totalEE.toFixed(2)}</strong></td>
+            <td><strong style="color: var(--brand-gold);">₱${totalER.toFixed(2)}</strong></td>
+            <td><strong style="color: var(--brand-green);">₱${totalRemit.toFixed(2)}</strong></td>
           </tr>
         `;
       }).join('');
