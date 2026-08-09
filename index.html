@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon Plant Manager & Decision Suite</title>
+  <title>Combinido Biocarbon Operations & Decision Suite</title>
   
   <style>
     :root {
@@ -131,15 +131,17 @@
     .badge-fail { background: #fee2e2; color: #b91c1c; }
     .badge-warn { background: #fef3c7; color: #b45309; }
 
-    /* Attendance Grid */
-    .att-grid { display: grid; grid-template-columns: repeat(31, 1fr); gap: 4px; overflow-x: auto; padding: 10px 0; }
-    .att-cell { width: 28px; height: 32px; border: 1px solid var(--border-light); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; background: #ffffff; }
-    .att-cell.p { background: #d1fae5; color: #047857; }
-    .att-cell.a { background: #fee2e2; color: #b91c1c; }
-    .att-cell.h { background: #fef3c7; color: #b45309; }
+    /* Calendar Grid Styling */
+    .cal-header-bar { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; }
+    .cal-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 6px 2px; }
+    .cal-day-num { font-weight: 700; font-size: 0.75rem; }
+    .cal-day-sun { background-color: #f1f5f9; color: #94a3b8; }
+    .cal-day-sat { background-color: #e0f2fe; color: #0369a1; font-weight: bold; }
+    .cal-day-hol { background-color: #fef2f2; color: #b91c1c; font-weight: bold; }
 
-    /* Printable Paystub Slip */
-    .paystub-card {
+    /* Voucher & Receipt Print Layout */
+    .printable-document {
       background: #ffffff;
       border: 2px dashed #000000;
       padding: 24px;
@@ -151,8 +153,8 @@
 
     @media print {
       body * { visibility: hidden; }
-      #printable-paystub, #printable-paystub * { visibility: visible; }
-      #printable-paystub { position: absolute; left: 0; top: 0; width: 100%; }
+      #printable-area, #printable-area * { visibility: visible; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
     }
 
     @media (max-width: 1024px) {
@@ -193,7 +195,7 @@
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
       <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle</a>
       <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
-      <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Crew Attendance Calendar</a>
+      <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
       <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Payroll, Vale & Paystubs</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
       <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory Balances</a>
@@ -211,7 +213,7 @@
           <div class="kpi-card orange-accent">
             <div class="kpi-title">TOTAL SALES REVENUE</div>
             <div class="kpi-main-val" id="biz-revenue">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Outbound finished goods tickets</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Outbound sales deliveries</div>
           </div>
           <div class="kpi-card blue-accent">
             <div class="kpi-title">RAW CONVERSION YIELD</div>
@@ -219,9 +221,9 @@
             <div style="font-size: 0.82rem; color: #94a3b8;">Pyrolysis biochar yield vs raw feed</div>
           </div>
           <div class="kpi-card gold-accent">
-            <div class="kpi-title">UNPAID VALE / CA BALANCE</div>
+            <div class="kpi-title">OUTSTANDING VALE / CA</div>
             <div class="kpi-main-val" id="biz-vale">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Outstanding employee advances</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Total employee advances</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-title">PLANT DOWNTIME LOSS</div>
@@ -239,7 +241,7 @@
             </div>
             <div>
               <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-blue);">2. Pyrolysis Cycle & Multi-Shift Handover</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing batch durations...</p>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing batch timelines...</p>
             </div>
           </div>
         </div>
@@ -279,7 +281,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: 6-8 HOUR BATCH CARBONIZATION LIFECYCLE (MULTI-SHIFT OPERATORS) -->
+      <!-- TAB 3: BATCH CARBONIZATION CYCLES -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Granular Batch Pyrolysis Lifecycle (Tracks Across Shifts)</div>
@@ -315,16 +317,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th>
-                  <th>Raw Feed Input</th>
-                  <th>Yield Output</th>
-                  <th>Yield %</th>
-                  <th>Loading (Staff)</th>
-                  <th>Cook Start (Staff)</th>
-                  <th>Cook End (Staff)</th>
-                  <th>Unload (Staff)</th>
-                  <th>Peak Temp</th>
-                  <th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Loading (Staff)</th><th>Cook Start (Staff)</th><th>Cook End (Staff)</th><th>Unload (Staff)</th><th>Peak Temp</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -333,7 +326,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: 2-HOUR FURNACE HEALTH MONITOR -->
+      <!-- TAB 4: 2-HOUR FURNACE MONITOR -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Scheduled 2-Hour Furnace Inspection</div>
@@ -366,46 +359,75 @@
         </div>
       </div>
 
-      <!-- TAB 5: CREW ATTENDANCE CALENDAR -->
+      <!-- TAB 5: PHILIPPINE CREW ATTENDANCE CALENDAR -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Monthly Crew Attendance Sheet (Visual Grid)</div>
+          <div class="panel-title">
+            <span>Philippine Factory Attendance Calendar</span>
+            <div class="cal-header-bar">
+              <select id="cal-month" class="form-control" onchange="renderAttendanceCalendar()">
+                <option value="0">January</option><option value="1">February</option><option value="2">March</option>
+                <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+                <option value="6">July</option><option value="7" selected>August</option><option value="8">September</option>
+                <option value="9">October</option><option value="10">November</option><option value="11">December</option>
+              </select>
+              <select id="cal-year" class="form-control" onchange="renderAttendanceCalendar()">
+                <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
+              </select>
+            </div>
+          </div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
-            Legend: <span class="badge badge-pass">P = Present</span> <span class="badge badge-fail">A = Absent</span> <span class="badge badge-warn">H = Half-Day</span>
+            Calendar Logic: <span class="badge" style="background:#e0f2fe; color:#0369a1;">Saturdays = Payday</span> | 
+            <span class="badge" style="background:#f1f5f9; color:#64748b;">Sundays = Rest Day</span> | 
+            <span class="badge badge-fail">Red = PH National Holiday</span>
           </p>
-          <div id="attendance-calendar-container"></div>
+          <div id="calendar-table-container"></div>
         </div>
       </div>
 
-      <!-- TAB 6: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE PAYSTUBS -->
+      <!-- TAB 6: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE RECEIPTS/PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Record Employee Cash Advance (VALE)</div>
+          <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
           <form onsubmit="handleLogVale(event)">
             <div class="form-grid">
               <div class="form-group"><label>Employee</label><select id="vale-emp" class="form-control"></select></div>
               <div class="form-group"><label>Cash Advance Amount (₱)</label><input type="number" id="vale-amount" class="form-control" placeholder="1000" required></div>
-              <div class="form-group"><label>Date Given</label><input type="date" id="vale-date" class="form-control" required></div>
-              <div class="form-group"><label>Reason / Notes</label><input type="text" id="vale-notes" class="form-control" placeholder="Emergency family expense"></div>
+              <div class="form-group"><label>Date Issued</label><input type="date" id="vale-date" class="form-control" required></div>
+              <div class="form-group"><label>Reason / Note</label><input type="text" id="vale-notes" class="form-control" placeholder="Family emergency advance" required></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">💸 Issue Cash Advance (Vale)</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">💸 Issue Vale & Generate Printable Receipt</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Automated Payroll Ledger & Cash Advance Balances</div>
+          <div class="panel-title">Cash Advance (Vale) Transaction Vouchers</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Employee</th>
+                  <th>Voucher ID</th><th>Date</th><th>Employee</th><th>Amount Issued</th><th>Notes</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-vale-vouchers"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Automated Payroll Ledger & Year-To-Date (YTD) Summary</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Employee Name</th>
                   <th>Daily Rate</th>
-                  <th>Days Worked</th>
+                  <th>Days Worked (Period)</th>
+                  <th>YTD Days Present</th>
                   <th>Gross Pay</th>
-                  <th>Total Vale Outstanding</th>
-                  <th>Vale Deduction Now</th>
-                  <th>Net Salary Payable</th>
-                  <th>Year-To-Date (YTD)</th>
+                  <th>Outstanding Vale Balance</th>
+                  <th>Vale Deduction</th>
+                  <th>Net Payable</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -414,8 +436,8 @@
           </div>
         </div>
 
-        <!-- Printable Paystub Display Container -->
-        <div id="printable-paystub" style="display: none;"></div>
+        <!-- Printable Document Area -->
+        <div id="printable-area" style="display: none;"></div>
       </div>
 
       <!-- TAB 7: CONTACT DIRECTORY -->
@@ -423,7 +445,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Contact Directory</span>
-            <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Quick search company, person, location...">
+            <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search company, person, location...">
           </div>
           <div class="table-container">
             <table>
@@ -565,7 +587,15 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v13';
+    const STORAGE_KEY = 'cbcm_master_suite_v14';
+
+    // Philippine Statutory Holidays Key Reference (Month-Day)
+    const phHolidays = {
+      '0-1': 'New Year', '3-9': 'Araw ng Kagitingan', '4-1': 'Labor Day',
+      '5-12': 'Independence Day', '7-31': 'National Heroes', '10-1': 'All Saints',
+      '10-2': 'All Souls', '10-30': 'Bonifacio Day', '11-8': 'Immaculate Concep',
+      '11-25': 'Christmas Day', '11-30': 'Rizal Day'
+    };
 
     const defaultState = {
       inventory: [
@@ -576,15 +606,15 @@
       ],
       batches: [
         {
-          id: "BATCH-101",
-          rawItem: "Spiny Bamboo", consumedKg: 1000,
-          finItem: "Charcoal Briquettes", yieldKg: 550,
-          opLoad: "Amber", opCookStart: "Amber", opCookEnd: "Beryl", opUnload: "Beryl",
-          maxTemp: 580
+          id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550,
+          opLoad: "Amber", opCookStart: "Amber", opCookEnd: "Beryl", opUnload: "Beryl", maxTemp: 580
         }
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" }
+      ],
+      valeVouchers: [
+        { id: "VALE-901", date: "2026-08-01", empName: "Amber", amount: 1000, notes: "Emergency medical expense" }
       ],
       logistics: [
         { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
@@ -593,8 +623,8 @@
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
-        { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", daysWorked: 12, valeBalance: 1000, ytdSalary: 45000 },
-        { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", daysWorked: 12, valeBalance: 0, ytdSalary: 42000 }
+        { name: "Amber", pos: "Furnace Lead Operator", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", daysWorked: 12, ytdPresentDays: 142, valeBalance: 1000, ytdNetSalary: 92300 },
+        { name: "Beryl", pos: "Plant Shift Supervisor", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", daysWorked: 12, ytdPresentDays: 138, valeBalance: 0, ytdNetSalary: 82800 }
       ],
       contacts: [
         { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
@@ -694,12 +724,17 @@
       e.preventDefault();
       const empName = document.getElementById('vale-emp').value;
       const amt = parseFloat(document.getElementById('vale-amount').value);
+      const dateVal = document.getElementById('vale-date').value;
+      const notesVal = document.getElementById('vale-notes').value;
       const emp = state.employees.find(e => e.name === empName);
 
       if (emp) {
         emp.valeBalance = (emp.valeBalance || 0) + amt;
-        alert(`Recorded Cash Advance (Vale) of ₱${amt.toLocaleString()} for ${empName}. New Vale Balance: ₱${emp.valeBalance.toLocaleString()}`);
+        const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
+        state.valeVouchers.unshift({ id: voucherId, date: dateVal, empName, amount: amt, notes: notesVal });
+
         saveState(); renderAll(); e.target.reset();
+        printValeVoucher(0);
       }
     }
 
@@ -750,7 +785,7 @@
         phone: empPhone, email: empEmail,
         emName: document.getElementById('m-emp-em-name').value,
         emPhone: document.getElementById('m-emp-em-phone').value,
-        daysWorked: 0, valeBalance: 0, ytdSalary: 0
+        daysWorked: 0, ytdPresentDays: 0, valeBalance: 0, ytdNetSalary: 0
       });
 
       state.contacts.push({
@@ -783,34 +818,64 @@
       const remainingVale = (emp.valeBalance || 0) - valeDeduct;
 
       const stubHtml = `
-        <div class="paystub-card">
+        <div class="printable-document">
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Plant Payroll Slip</p>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Official Payroll Paystub</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
           <p><strong>Employee Name:</strong> ${emp.name}</p>
           <p><strong>Job Title / Position:</strong> ${emp.pos}</p>
-          <p><strong>Daily Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
-          <p><strong>Days Worked:</strong> ${emp.daysWorked} days</p>
+          <p><strong>Daily Wage Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
+          <p><strong>Days Present (This Period):</strong> ${emp.daysWorked} days</p>
+          <p><strong>YTD Total Days Present:</strong> ${emp.ytdPresentDays + emp.daysWorked} days</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Gross Pay: ₱${gross.toLocaleString()}</p>
+          <p>Gross Pay (Days Worked x Rate): ₱${gross.toLocaleString()}</p>
           <p>Vale (Cash Advance) Deduction: -₱${valeDeduct.toLocaleString()}</p>
-          <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET PAYOUT: ₱${netPay.toLocaleString()}</p>
+          <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET PAYOUT AMOUNT: ₱${netPay.toLocaleString()}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Remaining Vale Balance: ₱${remainingVale.toLocaleString()}</p>
-          <p>Year-To-Date (YTD) Net Earnings: ₱${(emp.ytdSalary + netPay).toLocaleString()}</p>
+          <p>Remaining Outstanding Vale Balance: ₱${remainingVale.toLocaleString()}</p>
+          <p>Year-To-Date (YTD) Cumulative Net Earnings: ₱${(emp.ytdNetSalary + netPay).toLocaleString()}</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Employee Signature</div>
-            <div>___________________<br>Authorized Representative</div>
+            <div>___________________<br>Plant Manager / Owner</div>
           </div>
         </div>
       `;
 
-      const stubContainer = document.getElementById('printable-paystub');
-      stubContainer.innerHTML = stubHtml;
-      stubContainer.style.display = 'block';
+      const area = document.getElementById('printable-area');
+      area.innerHTML = stubHtml;
+      area.style.display = 'block';
       window.print();
-      stubContainer.style.display = 'none';
+      area.style.display = 'none';
+    }
+
+    function printValeVoucher(vIndex) {
+      const v = state.valeVouchers[vIndex];
+      const voucherHtml = `
+        <div class="printable-document">
+          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">CASH ADVANCE (VALE) RECEIPT VOUCHER</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          <p><strong>Voucher No:</strong> ${v.id}</p>
+          <p><strong>Date Issued:</strong> ${v.date}</p>
+          <p><strong>Employee Name:</strong> ${v.empName}</p>
+          <p style="font-size: 1.2rem; font-weight: bold; margin: 10px 0;">AMOUNT ADVANCED: ₱${v.amount.toLocaleString()}</p>
+          <p><strong>Purpose / Reason:</strong> ${v.notes}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance amount stated above and authorize its deduction from my upcoming payroll payouts.</p>
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>___________________<br>Borrower Signature</div>
+            <div>___________________<br>Authorized Disburser</div>
+          </div>
+        </div>
+      `;
+
+      const area = document.getElementById('printable-area');
+      area.innerHTML = voucherHtml;
+      area.style.display = 'block';
+      window.print();
+      area.style.display = 'none';
     }
 
     function filterContacts() {
@@ -826,26 +891,49 @@
       }
     }
 
-    function renderAttendanceGrid() {
-      const container = document.getElementById('attendance-calendar-container');
-      let html = '';
+    function renderAttendanceCalendar() {
+      const month = parseInt(document.getElementById('cal-month').value);
+      const year = parseInt(document.getElementById('cal-year').value);
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      let tableHtml = `<table class="cal-table"><thead><tr><th>Employee</th>`;
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dayOfWeek = new Date(year, month, d).getDay(); // 0 = Sun, 6 = Sat
+        const holKey = `${month}-${d}`;
+        let colClass = '';
+        if (dayOfWeek === 0) colClass = 'cal-day-sun';
+        else if (dayOfWeek === 6) colClass = 'cal-day-sat';
+        if (phHolidays[holKey]) colClass = 'cal-day-hol';
+
+        tableHtml += `<th class="${colClass}">${d}<br><span style="font-size: 0.65rem;">${dayOfWeek === 0 ? 'Sun' : dayOfWeek === 6 ? 'Sat' : 'Wk'}</span></th>`;
+      }
+      tableHtml += `</tr></thead><tbody>`;
 
       state.employees.forEach(emp => {
-        html += `<div style="margin-bottom: 16px;">
-          <strong style="font-size: 0.9rem;">${emp.name} (${emp.pos})</strong>
-          <div class="att-grid">`;
-        for (let d = 1; d <= 31; d++) {
-          const status = (d % 7 === 0) ? 'a' : (d % 5 === 0) ? 'h' : 'p';
-          html += `<div class="att-cell ${status}">${d}</div>`;
+        tableHtml += `<tr><td><strong>${emp.name}</strong></td>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dayOfWeek = new Date(year, month, d).getDay();
+          const holKey = `${month}-${d}`;
+
+          if (dayOfWeek === 0) {
+            tableHtml += `<td class="cal-day-sun">OFF</td>`;
+          } else if (phHolidays[holKey]) {
+            tableHtml += `<td class="cal-day-hol" title="${phHolidays[holKey]}">HOL</td>`;
+          } else if (dayOfWeek === 6) {
+            tableHtml += `<td class="cal-day-sat">PAY</td>`;
+          } else {
+            tableHtml += `<td style="color: var(--brand-green); font-weight: bold;">P</td>`;
+          }
         }
-        html += `</div></div>`;
+        tableHtml += `</tr>`;
       });
 
-      container.innerHTML = html;
+      tableHtml += `</tbody></table>`;
+      document.getElementById('calendar-table-container').innerHTML = tableHtml;
     }
 
     function renderAll() {
-      // Dynamic Select Dropdowns
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
       if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
@@ -861,7 +949,7 @@
       document.getElementById('log-party').innerHTML = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
       
       toggleLogisticsItemOptions();
-      renderAttendanceGrid();
+      renderAttendanceCalendar();
 
       // Shift Open/Close Table
       document.getElementById('tbl-openclose').innerHTML = state.openclose.map((o, idx) => `
@@ -878,7 +966,7 @@
         </tr>
       `).join('');
 
-      // Multi-Shift Batch Lifecycle Table
+      // Batch Table
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
@@ -894,7 +982,7 @@
         </tr>
       `).join('');
 
-      // 2-Hour Furnace Health Watch Table
+      // Furnace Inspection Table
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
         <tr>
           <td><strong>${fw.datetime}</strong></td>
@@ -908,29 +996,42 @@
         </tr>
       `).join('');
 
-      // Payroll Ledger with Vale Balance and Print Paystub Button
+      // Vale Receipt Voucher Table
+      document.getElementById('tbl-vale-vouchers').innerHTML = state.valeVouchers.map((v, idx) => `
+        <tr>
+          <td><strong>${v.id}</strong></td>
+          <td>${v.date}</td>
+          <td>${v.empName}</td>
+          <td><strong>₱${v.amount.toLocaleString()}</strong></td>
+          <td>${v.notes}</td>
+          <td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printValeVoucher(${idx})">🖨️ Print Receipt</button></td>
+        </tr>
+      `).join('');
+
+      // Payroll Ledger with YTD Days Present & Paystub Print Button
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const gross = e.daysWorked * e.rate;
         const vale = e.valeBalance || 0;
         const valeDeduct = Math.min(vale, gross);
         const net = gross - valeDeduct;
+        const ytdPresent = (e.ytdPresentDays || 0) + e.daysWorked;
 
         return `
           <tr>
             <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
             <td>₱${e.rate}</td>
             <td>${e.daysWorked} days</td>
+            <td><strong>${ytdPresent} days</strong></td>
             <td>₱${gross.toLocaleString()}</td>
             <td><strong style="color: var(--brand-gold);">₱${vale.toLocaleString()}</strong></td>
             <td>₱${valeDeduct.toLocaleString()}</td>
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString()}</strong></td>
-            <td>₱${e.ytdSalary.toLocaleString()}</td>
             <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Paystub Slip</button></td>
           </tr>
         `;
       }).join('');
 
-      // Inventory Balances
+      // Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -942,7 +1043,7 @@
         </tr>
       `).join('');
 
-      // Logistics Tickets
+      // Logistics Ledger
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -986,7 +1087,7 @@
       // Smart Recommendation Alerts
       const lowItems = state.inventory.filter(i => i.stock < i.min);
       if (lowItems.length > 0) {
-        document.getElementById('rec-stock-text').innerHTML = `<strong style="color: var(--brand-danger);">⚠️ REORDER NEEDED:</strong> Stock level for <strong>${lowItems.map(i => i.name).join(', ')}</strong> is below safety limit. Contact suppliers to prevent furnace idle time.`;
+        document.getElementById('rec-stock-text').innerHTML = `<strong style="color: var(--brand-danger);">⚠️ REORDER NEEDED:</strong> Stock level for <strong>${lowItems.map(i => i.name).join(', ')}</strong> is below safety threshold. Contact suppliers to prevent furnace idle time.`;
       } else {
         document.getElementById('rec-stock-text').innerHTML = `✅ <strong>Feedstock buffers are healthy.</strong> Stock is sufficient for continuous furnace runs.`;
       }
