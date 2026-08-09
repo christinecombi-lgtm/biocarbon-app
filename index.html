@@ -161,9 +161,9 @@
     }
 
     @media print {
-      body * { visibility: hidden; }
-      #printable-area, #printable-area * { visibility: visible; }
-      #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+      body * { visibility: hidden !important; }
+      #printable-area, #printable-area * { visibility: visible !important; }
+      #printable-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
     }
 
     @media (max-width: 1024px) {
@@ -207,11 +207,11 @@
       <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
       <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
       <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
-      <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Payroll, Vale & Paystubs</a>
+      <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Weekly Payroll, Vale & Paystubs</a>
       <a class="nav-link" onclick="switchTab('gov-remittances', this)"><span>🏛️</span> Government Remittances</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
-      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Inventory Balances</a>
-      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Deliveries & Official Receipts</a>
+      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Per-Kilo Pricing</a>
+      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Sales Dispatches & Official Receipts</a>
       <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Downtime & Bottlenecks</a>
       <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
     </aside>
@@ -458,7 +458,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: PAYROLL, CASH ADVANCE (VALE) & PRINTABLE PAYSTUBS -->
+      <!-- TAB 8: WEEKLY PAYROLL, CASH ADVANCE (VALE) & PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
@@ -488,7 +488,15 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Automated Payroll Ledger (With SSS, PhilHealth, Pag-IBIG Deductions for Regular Staff)</div>
+          <div class="panel-title">
+            <span>Weekly Payroll Ledger (7-Day Payout Cycles with Statutory Deductions)</span>
+            <select id="pay-week-select" class="form-control" style="width: auto;" onchange="renderAll()">
+              <option value="1">Week 1 (Days 1-7)</option>
+              <option value="2">Week 2 (Days 8-14)</option>
+              <option value="3" selected>Week 3 (Days 15-21)</option>
+              <option value="4">Week 4 (Days 22-28+)</option>
+            </select>
+          </div>
           <div class="table-container">
             <table>
               <thead>
@@ -496,13 +504,13 @@
                   <th>Employee Name</th>
                   <th>Type</th>
                   <th>Daily Rate</th>
-                  <th>Days Present</th>
-                  <th>Gross Pay</th>
-                  <th>SSS (EE)</th>
-                  <th>PhilHealth (EE)</th>
-                  <th>Pag-IBIG (EE)</th>
+                  <th>Days Present (Week)</th>
+                  <th>Weekly Gross</th>
+                  <th>Est. SSS (Wk)</th>
+                  <th>Est. PH (Wk)</th>
+                  <th>Est. Pag-IBIG (Wk)</th>
                   <th>Vale Deduct</th>
-                  <th>Net Payable</th>
+                  <th>Net Weekly Pay</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -511,17 +519,16 @@
           </div>
         </div>
 
-        <div id="printable-area" style="display: none;"></div>
       </div>
 
       <!-- TAB 9: GOVERNMENT REMITTANCES -->
       <div id="gov-remittances" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
-            <span>Philippine Government Statutory Remittances Summary (2025/2026 Schedule)</span>
+            <span>Philippine Government Statutory Remittances Summary (2025/2026 Monthly Schedule)</span>
           </div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-            Statutory Rates Applied: <strong>SSS</strong> (15% Total: 5% Employee, 10% Employer + EC); <strong>PhilHealth</strong> (5% Total: 2.5% Employee, 2.5% Employer); <strong>Pag-IBIG</strong> (2% Employee capped ₱200, 2% Employer capped ₱200). Contractual employees are exempt from contributions.
+            Statutory Monthly Rates: <strong>SSS</strong> (15% Total: 5% EE, 10% ER + EC fee); <strong>PhilHealth</strong> (5% Total: 2.5% EE, 2.5% ER); <strong>Pag-IBIG</strong> (2% EE capped ₱200, 2% ER capped ₱200). Contractual employees are exempt.
           </p>
           <div class="table-container">
             <table>
@@ -529,7 +536,7 @@
                 <tr>
                   <th>Employee Name</th>
                   <th>Type</th>
-                  <th>Monthly Salary Base</th>
+                  <th>Est. Monthly Base</th>
                   <th>SSS EE</th>
                   <th>SSS ER (+EC)</th>
                   <th>PH EE</th>
@@ -567,15 +574,15 @@
         </div>
       </div>
 
-      <!-- TAB 11: INVENTORY BALANCES -->
+      <!-- TAB 11: INVENTORY BALANCES WITH PER-KILO PRICES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Real-Time Inventory Balances</div>
+          <div class="panel-title">Real-Time Inventory Balances & Selling Prices (Per Kilo)</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>SKU</th><th>Category</th><th>Item Name</th><th>Available Stock (kg)</th><th>Min Threshold</th><th>Stock Status</th>
+                  <th>SKU</th><th>Category</th><th>Item Name</th><th>Selling Rate (₱/kg)</th><th>Available Stock (kg)</th><th>Min Threshold</th><th>Stock Status</th>
                 </tr>
               </thead>
               <tbody id="tbl-inventory"></tbody>
@@ -587,7 +594,7 @@
       <!-- TAB 12: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Record Delivery Ticket & Invoice</div>
+          <div class="panel-title">Record Delivery Ticket & Sales Invoice</div>
           <form onsubmit="handleLogisticsTicket(event)">
             <div class="form-grid">
               <div class="form-group">
@@ -598,9 +605,9 @@
                 </select>
               </div>
               <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control"></select></div>
-              <div class="form-group"><label>Item</label><select id="log-item" class="form-control"></select></div>
-              <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="2000" required></div>
-              <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="10000" required></div>
+              <div class="form-group"><label>Item (Per-Kilo Priced)</label><select id="log-item" class="form-control" onchange="autoCalculateLogisticsAmount()"></select></div>
+              <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="500" oninput="autoCalculateLogisticsAmount()" required></div>
+              <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="15000" required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">🚚 Process Logistics Ticket</button>
           </form>
@@ -612,7 +619,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Ticket ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity</th><th>Amount</th><th>Action</th>
+                  <th>Ticket ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity (kg)</th><th>Total Amount</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-logistics"></tbody>
@@ -700,8 +707,11 @@
     </main>
   </div>
 
+  <!-- PRINTABLE CONTAINER OUTSIDE MAIN DISPLAY TO PREVENT BLANK PRINTS -->
+  <div id="printable-area" style="display: none;"></div>
+
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v18';
+    const STORAGE_KEY = 'cbcm_master_suite_v19';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -745,10 +755,10 @@
 
     const defaultState = {
       inventory: [
-        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800, min: 1000 },
-        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 1500 },
-        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1800, min: 500 },
-        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300 }
+        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800, min: 1000, pricePerKg: 4.00 },
+        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 1500, pricePerKg: 5.50 },
+        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1800, min: 500, pricePerKg: 30.00 },
+        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300, pricePerKg: 25.00 }
       ],
       batches: [
         { id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
@@ -804,9 +814,19 @@
       const type = document.getElementById('log-type').value;
       const itemSelect = document.getElementById('log-item');
       if (type === 'INBOUND_SUPPLIER') {
-        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (₱${i.pricePerKg}/kg)</option>`).join('');
       } else {
-        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
+        itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name} (₱${i.pricePerKg}/kg)</option>`).join('');
+      }
+      autoCalculateLogisticsAmount();
+    }
+
+    function autoCalculateLogisticsAmount() {
+      const selectedText = document.getElementById('log-item').value;
+      const qty = parseFloat(document.getElementById('log-qty').value) || 0;
+      const invItem = state.inventory.find(i => selectedText.includes(i.name));
+      if (invItem && qty > 0) {
+        document.getElementById('log-amount').value = (qty * invItem.pricePerKg).toFixed(2);
       }
     }
 
@@ -927,11 +947,11 @@
       e.preventDefault();
       const type = document.getElementById('log-type').value;
       const party = document.getElementById('log-party').value;
-      const itemName = document.getElementById('log-item').value;
+      const rawItemVal = document.getElementById('log-item').value;
+      const invItem = state.inventory.find(i => rawItemVal.includes(i.name));
+      const itemName = invItem ? invItem.name : rawItemVal;
       const qty = parseFloat(document.getElementById('log-qty').value);
       const amount = parseFloat(document.getElementById('log-amount').value);
-
-      const invItem = state.inventory.find(i => i.name === itemName);
 
       if (type === 'INBOUND_SUPPLIER') {
         if (invItem) invItem.stock += qty;
@@ -1011,6 +1031,28 @@
       saveState(); renderAll();
     }
 
+    // Weekly Attendance Calculation Helper
+    function calculateEmployeeWeeklyPresent(emp, month, year, weekNum) {
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      let startDay = (weekNum - 1) * 7 + 1;
+      let endDay = weekNum === 4 ? daysInMonth : Math.min(daysInMonth, weekNum * 7);
+      let total = 0;
+
+      for (let d = startDay; d <= endDay; d++) {
+        const dayOfWeek = new Date(year, month, d).getDay();
+        const holKey = `${month}-${d}`;
+        const dateKey = `${year}-${month}-${d}`;
+
+        const isSunday = (dayOfWeek === 0);
+        const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
+
+        if (status === 'P' || status === 'PAY') total += 1.0;
+        else if (status === 'H') total += 0.5;
+      }
+      return total;
+    }
+
     function calculateEmployeeMonthlyPresent(emp, month, year) {
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       let total = 0;
@@ -1030,21 +1072,37 @@
       return total;
     }
 
+    // Direct DOM Printing Engine (Prevents Blank PDF/Printer Pages)
+    function executePrint(htmlContent) {
+      const area = document.getElementById('printable-area');
+      area.innerHTML = htmlContent;
+      area.style.display = 'block';
+      setTimeout(() => {
+        window.print();
+        area.style.display = 'none';
+        area.innerHTML = '';
+      }, 150);
+    }
+
     function printSalesInvoice(ticketIndex) {
       const t = state.logistics[ticketIndex];
+      const invItem = state.inventory.find(i => i.name === t.item);
+      const ratePerKg = invItem ? invItem.pricePerKg : (t.amount / t.qty);
+
       const invoiceHtml = `
         <div class="printable-document">
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · BIR Registered Official Sales Receipt</p>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · BIR Official Sales Receipt</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          <p><strong>Receipt / Invoice No:</strong> INV-${t.id}</p>
+          <p><strong>Official Receipt No:</strong> OR-${t.id}</p>
           <p><strong>Customer Name:</strong> ${t.party}</p>
-          <p><strong>Product Delivered:</strong> ${t.item}</p>
+          <p><strong>Product Item:</strong> ${t.item}</p>
+          <p><strong>Unit Selling Price:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
           <p><strong>Quantity Dispatched:</strong> ${t.qty.toLocaleString()} kg</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL AMOUNT PAID: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL PAID AMOUNT: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.75rem;">Received in good order and condition. Thank you for supporting sustainable Philippine biochar.</p>
+          <p style="font-size: 0.75rem;">Received in full and good order. Thank you for your business!</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Customer Received By</div>
@@ -1052,58 +1110,59 @@
           </div>
         </div>
       `;
-
-      const area = document.getElementById('printable-area');
-      area.innerHTML = invoiceHtml;
-      area.style.display = 'block';
-      window.print();
-      area.style.display = 'none';
+      executePrint(invoiceHtml);
     }
 
     function printPaystub(empIndex) {
       const month = parseInt(document.getElementById('cal-month').value);
       const year = parseInt(document.getElementById('cal-year').value);
+      const weekNum = parseInt(document.getElementById('pay-week-select').value || 3);
       const emp = state.employees[empIndex];
-      const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
+      
+      const weeklyDays = calculateEmployeeWeeklyPresent(emp, month, year, weekNum);
+      const weeklyGross = weeklyDays * emp.rate;
 
-      const gross = monthlyDays * emp.rate;
+      // Estimated Monthly Base for Statutory Calculations (4 Weeks)
+      const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
+      const estMonthlyGross = monthlyDays * emp.rate;
 
       let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
       if (emp.type === 'Regular') {
-        sss = computeSSS(gross);
-        ph = computePhilHealth(gross);
-        pagibig = computePagIBIG(gross);
+        let fullSss = computeSSS(estMonthlyGross);
+        let fullPh = computePhilHealth(estMonthlyGross);
+        let fullPagibig = computePagIBIG(estMonthlyGross);
+        
+        sss.ee = fullSss.ee / 4;
+        ph.ee = fullPh.ee / 4;
+        pagibig.ee = fullPagibig.ee / 4;
       }
 
       const totalDeductions = sss.ee + ph.ee + pagibig.ee;
-      const valeDeduct = Math.min(emp.valeBalance || 0, gross - totalDeductions);
-      const netPay = Math.max(0, gross - totalDeductions - valeDeduct);
+      const valeDeduct = Math.min(emp.valeBalance || 0, weeklyGross - totalDeductions);
+      const netPay = Math.max(0, weeklyGross - totalDeductions - valeDeduct);
       const remainingVale = (emp.valeBalance || 0) - valeDeduct;
-      const lifetimeDays = (emp.lifetimePresentDays || 0) + monthlyDays;
 
       const stubHtml = `
         <div class="printable-document">
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Official Payroll Paystub</p>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Weekly Paystub Slip (Week ${weekNum})</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
           <p><strong>Employee Name:</strong> ${emp.name} (${emp.type || 'Regular'})</p>
           <p><strong>Job Title / Position:</strong> ${emp.pos}</p>
           <p><strong>Daily Wage Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
-          <p><strong>Monthly Days Present:</strong> ${monthlyDays} days</p>
-          <p><strong>Lifetime Total Days Worked:</strong> ${lifetimeDays} days</p>
+          <p><strong>Weekly Days Worked:</strong> ${weeklyDays} days</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Gross Earnings (${monthlyDays} days x ₱${emp.rate}): ₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p>Weekly Gross Earnings (${weeklyDays} days x ₱${emp.rate}): ₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <br>
-          <p style="font-weight: bold;">Statutory Government Deductions:</p>
-          <p> · SSS Contribution (EE Share): -₱${sss.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · PhilHealth Premium (EE Share): -₱${ph.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · Pag-IBIG Fund (EE Share): -₱${pagibig.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-weight: bold;">Weekly Statutory Deductions (Est. 1/4th Monthly):</p>
+          <p> · SSS Contribution (EE): -₱${sss.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · PhilHealth Premium (EE): -₱${ph.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · Pag-IBIG Fund (EE): -₱${pagibig.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <p> · Cash Advance (Vale) Deduction: -₱${valeDeduct.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 1.1rem; font-weight: bold;">NET PAYOUT AMOUNT: ₱${netPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-size: 1.1rem; font-weight: bold;">NET WEEKLY PAYOUT: ₱${netPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
           <p>Remaining Outstanding Vale Balance: ₱${remainingVale.toLocaleString()}</p>
-          <p>Year-To-Date (YTD) Cumulative Net Earnings: ₱${(emp.ytdNetSalary + netPay).toLocaleString()}</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Employee Signature</div>
@@ -1111,12 +1170,7 @@
           </div>
         </div>
       `;
-
-      const area = document.getElementById('printable-area');
-      area.innerHTML = stubHtml;
-      area.style.display = 'block';
-      window.print();
-      area.style.display = 'none';
+      executePrint(stubHtml);
     }
 
     function printValeVoucher(vIndex) {
@@ -1132,7 +1186,7 @@
           <p style="font-size: 1.2rem; font-weight: bold; margin: 10px 0;">AMOUNT ADVANCED: ₱${v.amount.toLocaleString()}</p>
           <p><strong>Purpose / Reason:</strong> ${v.notes}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance amount stated above and authorize its deduction from my upcoming payroll payouts.</p>
+          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance amount stated above and authorize its weekly deduction from my payroll payouts.</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Borrower Signature</div>
@@ -1140,12 +1194,7 @@
           </div>
         </div>
       `;
-
-      const area = document.getElementById('printable-area');
-      area.innerHTML = voucherHtml;
-      area.style.display = 'block';
-      window.print();
-      area.style.display = 'none';
+      executePrint(voucherHtml);
     }
 
     function filterContacts() {
@@ -1218,6 +1267,7 @@
     function renderAll() {
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
+      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
 
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
       if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
@@ -1229,7 +1279,7 @@
       if(document.getElementById('wb-inspector')) document.getElementById('wb-inspector').innerHTML = empOpts;
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
 
-      const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail)</option>`).join('');
+      const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail - ₱${i.pricePerKg}/kg)</option>`).join('');
       if(document.getElementById('proc-raw-item')) document.getElementById('proc-raw-item').innerHTML = rawOpts;
       if(document.getElementById('wb-item')) document.getElementById('wb-item').innerHTML = rawOpts;
 
@@ -1332,36 +1382,44 @@
         </tr>
       `).join('');
 
-      // Payroll Ledger Summary
+      // Weekly Payroll Ledger Summary
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
+        const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
+        const weeklyGross = weeklyDays * e.rate;
+
+        // Est. Monthly Gross for statutory portion
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
-        const gross = monthlyDays * e.rate;
+        const estMonthlyGross = monthlyDays * e.rate;
 
         let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
         if (e.type === 'Regular') {
-          sss = computeSSS(gross);
-          ph = computePhilHealth(gross);
-          pagibig = computePagIBIG(gross);
+          let fullSss = computeSSS(estMonthlyGross);
+          let fullPh = computePhilHealth(estMonthlyGross);
+          let fullPagibig = computePagIBIG(estMonthlyGross);
+
+          sss.ee = fullSss.ee / 4;
+          ph.ee = fullPh.ee / 4;
+          pagibig.ee = fullPagibig.ee / 4;
         }
 
         const totalStatutory = sss.ee + ph.ee + pagibig.ee;
         const vale = e.valeBalance || 0;
-        const valeDeduct = Math.min(vale, gross - totalStatutory);
-        const net = Math.max(0, gross - totalStatutory - valeDeduct);
+        const valeDeduct = Math.min(vale, weeklyGross - totalStatutory);
+        const net = Math.max(0, weeklyGross - totalStatutory - valeDeduct);
 
         return `
           <tr>
             <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
             <td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type || 'Regular'}</span></td>
             <td>₱${e.rate}</td>
-            <td><strong>${monthlyDays} days</strong></td>
-            <td>₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td><strong>${weeklyDays} days</strong></td>
+            <td>₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
             <td>-₱${sss.ee.toFixed(2)}</td>
             <td>-₱${ph.ee.toFixed(2)}</td>
             <td>-₱${pagibig.ee.toFixed(2)}</td>
             <td><strong style="color: var(--brand-gold);">₱${valeDeduct.toFixed(2)}</strong></td>
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
-            <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Paystub Slip</button></td>
+            <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Weekly Paystub</button></td>
           </tr>
         `;
       }).join('');
@@ -1401,19 +1459,20 @@
         `;
       }).join('');
 
-      // Inventory Table
+      // Inventory Table with Per-Kilo Selling Prices
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
         <tr>
           <td><strong>${i.id}</strong></td>
           <td>${i.category}</td>
           <td>${i.name}</td>
+          <td><strong style="color: var(--brand-orange);">₱${i.pricePerKg.toFixed(2)} / kg</strong></td>
           <td><strong>${i.stock.toLocaleString()} kg</strong></td>
           <td>${i.min.toLocaleString()} kg</td>
           <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'HEALTHY' : 'REORDER ALERT'}</span></td>
         </tr>
       `).join('');
 
-      // Logistics Tickets Ledger with Printable Sales Receipts
+      // Logistics Tickets Ledger
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -1421,9 +1480,9 @@
           <td>${l.party}</td>
           <td>${l.item}</td>
           <td>${l.qty.toLocaleString()} kg</td>
-          <td>₱${l.amount.toLocaleString()}</td>
+          <td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
           <td>
-            ${l.type === 'OUTBOUND_CUSTOMER' ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 Official Receipt</button>` : ''}
+            ${l.type === 'OUTBOUND_CUSTOMER' ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Official Receipt</button>` : ''}
             <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
           </td>
         </tr>
