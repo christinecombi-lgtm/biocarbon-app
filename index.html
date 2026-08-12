@@ -111,7 +111,7 @@
     .kpi-main-val { font-size: 1.5rem; font-weight: 800; color: var(--text-main); margin: 6px 0 2px 0; }
 
     .panel { background-color: var(--card-bg); border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; border: 1px solid var(--border-light); }
-    .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+    .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
     .chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
     .chart-card { background: var(--card-bg); padding: 20px; border-radius: 10px; border: 1px solid var(--border-light); }
@@ -123,6 +123,7 @@
     .form-control { padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.88rem; outline: none; }
 
     .btn { background-color: var(--brand-orange); color: #ffffff; font-weight: 700; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-secondary { background-color: var(--brand-blue); color: #ffffff; font-weight: 700; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; }
     .btn-danger { background-color: #fee2e2; color: var(--brand-danger); border: 1px solid var(--brand-danger); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
 
     .search-input { padding: 10px 16px; width: 100%; max-width: 360px; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.88rem; outline: none; }
@@ -162,7 +163,7 @@
       background: #ffffff;
       border: 2px dashed #000000;
       padding: 24px;
-      max-width: 650px;
+      max-width: 750px;
       margin: 20px auto;
       font-family: 'Courier New', Courier, monospace;
       color: #000;
@@ -585,7 +586,17 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Cash Advance (Vale) Multi-Voucher FIFO Queue & Status</div>
+          <div class="panel-title">
+            <span>Cash Advance (Vale) Multi-Voucher FIFO Queue & Status</span>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <select id="soa-emp-select" class="form-control" style="width: auto; font-size: 0.8rem;"></select>
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">From:</span>
+              <input type="date" id="soa-date-from" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-01">
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To:</span>
+              <input type="date" id="soa-date-to" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-15">
+              <button class="btn-secondary" onclick="printSOAFromDropdown()">📄 Print / Save SOA PDF</button>
+            </div>
+          </div>
           <div class="table-container">
             <table>
               <thead>
@@ -824,7 +835,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v22';
+    const STORAGE_KEY = 'cbcm_master_suite_v24';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -890,7 +901,8 @@
         { id: "WB-301", date: "2026-08-05", item: "Spiny Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, inspector: "Amber" }
       ],
       valeVouchers: [
-        { id: "VALE-901", date: "2026-08-01", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" }
+        { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" },
+        { id: "VALE-902", date: "2026-08-12", empName: "Amber", amount: 1500, remainingBalance: 1500, planType: "50", minPct: 50, customAmt: null, status: "ACTIVE", notes: "School fees advance" }
       ],
       logistics: [
         { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
@@ -1435,6 +1447,113 @@
       executePrint(voucherHtml);
     }
 
+    function printEmployeeCaSOAByName(empName, fromDate = null, toDate = null) {
+      const emp = state.employees.find(e => e.name === empName);
+      if (!emp) return;
+
+      let empVouchers = (state.valeVouchers || []).filter(v => v.empName === emp.name);
+
+      if (fromDate && toDate) {
+        empVouchers = empVouchers.filter(v => v.date >= fromDate && v.date <= toDate);
+      }
+
+      let totalIssued = 0;
+      let totalBalance = 0;
+
+      let rowsHtml = empVouchers.map(v => {
+        totalIssued += v.amount;
+        totalBalance += (v.remainingBalance || 0);
+        const paidAmt = v.amount - (v.remainingBalance || 0);
+        const planDisplay = v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`;
+        const isPaid = (v.remainingBalance || 0) <= 0 || v.status === 'PAID';
+
+        return `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 6px 4px;">${v.date}</td>
+            <td style="padding: 6px 4px;"><strong>${v.id}</strong></td>
+            <td style="padding: 6px 4px;">₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td style="padding: 6px 4px;">${planDisplay}</td>
+            <td style="padding: 6px 4px;">₱${paidAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td style="padding: 6px 4px;">₱${(v.remainingBalance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td style="padding: 6px 4px;"><strong>${isPaid ? 'PAID' : 'ACTIVE QUEUE'}</strong></td>
+          </tr>
+        `;
+      }).join('');
+
+      const periodLabel = (fromDate && toDate) ? `${fromDate} to ${toDate}` : 'All On-Record History';
+
+      if (empVouchers.length === 0) {
+        rowsHtml = `<tr><td colspan="7" style="text-align: center; padding: 12px;">No Cash Advance transactions found covering period (${periodLabel}).</td></tr>`;
+      }
+
+      const totalPaid = totalIssued - totalBalance;
+
+      const soaHtml = `
+        <div class="printable-document">
+          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · CASH ADVANCE STATEMENT OF ACCOUNT (SOA)</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 12px;">
+            <div>
+              <p><strong>Employee Name:</strong> ${emp.name}</p>
+              <p><strong>Position:</strong> ${emp.pos}</p>
+              <p><strong>Employment Status:</strong> ${emp.type || 'Regular'}</p>
+            </div>
+            <div style="text-align: right;">
+              <p><strong>Statement Date:</strong> ${new Date().toISOString().split('T')[0]}</p>
+              <p><strong>Coverage Period:</strong> ${periodLabel}</p>
+              <p><strong>Daily Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
+            </div>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 16px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #000;">
+                <th style="padding: 6px 4px;">Date</th>
+                <th style="padding: 6px 4px;">Voucher ID</th>
+                <th style="padding: 6px 4px;">Granted Amount</th>
+                <th style="padding: 6px 4px;">Plan</th>
+                <th style="padding: 6px 4px;">Total Repaid</th>
+                <th style="padding: 6px 4px;">Balance</th>
+                <th style="padding: 6px 4px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+
+          <div style="font-size: 0.85rem; line-height: 1.6;">
+            <p><strong>Period Cash Advances Granted:</strong> ₱${totalIssued.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+            <p><strong>Period Repayments Liquidated:</strong> ₱${totalPaid.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+            <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET UNPAID BALANCE (SELECTED PERIOD): ₱${totalBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin: 16px 0;">
+          <p style="font-size: 0.72rem; font-style: italic;">To save as PDF, select "Save as PDF" in your print options menu.</p>
+          
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 0.8rem;">
+            <div>___________________<br>Employee Acknowledgment</div>
+            <div>___________________<br>Approved By (Plant Owner)</div>
+          </div>
+        </div>
+      `;
+      executePrint(soaHtml);
+    }
+
+    function printSOAFromDropdown() {
+      const empName = document.getElementById('soa-emp-select').value;
+      const fromDate = document.getElementById('soa-date-from').value;
+      const toDate = document.getElementById('soa-date-to').value;
+      if (empName) printEmployeeCaSOAByName(empName, fromDate, toDate);
+    }
+
     function filterContacts() {
       const q = document.getElementById('contact-search').value.toLowerCase();
       const rows = document.querySelectorAll('#tbl-contacts tr');
@@ -1578,6 +1697,7 @@
       if(document.getElementById('maint-tech')) document.getElementById('maint-tech').innerHTML = empOpts;
       if(document.getElementById('wb-inspector')) document.getElementById('wb-inspector').innerHTML = empOpts;
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
+      if(document.getElementById('soa-emp-select')) document.getElementById('soa-emp-select').innerHTML = empOpts;
 
       const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail - ₱${i.pricePerKg}/kg)</option>`).join('');
       if(document.getElementById('proc-raw-item')) document.getElementById('proc-raw-item').innerHTML = rawOpts;
@@ -1712,7 +1832,7 @@
         `;
       }).join('');
 
-      // Weekly Payroll Ledger Summary with FIFO CA Logic
+      // Weekly Payroll Ledger Summary with FIFO CA Logic & SOA Trigger
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
         const weeklyGross = weeklyDays * e.rate;
@@ -1754,7 +1874,6 @@
             requiredDeduct = netTakeHomeBeforeVale * pct;
           }
 
-          // Enforce 30% absolute minimum floor unless balance is lower
           const minPctAmt = netTakeHomeBeforeVale * 0.30;
           if (requiredDeduct < minPctAmt) requiredDeduct = minPctAmt;
 
@@ -1776,7 +1895,10 @@
             <td><span class="badge badge-blue">${targetCaId}</span></td>
             <td><strong style="color: var(--brand-gold);">₱${valeDeduct.toFixed(2)}</strong></td>
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
-            <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Weekly Paystub</button></td>
+            <td>
+              <button class="btn" style="padding: 4px 8px; font-size: 0.72rem;" onclick="printPaystub(${idx})">🖨️ Paystub</button>
+              <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="printEmployeeCaSOAByName('${e.name}', '2026-08-01', '2026-08-15')">📄 Aug 1-15 SOA</button>
+            </td>
           </tr>
         `;
       }).join('');
