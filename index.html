@@ -587,14 +587,14 @@
 
         <div class="panel">
           <div class="panel-title">
-            <span>Cash Advance (Vale) Multi-Voucher FIFO Queue & Status</span>
+            <span>Cash Advance (Vale) Multi-Voucher FIFO Queue & SOA Generator</span>
             <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
               <select id="soa-emp-select" class="form-control" style="width: auto; font-size: 0.8rem;"></select>
-              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">From:</span>
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">From Date:</span>
               <input type="date" id="soa-date-from" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-01">
-              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To:</span>
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To Date:</span>
               <input type="date" id="soa-date-to" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-15">
-              <button class="btn-secondary" onclick="printSOAFromDropdown()">📄 Print / Save SOA PDF</button>
+              <button class="btn-secondary" onclick="printSOAFromDropdown()">📄 Print / Save Employee CA SOA PDF</button>
             </div>
           </div>
           <div class="table-container">
@@ -720,11 +720,12 @@
           <div class="panel-title">Record Delivery Ticket & Sales Invoice</div>
           <form onsubmit="handleLogisticsTicket(event)">
             <div class="form-grid">
+              <div class="form-group"><label>Ticket Date</label><input type="date" id="log-date" class="form-control" value="2026-08-08" required></div>
               <div class="form-group">
                 <label>Ticket Type</label>
                 <select id="log-type" class="form-control" onchange="toggleLogisticsItemOptions()">
                   <option value="INBOUND_SUPPLIER">Inbound Raw Material Pickup (Increases Stock)</option>
-                  <option value="OUTBOUND_CUSTOMER">Outbound Sales Delivery (Deducts Stock & Generates Revenue)</option>
+                  <option value="OUTBOUND_CUSTOMER" selected>Outbound Sales Delivery (Deducts Stock & Generates Revenue)</option>
                 </select>
               </div>
               <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control"></select></div>
@@ -737,12 +738,22 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Logistics Tickets & Official Sales Receipts</div>
+          <div class="panel-title">
+            <span>Logistics Tickets & Customer Sales Statement of Account (SOA)</span>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <select id="sales-soa-cust-select" class="form-control" style="width: auto; font-size: 0.8rem;"></select>
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">From Date:</span>
+              <input type="date" id="sales-soa-date-from" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-01">
+              <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To Date:</span>
+              <input type="date" id="sales-soa-date-to" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-15">
+              <button class="btn-secondary" onclick="printSalesSOAFromDropdown()">📄 Print Customer Sales SOA</button>
+            </div>
+          </div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Ticket ID</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity (kg)</th><th>Total Amount</th><th>Action</th>
+                  <th>Ticket ID</th><th>Date</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity (kg)</th><th>Total Amount</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-logistics"></tbody>
@@ -835,7 +846,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v24';
+    const STORAGE_KEY = 'cbcm_master_suite_v26';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -905,8 +916,9 @@
         { id: "VALE-902", date: "2026-08-12", empName: "Amber", amount: 1500, remainingBalance: 1500, planType: "50", minPct: 50, customAmt: null, status: "ACTIVE", notes: "School fees advance" }
       ],
       logistics: [
-        { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
-        { id: "TICKET-502", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 }
+        { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
+        { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 },
+        { id: "TICKET-503", date: "2026-08-12", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Fine Biochar Powder", qty: 400, amount: 10000 }
       ],
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
@@ -1140,6 +1152,7 @@
 
     function handleLogisticsTicket(e) {
       e.preventDefault();
+      const date = document.getElementById('log-date').value;
       const type = document.getElementById('log-type').value;
       const party = document.getElementById('log-party').value;
       const rawItemVal = document.getElementById('log-item').value;
@@ -1160,7 +1173,7 @@
 
       state.logistics.unshift({
         id: `TICKET-${Date.now().toString().slice(-3)}`,
-        type, party, item: itemName, qty, amount
+        date, type, party, item: itemName, qty, amount
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -1316,6 +1329,7 @@
           <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · BIR Official Sales Receipt</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
           <p><strong>Official Receipt No:</strong> OR-${t.id}</p>
+          <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
           <p><strong>Customer Name:</strong> ${t.party}</p>
           <p><strong>Product Item:</strong> ${t.item}</p>
           <p><strong>Unit Selling Price:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
@@ -1334,117 +1348,103 @@
       executePrint(invoiceHtml);
     }
 
-    function printPaystub(empIndex) {
-      const month = parseInt(document.getElementById('cal-month').value);
-      const year = parseInt(document.getElementById('cal-year').value);
-      const weekNum = parseInt(document.getElementById('pay-week-select').value || 3);
-      const emp = state.employees[empIndex];
-      
-      const weeklyDays = calculateEmployeeWeeklyPresent(emp, month, year, weekNum);
-      const weeklyGross = weeklyDays * emp.rate;
+    function printCustomerSalesSOA(customerName, fromDate = null, toDate = null) {
+      const contact = state.contacts.find(c => c.company === customerName) || { company: customerName, person: 'Procurement Lead', address: 'Tacloban City' };
 
-      const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
-      const estMonthlyGross = monthlyDays * emp.rate;
+      let salesTickets = (state.logistics || []).filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.party === customerName);
 
-      let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
-      if (emp.type === 'Regular') {
-        let fullSss = computeSSS(estMonthlyGross);
-        let fullPh = computePhilHealth(estMonthlyGross);
-        let fullPagibig = computePagIBIG(estMonthlyGross);
-        
-        sss.ee = fullSss.ee / 4;
-        ph.ee = fullPh.ee / 4;
-        pagibig.ee = fullPagibig.ee / 4;
+      if (fromDate && toDate) {
+        salesTickets = salesTickets.filter(l => !l.date || (l.date >= fromDate && l.date <= toDate));
       }
 
-      const totalDeductions = sss.ee + ph.ee + pagibig.ee;
-      const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalDeductions);
+      let totalQty = 0;
+      let totalSalesAmt = 0;
 
-      // FIFO CA Deductions
-      const activeVouchers = state.valeVouchers
-        .filter(v => v.empName === emp.name && (v.status === 'ACTIVE' || v.remainingBalance > 0))
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+      let rowsHtml = salesTickets.map(t => {
+        totalQty += t.qty;
+        totalSalesAmt += t.amount;
+        const ratePerKg = t.qty > 0 ? (t.amount / t.qty) : 0;
 
-      let valeDeduct = 0;
-      let targetCaId = "None";
+        return `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 6px 4px;">${t.date || 'N/A'}</td>
+            <td style="padding: 6px 4px;"><strong>OR-${t.id}</strong></td>
+            <td style="padding: 6px 4px;">${t.item}</td>
+            <td style="padding: 6px 4px;">${t.qty.toLocaleString()} kg</td>
+            <td style="padding: 6px 4px;">₱${ratePerKg.toFixed(2)}</td>
+            <td style="padding: 6px 4px;"><strong>₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
+          </tr>
+        `;
+      }).join('');
 
-      if (activeVouchers.length > 0) {
-        const primaryCa = activeVouchers[0];
-        targetCaId = primaryCa.id;
+      const periodLabel = (fromDate && toDate) ? `${fromDate} to ${toDate}` : 'All On-Record Dispatches';
 
-        let requiredDeduct = 0;
-        if (primaryCa.planType === 'CUSTOM' && primaryCa.customAmt) {
-          requiredDeduct = primaryCa.customAmt;
-        } else {
-          const pct = (primaryCa.minPct || 30) / 100;
-          requiredDeduct = netTakeHomeBeforeVale * pct;
-        }
-
-        const minPctAmt = netTakeHomeBeforeVale * 0.30;
-        if (requiredDeduct < minPctAmt) requiredDeduct = minPctAmt;
-
-        valeDeduct = Math.min(primaryCa.remainingBalance, requiredDeduct, netTakeHomeBeforeVale);
+      if (salesTickets.length === 0) {
+        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 12px;">No Sales Transactions found covering period (${periodLabel}).</td></tr>`;
       }
 
-      const netPay = Math.max(0, netTakeHomeBeforeVale - valeDeduct);
-      const totalRemainingVale = state.valeVouchers
-        .filter(v => v.empName === emp.name)
-        .reduce((s, v) => s + (v.remainingBalance || 0), 0);
-
-      const stubHtml = `
+      const salesSoaHtml = `
         <div class="printable-document">
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · Weekly Paystub Slip (Week ${weekNum})</p>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · CUSTOMER SALES STATEMENT OF ACCOUNT (SOA)</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          <p><strong>Employee Name:</strong> ${emp.name} (${emp.type || 'Regular'})</p>
-          <p><strong>Job Title / Position:</strong> ${emp.pos}</p>
-          <p><strong>Daily Wage Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
-          <p><strong>Weekly Days Worked:</strong> ${weeklyDays} days</p>
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 12px;">
+            <div>
+              <p><strong>Customer / Buyer:</strong> ${contact.company}</p>
+              <p><strong>Attention:</strong> ${contact.person || 'Procurement Lead'}</p>
+              <p><strong>Location:</strong> ${contact.address || 'Leyte'}</p>
+            </div>
+            <div style="text-align: right;">
+              <p><strong>Statement Date:</strong> ${new Date().toISOString().split('T')[0]}</p>
+              <p><strong>Coverage Period:</strong> ${periodLabel}</p>
+              <p><strong>Account Status:</strong> ACTIVE BUYER</p>
+            </div>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 16px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #000;">
+                <th style="padding: 6px 4px;">Date</th>
+                <th style="padding: 6px 4px;">Receipt #</th>
+                <th style="padding: 6px 4px;">Product Item</th>
+                <th style="padding: 6px 4px;">Qty (kg)</th>
+                <th style="padding: 6px 4px;">Rate/kg</th>
+                <th style="padding: 6px 4px;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Weekly Gross Earnings (${weeklyDays} days x ₱${emp.rate}): ₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <br>
-          <p style="font-weight: bold;">Weekly Statutory Deductions (Est. 1/4th Monthly):</p>
-          <p> · SSS Contribution (EE): -₱${sss.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · PhilHealth Premium (EE): -₱${ph.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · Pag-IBIG Fund (EE): -₱${pagibig.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · FIFO CA Repayment Deduction [Target ${targetCaId}]: -₱${valeDeduct.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 1.1rem; font-weight: bold;">NET WEEKLY PAYOUT: ₱${netPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Cumulative Active CA Balance Across Queue: ₱${totalRemainingVale.toLocaleString()}</p>
+
+          <div style="font-size: 0.85rem; line-height: 1.6;">
+            <p><strong>Total Biochar/Briquet Volume Delivered:</strong> ${totalQty.toLocaleString()} kg</p>
+            <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">TOTAL BILLABLE SALES AMOUNT: ₱${totalSalesAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin: 16px 0;">
+          <p style="font-size: 0.72rem; font-style: italic;">Thank you for your business. Please make payments via bank transfer or cashier's check to Combinido Biocarbon Manufacturing.</p>
+          
           <br><br>
-          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <div>___________________<br>Employee Signature</div>
-            <div>___________________<br>Plant Manager / Owner</div>
+          <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 0.8rem;">
+            <div>___________________<br>Customer Representative</div>
+            <div>___________________<br>Plant Sales Manager</div>
           </div>
         </div>
       `;
-      executePrint(stubHtml);
+      executePrint(salesSoaHtml);
     }
 
-    function printValeVoucher(vIndex) {
-      const v = state.valeVouchers[vIndex];
-      const voucherHtml = `
-        <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">CASH ADVANCE (VALE) RECEIPT VOUCHER</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          <p><strong>Voucher Control No:</strong> ${v.id}</p>
-          <p><strong>Date Issued:</strong> ${v.date}</p>
-          <p><strong>Employee Name:</strong> ${v.empName}</p>
-          <p style="font-size: 1.2rem; font-weight: bold; margin: 10px 0;">AMOUNT ADVANCED: ₱${v.amount.toLocaleString()}</p>
-          <p><strong>Agreed Deduction Plan:</strong> ${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}/payroll` : `${v.planType}% per payroll`}</p>
-          <p><strong>Purpose / Reason:</strong> ${v.notes}</p>
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance stated above and agree to the FIFO payroll deduction schedule (minimum 30% per payday) until full liquidation.</p>
-          <br><br>
-          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
-            <div>___________________<br>Borrower Signature</div>
-            <div>___________________<br>Authorized Disburser</div>
-          </div>
-        </div>
-      `;
-      executePrint(voucherHtml);
+    function printSalesSOAFromDropdown() {
+      const custName = document.getElementById('sales-soa-cust-select').value;
+      const fromDate = document.getElementById('sales-soa-date-from').value;
+      const toDate = document.getElementById('sales-soa-date-to').value;
+      if (custName) printCustomerSalesSOA(custName, fromDate, toDate);
     }
 
     function printEmployeeCaSOAByName(empName, fromDate = null, toDate = null) {
@@ -1709,6 +1709,9 @@
       if(document.getElementById('log-party')) document.getElementById('log-party').innerHTML = supplierOpts;
       if(document.getElementById('wb-supplier')) document.getElementById('wb-supplier').innerHTML = supplierOpts;
       if(document.getElementById('exp-vendor')) document.getElementById('exp-vendor').innerHTML = supplierOpts;
+
+      const customerOpts = state.contacts.filter(c => c.type === 'Customer').map(c => `<option value="${c.company}">${c.company}</option>`).join('');
+      if(document.getElementById('sales-soa-cust-select')) document.getElementById('sales-soa-cust-select').innerHTML = customerOpts || supplierOpts;
       
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
@@ -1955,6 +1958,7 @@
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
+          <td>${l.date || 'N/A'}</td>
           <td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound Stock' : 'Outbound Sale'}</span></td>
           <td>${l.party}</td>
           <td>${l.item}</td>
