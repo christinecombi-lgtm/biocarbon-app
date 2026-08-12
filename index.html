@@ -216,7 +216,7 @@
       <a class="nav-link active" onclick="switchTab('owner-suite', this)"><span>📈</span> Business Health & Decisions</a>
       <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
-      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle</a>
+      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle & QC</a>
       <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
       <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
       <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
@@ -394,10 +394,10 @@
         </div>
       </div>
 
-      <!-- TAB 4: BATCH CARBONIZATION CYCLES -->
+      <!-- TAB 4: BATCH CARBONIZATION CYCLES & QC -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Log 6-8 Hour Batch Pyrolysis Lifecycle</div>
+          <div class="panel-title">Log 6-8 Hour Batch Pyrolysis Lifecycle & QC Inspection</div>
           <form onsubmit="handleProcessBatch(event)">
             <div class="form-grid">
               <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
@@ -411,19 +411,34 @@
               <div class="form-group"><label>Cook End / Unload Time (6-8 hrs later)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
               <div class="form-group"><label>Cook End Duty (Cooler & Unloader)</label><select id="proc-op-end" class="form-control"></select></div>
 
-              <div class="form-group"><label>Peak Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="580" required></div>
+              <div class="form-group">
+                <label>Peak Operating Temp (°C)</label>
+                <input type="number" id="proc-temp" class="form-control" placeholder="580" required>
+              </div>
+
+              <!-- QUALITY CONTROL & TESTING FIELDS -->
+              <div class="form-group"><label>Pre-Burn Feedstock MC %</label><input type="number" step="0.1" id="proc-pre-mc" class="form-control" placeholder="18.5" required></div>
+              <div class="form-group">
+                <label>Biochar Yield Quality Grade</label>
+                <select id="proc-qc-grade" class="form-control">
+                  <option value="Grade A">Grade A (High Fixed Carbon / Metallic Sound)</option>
+                  <option value="Grade B">Grade B (Acceptable / Minor Underburn)</option>
+                  <option value="Grade C">Grade C (Defective / Overburnt Ash)</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>QC Test Remarks / Bench Notes</label><input type="text" id="proc-qc-notes" class="form-control" placeholder="Metallic clink sound; clean burn, low ash content"></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Batch Lifecycle & Update Stock</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Batch Lifecycle & Auto-Update Stock</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Batch Lifecycle Ledger & Shift Duty Handover</div>
+          <div class="panel-title">Batch Lifecycle Ledger & QC History</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Pre-MC %</th><th>Quality Grade</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>QC Remarks</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -893,9 +908,20 @@
         </div>
       </div>
 
-      <!-- TAB 15: MASTER DATA MANAGER -->
+      <!-- TAB 15: MASTER DATA MANAGER & CSV QR IMPORTER -->
       <div id="settings" class="tab-pane">
         
+        <div class="panel">
+          <div class="panel-title">📥 Bulk Sync Google Form Crew QR Submissions (.CSV)</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Upload your downloaded Google Form response spreadsheet (`.csv`) to automatically populate batch carbonization runs, weighbridge tickets, 2-hour furnace checks, and downtime logs across all application tabs without double entries.
+          </p>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <input type="file" id="qr-csv-file" accept=".csv" class="form-control" style="max-width: 380px;">
+            <button class="btn" onclick="importQRFormCSV()">⚡ Bulk Sync QR Submissions to Plant Ledger</button>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed & Finished Goods)</div>
           <form onsubmit="handleSaveItem(event)">
@@ -1027,10 +1053,11 @@
         { id: "EXP-102", date: "2026-08-06", category: "Machinery & Refractory Parts", asset: "Furnace #1", vendor: "Tacloban Industrial Hardware", inv: "OR-4410", method: "Petty Cash", amount: 3500, notes: "High-temp refractory seal & gaskets" }
       ],
       batches: [
-        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
+        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, preMcPct: 18.5, qcGrade: "Grade A", opStart: "Amber", opEnd: "Beryl", maxTemp: 580, qcNotes: "Metallic clink sound; low ash content" }
       ],
       furnaceWatch: [
-        { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" }
+        { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" },
+        { datetime: "2026-08-08 12:00", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Peak carbonization temperature achieved.", attendant: "Beryl" }
       ],
       maintenanceLogs: [
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
@@ -1078,6 +1105,82 @@
     let state = loadState();
     let financialChartInstance = null;
     let inventoryChartInstance = null;
+
+    // CSV IMPORT UTILITY: Bulk Syncs Google Form Submissions
+    function importQRFormCSV() {
+      const fileInput = document.getElementById('qr-csv-file');
+      const file = fileInput.files[0];
+      if (!file) { alert("Please select a downloaded Google Form CSV file."); return; }
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        let importedCount = 0;
+
+        for (let i = 1; i < lines.length; i++) {
+          if (!lines[i].trim()) continue;
+          
+          const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
+          const category = cols[1] || "";
+
+          if (category.includes("Furnace Batch")) {
+            state.batches.unshift({
+              id: `BATCH-QR-${Date.now().toString().slice(-3)}-${i}`,
+              rawItem: cols[2] || "Bamboo",
+              consumedKg: parseFloat(cols[3]) || 0,
+              finItem: cols[4] || "Charcoal Briquettes",
+              yieldKg: parseFloat(cols[5]) || 0,
+              opStart: cols[7] || "Loader Crew",
+              opEnd: cols[9] || "Unloader Crew",
+              maxTemp: parseInt(cols[10]) || 580,
+              preMcPct: parseFloat(cols[6]) || 18.0,
+              qcGrade: cols[8] || "Grade A",
+              qcNotes: cols[11] || "QR Submitted Batch Log"
+            });
+            importedCount++;
+          } else if (category.includes("Weighbridge")) {
+            state.weighbridgeLogs.unshift({
+              id: `WB-QR-${Date.now().toString().slice(-3)}-${i}`,
+              date: cols[11] || new Date().toISOString().split('T')[0],
+              item: cols[13] || "Bamboo",
+              supplier: cols[14] || "QR Supplier",
+              grossKg: parseFloat(cols[15]) || 0,
+              tareKg: parseFloat(cols[16]) || 0,
+              mcPct: parseFloat(cols[17]) || 15.0,
+              amount: parseFloat(cols[20]) || 0,
+              terms: cols[18] || "COD",
+              status: cols[19] || "PAID",
+              inspector: cols[12] || "Intake Inspector"
+            });
+            importedCount++;
+          } else if (category.includes("2-Hour Inspection")) {
+            state.furnaceWatch.unshift({
+              datetime: cols[21] || new Date().toLocaleString(),
+              unit: cols[23] || "Furnace #1",
+              temp: parseInt(cols[24]) || 450,
+              vent: cols[25] || "NORMAL",
+              safety: cols[26] || "SAFE",
+              attendant: cols[22] || "Inspector",
+              notes: cols[27] || "QR Inspection Note"
+            });
+            importedCount++;
+          } else if (category.includes("Downtime")) {
+            state.downtime.unshift({
+              id: `DT-QR-${Date.now().toString().slice(-3)}-${i}`,
+              reason: cols[30] || "Stoppage Incident",
+              duration: parseInt(cols[31]) || 30
+            });
+            importedCount++;
+          }
+        }
+
+        saveState();
+        renderAll();
+        alert(`Successfully imported ${importedCount} QR factory logs into your plant ledger!`);
+      };
+      reader.readAsText(file);
+    }
 
     function saveGovRates() {
       state.govRates = {
@@ -1324,7 +1427,10 @@
         rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty,
         opStart: document.getElementById('proc-op-start').value,
         opEnd: document.getElementById('proc-op-end').value,
-        maxTemp: parseInt(document.getElementById('proc-temp').value)
+        maxTemp: parseInt(document.getElementById('proc-temp').value) || 580,
+        preMcPct: parseFloat(document.getElementById('proc-pre-mc').value) || 18.5,
+        qcGrade: document.getElementById('proc-qc-grade').value,
+        qcNotes: document.getElementById('proc-qc-notes').value || 'Clean carbonization cycle'
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -1750,7 +1856,6 @@
       let rowsHtml = salesTickets.map(t => {
         totalQty += t.qty;
         totalSalesAmt += t.amount;
-        const ratePerKg = t.qty > 0 ? (t.amount / t.qty) : 0;
 
         return `
           <tr style="border-bottom: 1px solid #e2e8f0;">
@@ -1834,113 +1939,6 @@
       const fromDate = document.getElementById('sales-soa-date-from').value;
       const toDate = document.getElementById('sales-soa-date-to').value;
       if (custName) printCustomerSalesSOA(custName, fromDate, toDate);
-    }
-
-    function printEmployeeCaSOAByName(empName, fromDate = null, toDate = null) {
-      const emp = state.employees.find(e => e.name === empName);
-      if (!emp) return;
-
-      let empVouchers = (state.valeVouchers || []).filter(v => v.empName === emp.name);
-
-      if (fromDate && toDate) {
-        empVouchers = empVouchers.filter(v => v.date >= fromDate && v.date <= toDate);
-      }
-
-      let totalIssued = 0;
-      let totalBalance = 0;
-
-      let rowsHtml = empVouchers.map(v => {
-        totalIssued += v.amount;
-        totalBalance += (v.remainingBalance || 0);
-        const paidAmt = v.amount - (v.remainingBalance || 0);
-        const planDisplay = v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`;
-        const isPaid = (v.remainingBalance || 0) <= 0 || v.status === 'PAID';
-
-        return `
-          <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 6px 4px;">${v.date}</td>
-            <td style="padding: 6px 4px;"><strong>${v.id}</strong></td>
-            <td style="padding: 6px 4px;">₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td style="padding: 6px 4px;">${planDisplay}</td>
-            <td style="padding: 6px 4px;">₱${paidAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td style="padding: 6px 4px;">₱${(v.remainingBalance || 0).toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td style="padding: 6px 4px;"><strong>${isPaid ? 'PAID' : 'ACTIVE QUEUE'}</strong></td>
-          </tr>
-        `;
-      }).join('');
-
-      const periodLabel = (fromDate && toDate) ? `${fromDate} to ${toDate}` : 'All On-Record History';
-
-      if (empVouchers.length === 0) {
-        rowsHtml = `<tr><td colspan="7" style="text-align: center; padding: 12px;">No Cash Advance transactions found covering period (${periodLabel}).</td></tr>`;
-      }
-
-      const totalPaid = totalIssued - totalBalance;
-
-      const soaHtml = `
-        <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · CASH ADVANCE STATEMENT OF ACCOUNT (SOA)</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 12px;">
-            <div>
-              <p><strong>Employee Name:</strong> ${emp.name}</p>
-              <p><strong>Position:</strong> ${emp.pos}</p>
-              <p><strong>Employment Status:</strong> ${emp.type || 'Regular'}</p>
-            </div>
-            <div style="text-align: right;">
-              <p><strong>Statement Date:</strong> ${new Date().toISOString().split('T')[0]}</p>
-              <p><strong>Coverage Period:</strong> ${periodLabel}</p>
-              <p><strong>Daily Rate:</strong> ₱${emp.rate.toLocaleString()}</p>
-            </div>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; text-align: left; margin-bottom: 16px;">
-            <thead>
-              <tr style="border-bottom: 2px solid #000;">
-                <th style="padding: 6px 4px;">Date</th>
-                <th style="padding: 6px 4px;">Voucher ID</th>
-                <th style="padding: 6px 4px;">Granted Amount</th>
-                <th style="padding: 6px 4px;">Plan</th>
-                <th style="padding: 6px 4px;">Total Repaid</th>
-                <th style="padding: 6px 4px;">Balance</th>
-                <th style="padding: 6px 4px;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-          </table>
-
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-
-          <div style="font-size: 0.85rem; line-height: 1.6;">
-            <p><strong>Period Cash Advances Granted:</strong> ₱${totalIssued.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-            <p><strong>Period Repayments Liquidated:</strong> ₱${totalPaid.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-            <p style="font-size: 1.1rem; font-weight: bold; margin-top: 6px;">NET UNPAID BALANCE (SELECTED PERIOD): ₱${totalBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin: 16px 0;">
-          <p style="font-size: 0.72rem; font-style: italic;">To save as PDF, select "Save as PDF" in your print options menu.</p>
-          
-          <br><br>
-          <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 0.8rem;">
-            <div>___________________<br>Employee Acknowledgment</div>
-            <div>___________________<br>Approved By (Plant Owner)</div>
-          </div>
-        </div>
-      `;
-      executePrint(soaHtml);
-    }
-
-    function printSOAFromDropdown() {
-      const empName = document.getElementById('soa-emp-select').value;
-      const fromDate = document.getElementById('soa-date-from').value;
-      const toDate = document.getElementById('soa-date-to').value;
-      if (empName) printEmployeeCaSOAByName(empName, fromDate, toDate);
     }
 
     function filterContacts() {
@@ -2172,16 +2170,19 @@
         </tr>
       `).join('');
 
-      // Batch Table
+      // Batch Table (Enhanced with Pre-MC% and QC Grade)
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
           <td>${b.rawItem} (${b.consumedKg} kg)</td>
           <td><strong>${b.yieldKg} kg (${b.finItem})</strong></td>
           <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
+          <td>${b.preMcPct || 18.5}%</td>
+          <td><span class="badge ${b.qcGrade === 'Grade A' ? 'badge-pass' : b.qcGrade === 'Grade B' ? 'badge-warn' : 'badge-fail'}">${b.qcGrade || 'Grade A'}</span></td>
           <td>${b.opStart}</td>
           <td>${b.opEnd}</td>
           <td><strong>${b.maxTemp} °C</strong></td>
+          <td>${b.qcNotes || 'Clean burn'}</td>
           <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
@@ -2392,7 +2393,7 @@
         </tr>
       `).join('');
 
-      // Logistics Tickets Ledger with Printable Receipts and Payment Settlement Buttons
+      // Logistics Tickets Ledger
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => {
         const isPaid = l.status === 'PAID';
 
