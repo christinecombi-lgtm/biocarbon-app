@@ -97,14 +97,15 @@
     .tab-pane { display: none; }
     .tab-pane.active { display: block; }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
     .kpi-card { background-color: var(--card-bg); border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--brand-green); }
     .kpi-card.blue-accent { border-left-color: var(--brand-blue); }
     .kpi-card.orange-accent { border-left-color: var(--brand-orange); }
     .kpi-card.gold-accent { border-left-color: var(--brand-gold); }
+    .kpi-card.danger-accent { border-left-color: var(--brand-danger); }
 
-    .kpi-title { font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .kpi-main-val { font-size: 1.8rem; font-weight: 800; color: var(--text-main); margin: 6px 0 2px 0; }
+    .kpi-title { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .kpi-main-val { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin: 6px 0 2px 0; }
 
     .panel { background-color: var(--card-bg); border-radius: 10px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 24px; border: 1px solid var(--border-light); }
     .panel-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
@@ -166,8 +167,8 @@
       #printable-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
     }
 
-    @media (max-width: 1024px) {
-      .kpi-grid { grid-template-columns: 1fr; }
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .app-body { flex-direction: column; }
       .sidebar { width: 100%; }
       .main-content { max-width: 100vw; padding: 16px; }
@@ -201,6 +202,7 @@
     <!-- NAVIGATION SIDEBAR -->
     <aside class="sidebar">
       <a class="nav-link active" onclick="switchTab('owner-suite', this)"><span>📈</span> Business Health & Decisions</a>
+      <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
       <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle</a>
       <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
@@ -226,6 +228,11 @@
             <div class="kpi-title">TOTAL SALES REVENUE</div>
             <div class="kpi-main-val" id="biz-revenue">₱0</div>
             <div style="font-size: 0.82rem; color: #94a3b8;">Outbound sales deliveries</div>
+          </div>
+          <div class="kpi-card danger-accent">
+            <div class="kpi-title">TOTAL PLANT EXPENSES</div>
+            <div class="kpi-main-val" id="biz-expenses">₱0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Utilities, parts, fuel & op-costs</div>
           </div>
           <div class="kpi-card blue-accent">
             <div class="kpi-title">RAW CONVERSION YIELD</div>
@@ -259,7 +266,60 @@
         </div>
       </div>
 
-      <!-- TAB 2: SHIFT OPEN/CLOSE -->
+      <!-- TAB 2: EXPENSES, UTILITIES & PARTS -->
+      <div id="expenses" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">Log Plant Operating Expense, Utility & Spare Parts</div>
+          <form onsubmit="handleExpenseLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Expense Date</label><input type="date" id="exp-date" class="form-control" required></div>
+              <div class="form-group">
+                <label>Expense Category</label>
+                <select id="exp-cat" class="form-control" required>
+                  <option value="Utilities">Utilities (Grid Electricity / Water / Internet)</option>
+                  <option value="Machinery & Refractory Parts">Machinery & Refractory Parts (Kiln, Press, Blower)</option>
+                  <option value="Maintenance & Repairs">Maintenance & Repairs (Labor & Servicing)</option>
+                  <option value="Fuel & Diesel">Fuel & Diesel (Generator, Hauling Truck)</option>
+                  <option value="Feedstock Freight">Feedstock Freight & Hauling</option>
+                  <option value="Site Consumables & PPE">Site Consumables, Tools & PPE</option>
+                  <option value="Admin & Government Fees">Admin, Permits & Government Fees</option>
+                  <option value="Miscellaneous">Miscellaneous Operating Costs</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Asset / Machine Affected</label><input type="text" id="exp-asset" class="form-control" placeholder="Furnace #1, Generator, Site General"></div>
+              <div class="form-group"><label>Vendor / Supplier</label><select id="exp-vendor" class="form-control"></select></div>
+              <div class="form-group"><label>Invoice / Official Receipt #</label><input type="text" id="exp-inv" class="form-control" placeholder="OR-99182"></div>
+              <div class="form-group">
+                <label>Payment Method</label>
+                <select id="exp-pay-method" class="form-control">
+                  <option value="Petty Cash">Petty Cash</option>
+                  <option value="Bank Transfer">Bank Transfer / Check</option>
+                  <option value="GCash / E-Wallet">GCash / E-Wallet</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Amount Paid (₱)</label><input type="number" id="exp-amount" class="form-control" placeholder="4500" required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Detailed Particulars / Description</label><input type="text" id="exp-notes" class="form-control" placeholder="Electricity bill payment for July 2026 furnace continuous run" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">💸 Log Expense & Generate Disbursement Voucher</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Operating Expense & Utility Disbursement Ledger</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Voucher ID</th><th>Date</th><th>Category</th><th>Asset / Unit</th><th>Particulars</th><th>Vendor</th><th>Payment Method</th><th>Amount Paid</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-expenses"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: SHIFT OPEN/CLOSE -->
       <div id="openclose" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Daily Factory Shift Open & Close Log (Pagbukas ug Pagsara)</div>
@@ -293,7 +353,7 @@
         </div>
       </div>
 
-      <!-- TAB 3: BATCH CARBONIZATION CYCLES -->
+      <!-- TAB 4: BATCH CARBONIZATION CYCLES -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log 6-8 Hour Batch Pyrolysis Lifecycle</div>
@@ -331,7 +391,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: 2-HOUR FURNACE MONITOR -->
+      <!-- TAB 5: 2-HOUR FURNACE MONITOR -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Scheduled 2-Hour Furnace Inspection</div>
@@ -364,7 +424,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: FURNACE & KILN MAINTENANCE LOGS -->
+      <!-- TAB 6: FURNACE & KILN MAINTENANCE LOGS -->
       <div id="furnace-maint" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Furnace & Kiln Maintenance Service</div>
@@ -396,7 +456,7 @@
         </div>
       </div>
 
-      <!-- TAB 6: FEEDSTOCK WEIGHBRIDGE & MOISTURE LOG -->
+      <!-- TAB 7: FEEDSTOCK WEIGHBRIDGE & MOISTURE LOG -->
       <div id="weighbridge" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Feedstock Intake Weighbridge & Moisture Content (MC%)</div>
@@ -429,7 +489,7 @@
         </div>
       </div>
 
-      <!-- TAB 7: CREW ATTENDANCE CALENDAR -->
+      <!-- TAB 8: CREW ATTENDANCE CALENDAR -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -458,7 +518,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: WEEKLY PAYROLL, CASH ADVANCE (VALE) & PAYSTUBS -->
+      <!-- TAB 9: WEEKLY PAYROLL, CASH ADVANCE (VALE) & PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
@@ -521,7 +581,7 @@
 
       </div>
 
-      <!-- TAB 9: GOVERNMENT REMITTANCES -->
+      <!-- TAB 10: GOVERNMENT REMITTANCES -->
       <div id="gov-remittances" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -554,7 +614,7 @@
         </div>
       </div>
 
-      <!-- TAB 10: CONTACT DIRECTORY -->
+      <!-- TAB 11: CONTACT DIRECTORY -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -574,7 +634,7 @@
         </div>
       </div>
 
-      <!-- TAB 11: INVENTORY BALANCES WITH PER-KILO PRICES -->
+      <!-- TAB 12: INVENTORY BALANCES WITH PER-KILO PRICES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Real-Time Inventory Balances & Selling Prices (Per Kilo)</div>
@@ -591,7 +651,7 @@
         </div>
       </div>
 
-      <!-- TAB 12: LOGISTICS & OFFICIAL RECEIPTS -->
+      <!-- TAB 13: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Delivery Ticket & Sales Invoice</div>
@@ -628,7 +688,7 @@
         </div>
       </div>
 
-      <!-- TAB 13: DOWNTIME -->
+      <!-- TAB 14: DOWNTIME -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
@@ -656,7 +716,7 @@
         </div>
       </div>
 
-      <!-- TAB 14: MASTER DATA MANAGER -->
+      <!-- TAB 15: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Register Employee Profile (Regular vs Contractual)</div>
@@ -693,6 +753,7 @@
                 <select id="m-con-type" class="form-control">
                   <option value="Supplier">Supplier</option>
                   <option value="Customer">Customer</option>
+                  <option value="Service Provider">Service Provider / Utility</option>
                 </select>
               </div>
               <div class="form-group"><label>Contact Number</label><input type="text" id="m-con-phone" class="form-control" placeholder="0917-123-4567" required></div>
@@ -711,7 +772,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v19';
+    const STORAGE_KEY = 'cbcm_master_suite_v20';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -760,6 +821,10 @@
         { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1800, min: 500, pricePerKg: 30.00 },
         { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300, pricePerKg: 25.00 }
       ],
+      expenses: [
+        { id: "EXP-101", date: "2026-08-03", category: "Utilities", asset: "Site Electrical", vendor: "LEYECO II", inv: "INV-8829", method: "Bank Transfer", amount: 12500, notes: "July 2026 Grid Power for Plant Operations" },
+        { id: "EXP-102", date: "2026-08-06", category: "Machinery & Refractory Parts", asset: "Furnace #1", vendor: "Tacloban Industrial Hardware", inv: "OR-4410", method: "Petty Cash", amount: 3500, notes: "High-temp refractory seal & gaskets" }
+      ],
       batches: [
         { id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
       ],
@@ -787,6 +852,8 @@
         { name: "Carlos", pos: "Seasonal Sorter", type: "Contractual", rate: 500, phone: "0920-333-4444", email: "carlos@cbcm.ph", emName: "Ana Gomez", emPhone: "0921-555-6666", lifetimePresentDays: 45, valeBalance: 0, ytdNetSalary: 22500, attendance: {} }
       ],
       contacts: [
+        { company: "LEYECO II", person: "Customer Service", position: "Utility Provider", type: "Service Provider", phone: "053-321-2000", email: "billing@leyeco2.ph", address: "Tacloban City, Leyte" },
+        { company: "Tacloban Industrial Hardware", person: "Mark Tan", position: "Store Manager", type: "Supplier", phone: "0917-888-9999", email: "sales@taclobanhardware.ph", address: "Tacloban City" },
         { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
         { company: "AgriGrow Distributors", person: "Elena Gomez", position: "Procurement Manager", type: "Customer", phone: "0920-555-0192", email: "elena@agrigrow.ph", address: "Tacloban City" }
       ]
@@ -828,6 +895,25 @@
       if (invItem && qty > 0) {
         document.getElementById('log-amount').value = (qty * invItem.pricePerKg).toFixed(2);
       }
+    }
+
+    function handleExpenseLog(e) {
+      e.preventDefault();
+      const expId = `EXP-${Date.now().toString().slice(-3)}`;
+      state.expenses.unshift({
+        id: expId,
+        date: document.getElementById('exp-date').value,
+        category: document.getElementById('exp-cat').value,
+        asset: document.getElementById('exp-asset').value || 'Site General',
+        vendor: document.getElementById('exp-vendor').value,
+        inv: document.getElementById('exp-inv').value || '-',
+        method: document.getElementById('exp-pay-method').value,
+        amount: parseFloat(document.getElementById('exp-amount').value),
+        notes: document.getElementById('exp-notes').value
+      });
+
+      saveState(); renderAll(); e.target.reset();
+      printExpenseVoucher(0);
     }
 
     function handleOpenCloseLog(e) {
@@ -890,15 +976,34 @@
 
     function handleMaintenanceLog(e) {
       e.preventDefault();
+      const mntCost = parseFloat(document.getElementById('maint-cost').value);
+      const mntNotes = document.getElementById('maint-notes').value;
+      const mntDate = document.getElementById('maint-date').value;
+      const mntUnit = document.getElementById('maint-unit').value;
+
       state.maintenanceLogs.unshift({
         id: `MNT-${Date.now().toString().slice(-3)}`,
-        date: document.getElementById('maint-date').value,
-        unit: document.getElementById('maint-unit').value,
+        date: mntDate,
+        unit: mntUnit,
         cat: document.getElementById('maint-cat').value,
         tech: document.getElementById('maint-tech').value,
-        cost: parseFloat(document.getElementById('maint-cost').value),
-        notes: document.getElementById('maint-notes').value
+        cost: mntCost,
+        notes: mntNotes
       });
+
+      // Automatically sync into Expenses Ledger as Maintenance & Repair cost
+      state.expenses.unshift({
+        id: `EXP-MNT-${Date.now().toString().slice(-3)}`,
+        date: mntDate,
+        category: "Maintenance & Repairs",
+        asset: mntUnit,
+        vendor: "Internal Maintenance",
+        inv: "-",
+        method: "Petty Cash",
+        amount: mntCost,
+        notes: mntNotes
+      });
+
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -1031,7 +1136,6 @@
       saveState(); renderAll();
     }
 
-    // Weekly Attendance Calculation Helper
     function calculateEmployeeWeeklyPresent(emp, month, year, weekNum) {
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       let startDay = (weekNum - 1) * 7 + 1;
@@ -1072,7 +1176,6 @@
       return total;
     }
 
-    // Direct DOM Printing Engine (Prevents Blank PDF/Printer Pages)
     function executePrint(htmlContent) {
       const area = document.getElementById('printable-area');
       area.innerHTML = htmlContent;
@@ -1082,6 +1185,34 @@
         area.style.display = 'none';
         area.innerHTML = '';
       }, 150);
+    }
+
+    function printExpenseVoucher(expIndex) {
+      const exp = state.expenses[expIndex];
+      const voucherHtml = `
+        <div class="printable-document">
+          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · DISBURSEMENT EXPENSE VOUCHER</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          <p><strong>Voucher Control ID:</strong> ${exp.id}</p>
+          <p><strong>Expense Date:</strong> ${exp.date}</p>
+          <p><strong>Category:</strong> ${exp.category}</p>
+          <p><strong>Asset / Unit:</strong> ${exp.asset}</p>
+          <p><strong>Payee / Vendor:</strong> ${exp.vendor}</p>
+          <p><strong>Ref / Invoice No:</strong> ${exp.inv}</p>
+          <p><strong>Payment Mode:</strong> ${exp.method}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 1.1rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p><strong>Particulars:</strong> ${exp.notes}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>___________________<br>Prepared / Paid By</div>
+            <div>___________________<br>Approved By (Plant Owner)</div>
+          </div>
+        </div>
+      `;
+      executePrint(voucherHtml);
     }
 
     function printSalesInvoice(ticketIndex) {
@@ -1122,7 +1253,6 @@
       const weeklyDays = calculateEmployeeWeeklyPresent(emp, month, year, weekNum);
       const weeklyGross = weeklyDays * emp.rate;
 
-      // Estimated Monthly Base for Statutory Calculations (4 Weeks)
       const monthlyDays = calculateEmployeeMonthlyPresent(emp, month, year);
       const estMonthlyGross = monthlyDays * emp.rate;
 
@@ -1288,9 +1418,28 @@
       const supplierOpts = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
       if(document.getElementById('log-party')) document.getElementById('log-party').innerHTML = supplierOpts;
       if(document.getElementById('wb-supplier')) document.getElementById('wb-supplier').innerHTML = supplierOpts;
+      if(document.getElementById('exp-vendor')) document.getElementById('exp-vendor').innerHTML = supplierOpts;
       
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
+
+      // Operating Expenses Table
+      document.getElementById('tbl-expenses').innerHTML = (state.expenses || []).map((x, idx) => `
+        <tr>
+          <td><strong>${x.id}</strong></td>
+          <td>${x.date}</td>
+          <td><span class="badge badge-blue">${x.category}</span></td>
+          <td>${x.asset}</td>
+          <td>${x.notes}</td>
+          <td>${x.vendor}</td>
+          <td><span class="badge badge-warn">${x.method}</span></td>
+          <td><strong style="color: var(--brand-danger);">₱${x.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
+          <td>
+            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printExpenseVoucher(${idx})">🖨️ Voucher</button>
+            <button onclick="deleteEntry('expenses', ${idx})" class="btn-danger">Delete</button>
+          </td>
+        </tr>
+      `).join('');
 
       // Shift Open/Close Table
       document.getElementById('tbl-openclose').innerHTML = state.openclose.map((o, idx) => `
@@ -1387,7 +1536,6 @@
         const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
         const weeklyGross = weeklyDays * e.rate;
 
-        // Est. Monthly Gross for statutory portion
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const estMonthlyGross = monthlyDays * e.rate;
 
@@ -1494,7 +1642,7 @@
           <td><strong>${c.company}</strong></td>
           <td>${c.person}</td>
           <td>${c.position || '-'}</td>
-          <td><span class="badge ${c.type === 'Supplier' ? 'badge-warn' : c.type === 'Customer' ? 'badge-pass' : 'badge-fail'}">${c.type}</span></td>
+          <td><span class="badge ${c.type === 'Supplier' ? 'badge-warn' : c.type === 'Customer' ? 'badge-pass' : 'badge-blue'}">${c.type}</span></td>
           <td>${c.phone}</td>
           <td>${c.email}</td>
           <td>${c.address}</td>
@@ -1505,6 +1653,7 @@
 
       // Executive Metrics
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
+      const totalExp = (state.expenses || []).reduce((s, x) => s + x.amount, 0);
       const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
       const totalFin = state.batches.reduce((s, b) => s + b.yieldKg, 0);
       const avgYield = totalRaw > 0 ? ((totalFin / totalRaw) * 100).toFixed(1) : 0;
@@ -1512,6 +1661,7 @@
       const totalDowntimeHrs = (state.downtime.reduce((s, d) => s + d.duration, 0) / 60).toFixed(1);
 
       document.getElementById('biz-revenue').innerText = `₱${totalRev.toLocaleString()}`;
+      document.getElementById('biz-expenses').innerText = `₱${totalExp.toLocaleString()}`;
       document.getElementById('biz-yield').innerText = `${avgYield}%`;
       document.getElementById('biz-vale').innerText = `₱${totalVale.toLocaleString()}`;
       document.getElementById('biz-downtime').innerText = `${totalDowntimeHrs} hrs`;
