@@ -158,15 +158,36 @@
     .att-toggle.h { background-color: #fef3c7; color: #b45309; }
     .att-toggle.off { background-color: #f1f5f9; color: #94a3b8; }
 
+    /* BRANDED PRINTABLE LETTERHEAD */
     .printable-document {
       background: #ffffff;
-      border: 2px dashed #000000;
-      padding: 24px;
-      max-width: 750px;
+      border: 2px solid #1a1816;
+      padding: 30px;
+      max-width: 780px;
       margin: 20px auto;
-      font-family: 'Courier New', Courier, monospace;
-      color: #000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #0f172a;
     }
+
+    .print-letterhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px solid var(--brand-orange);
+      padding-bottom: 14px;
+      margin-bottom: 18px;
+    }
+
+    .print-logo-group { display: flex; align-items: center; gap: 12px; }
+    .print-shapes { display: flex; align-items: center; gap: 6px; }
+    .print-shape-orange { width: 16px; height: 16px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
+    .print-shape-white { width: 18px; height: 18px; background-color: #0f172a; border-radius: 50%; }
+    .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
+
+    .print-brand-title h2 { font-size: 1.3rem; font-weight: 800; line-height: 1; color: #0f172a; }
+    .print-brand-title span { font-size: 0.55rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
+
+    .print-meta-right { text-align: right; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
 
     @media print {
       body * { visibility: hidden !important; }
@@ -411,10 +432,8 @@
               <div class="form-group"><label>Cook End / Unload Time (6-8 hrs later)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
               <div class="form-group"><label>Cook End Duty (Cooler & Unloader)</label><select id="proc-op-end" class="form-control"></select></div>
 
-              <div class="form-group">
-                <label>Peak Operating Temp (°C)</label>
-                <input type="number" id="proc-temp" class="form-control" placeholder="580" required>
-              </div>
+              <div class="form-group"><label>Total Cook Duration (Hours)</label><input type="number" step="0.1" id="proc-cook-hours" class="form-control" placeholder="7.5" required></div>
+              <div class="form-group"><label>Peak Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="580" required></div>
 
               <!-- QUALITY CONTROL & TESTING FIELDS -->
               <div class="form-group"><label>Pre-Burn Feedstock MC %</label><input type="number" step="0.1" id="proc-pre-mc" class="form-control" placeholder="18.5" required></div>
@@ -438,7 +457,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Pre-MC %</th><th>Quality Grade</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>QC Remarks</th><th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Total Cook Time</th><th>Pre-MC %</th><th>Quality Grade</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>QC Remarks</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -1053,7 +1072,7 @@
         { id: "EXP-102", date: "2026-08-06", category: "Machinery & Refractory Parts", asset: "Furnace #1", vendor: "Tacloban Industrial Hardware", inv: "OR-4410", method: "Petty Cash", amount: 3500, notes: "High-temp refractory seal & gaskets" }
       ],
       batches: [
-        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, preMcPct: 18.5, qcGrade: "Grade A", opStart: "Amber", opEnd: "Beryl", maxTemp: 580, qcNotes: "Metallic clink sound; low ash content" }
+        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, cookHours: 7.5, preMcPct: 18.5, qcGrade: "Grade A", opStart: "Amber", opEnd: "Beryl", maxTemp: 580, qcNotes: "Metallic clink sound; low ash content" }
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" },
@@ -1106,6 +1125,74 @@
     let financialChartInstance = null;
     let inventoryChartInstance = null;
 
+    // BRANDED LETTERHEAD HTML WRAPPER FOR ALL PRINT/PDF OUTPUTS
+    function getBrandedHeader(documentTitle) {
+      return `
+        <div class="print-letterhead">
+          <div class="print-logo-group">
+            <div class="print-shapes">
+              <div class="print-shape-orange"></div>
+              <div class="print-shape-white"></div>
+              <div class="print-shape-green"></div>
+            </div>
+            <div class="print-brand-title">
+              <h2>Combinido Biocarbon</h2>
+              <span>MANUFACTURING · CARIGARA, LEYTE</span>
+            </div>
+          </div>
+          <div class="print-meta-right">
+            <strong>${documentTitle}</strong><br>
+            <em>One carbon. Two lives.</em><br>
+            Manloy Plant Site, Leyte
+          </div>
+        </div>
+      `;
+    }
+
+    // PRINTABLE BATCH QC CERTIFICATE REPORT
+    function printBatchQCReport(batchIndex) {
+      const b = state.batches[batchIndex];
+      const yieldPct = b.consumedKg > 0 ? ((b.yieldKg / b.consumedKg) * 100).toFixed(1) : 0;
+
+      const reportHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('BATCH PYROLYSIS & QUALITY CONTROL REPORT')}
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 16px;">
+            <div>
+              <p><strong>Batch Control ID:</strong> ${b.id}</p>
+              <p><strong>Raw Feedstock Used:</strong> ${b.rawItem} (${b.consumedKg.toLocaleString()} kg)</p>
+              <p><strong>Finished Yield Produced:</strong> ${b.finItem} (${b.yieldKg.toLocaleString()} kg)</p>
+            </div>
+            <div style="text-align: right;">
+              <p><strong>Conversion Efficiency:</strong> <span style="font-size: 1.1rem; color: #10b981; font-weight: bold;">${yieldPct}%</span></p>
+              <p><strong>Total Cook Duration:</strong> <span style="font-size: 1.1rem; font-weight: bold;">${b.cookHours || 7.5} hours</span></p>
+              <p><strong>Peak Operating Temp:</strong> ${b.maxTemp} °C</p>
+            </div>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+
+          <div style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 16px;">
+            <p><strong>Pre-Burn Feedstock Moisture Content (MC %):</strong> ${b.preMcPct || 18.5}%</p>
+            <p><strong>Assigned Biochar Yield Quality Grade:</strong> <span style="border: 1px solid #000; padding: 2px 8px; font-weight: bold;">${b.qcGrade || 'Grade A'}</span></p>
+            <p><strong>Duty Handover (Start / End):</strong> ${b.opStart} / ${b.opEnd}</p>
+            <p><strong>QC Laboratory / Bench Test Remarks:</strong> ${b.qcNotes || 'Clean carbonization cycle with high fixed carbon structure.'}</p>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin: 16px 0;">
+          <p style="font-size: 0.72rem; font-style: italic;">Certified inspected at Combinido Biocarbon Manufacturing Plant, Manloy, Carigara, Leyte.</p>
+          
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 24px; font-size: 0.8rem;">
+            <div>___________________<br>Loader & Igniter Operator</div>
+            <div>___________________<br>Plant Quality Control Lead</div>
+          </div>
+        </div>
+      `;
+      executePrint(reportHtml);
+    }
+
     // CSV IMPORT UTILITY: Bulk Syncs Google Form Submissions
     function importQRFormCSV() {
       const fileInput = document.getElementById('qr-csv-file');
@@ -1131,12 +1218,13 @@
               consumedKg: parseFloat(cols[3]) || 0,
               finItem: cols[4] || "Charcoal Briquettes",
               yieldKg: parseFloat(cols[5]) || 0,
-              opStart: cols[7] || "Loader Crew",
-              opEnd: cols[9] || "Unloader Crew",
-              maxTemp: parseInt(cols[10]) || 580,
-              preMcPct: parseFloat(cols[6]) || 18.0,
-              qcGrade: cols[8] || "Grade A",
-              qcNotes: cols[11] || "QR Submitted Batch Log"
+              cookHours: parseFloat(cols[6]) || 7.5,
+              opStart: cols[8] || "Loader Crew",
+              opEnd: cols[10] || "Unloader Crew",
+              maxTemp: parseInt(cols[11]) || 580,
+              preMcPct: parseFloat(cols[7]) || 18.0,
+              qcGrade: cols[9] || "Grade A",
+              qcNotes: cols[12] || "QR Submitted Batch Log"
             });
             importedCount++;
           } else if (category.includes("Weighbridge")) {
@@ -1425,6 +1513,7 @@
       state.batches.unshift({
         id: `BATCH-${Date.now().toString().slice(-3)}`,
         rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty,
+        cookHours: parseFloat(document.getElementById('proc-cook-hours').value) || 7.5,
         opStart: document.getElementById('proc-op-start').value,
         opEnd: document.getElementById('proc-op-end').value,
         maxTemp: parseInt(document.getElementById('proc-temp').value) || 580,
@@ -1735,9 +1824,7 @@
       const exp = state.expenses[expIndex];
       const voucherHtml = `
         <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · DISBURSEMENT EXPENSE VOUCHER</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          ${getBrandedHeader('DISBURSEMENT EXPENSE VOUCHER')}
           <p><strong>Voucher Control ID:</strong> ${exp.id}</p>
           <p><strong>Expense Date:</strong> ${exp.date}</p>
           <p><strong>Category:</strong> ${exp.category}</p>
@@ -1753,6 +1840,30 @@
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Prepared / Paid By</div>
             <div>___________________<br>Approved By (Plant Owner)</div>
+          </div>
+        </div>
+      `;
+      executePrint(voucherHtml);
+    }
+
+    function printValeVoucher(valeIndex) {
+      const v = state.valeVouchers[valeIndex];
+      const voucherHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('CASH ADVANCE (VALE) VOUCHER')}
+          <p><strong>Voucher ID:</strong> ${v.id}</p>
+          <p><strong>Date Issued:</strong> ${v.date}</p>
+          <p><strong>Employee Name:</strong> ${v.empName}</p>
+          <p><strong>Deduction Terms:</strong> ${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% per payroll`}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 1.2rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p><strong>Reason / Note:</strong> ${v.notes}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 0.75rem;">Received cash advance subject to automatic weekly payroll deductions.</p>
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>___________________<br>Employee Signature</div>
+            <div>___________________<br>Authorized Cashier</div>
           </div>
         </div>
       `;
@@ -1784,9 +1895,7 @@
 
       const receiptHtml = `
         <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · RAW MATERIAL RECEIVING SLIP / GOODS RECEIVED NOTE (GRN)</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          ${getBrandedHeader('RAW MATERIAL RECEIVING SLIP / GRN')}
           <p><strong>Receiving Control Ticket No:</strong> ${t.id}</p>
           <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
           <p><strong>Supplier / Source:</strong> ${t.party}</p>
@@ -1816,9 +1925,7 @@
 
       const invoiceHtml = `
         <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · BIR Official Sales Invoice</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          ${getBrandedHeader('BIR OFFICIAL SALES INVOICE')}
           <p><strong>Official Invoice No:</strong> INV-${t.id}</p>
           <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
           <p><strong>Customer Name:</strong> ${t.party}</p>
@@ -1878,9 +1985,7 @@
 
       const salesSoaHtml = `
         <div class="printable-document">
-          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
-          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · CUSTOMER SALES STATEMENT OF ACCOUNT (SOA)</p>
-          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          ${getBrandedHeader('CUSTOMER SALES STATEMENT OF ACCOUNT (SOA)')}
           
           <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 12px;">
             <div>
@@ -2170,20 +2275,24 @@
         </tr>
       `).join('');
 
-      // Batch Table (Enhanced with Pre-MC% and QC Grade)
+      // Batch Table (Includes Total Cook Time & Printable QC Report Button)
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
           <td>${b.rawItem} (${b.consumedKg} kg)</td>
           <td><strong>${b.yieldKg} kg (${b.finItem})</strong></td>
           <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
+          <td><strong>${b.cookHours || 7.5} hrs</strong></td>
           <td>${b.preMcPct || 18.5}%</td>
           <td><span class="badge ${b.qcGrade === 'Grade A' ? 'badge-pass' : b.qcGrade === 'Grade B' ? 'badge-warn' : 'badge-fail'}">${b.qcGrade || 'Grade A'}</span></td>
           <td>${b.opStart}</td>
           <td>${b.opEnd}</td>
           <td><strong>${b.maxTemp} °C</strong></td>
           <td>${b.qcNotes || 'Clean burn'}</td>
-          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
+          <td>
+            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBatchQCReport(${idx})">🖨️ Print QC PDF</button>
+            <button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button>
+          </td>
         </tr>
       `).join('');
 
@@ -2472,8 +2581,6 @@
         netSubElem.innerText = "OPERATING IN THE RED (DEFICIT)";
       }
 
-      document.getElementById('biz-yield').innerText = `${avgYield}%`;
-      document.getElementById('biz-vale').innerText = `₱${totalVale.toLocaleString()}`;
       document.getElementById('biz-downtime').innerText = `${totalDowntimeHrs} hrs`;
 
       // Smart Recommendation Alerts
