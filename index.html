@@ -564,20 +564,33 @@
             <div class="form-grid">
               <div class="form-group"><label>Employee</label><select id="vale-emp" class="form-control"></select></div>
               <div class="form-group"><label>Cash Advance Amount (₱)</label><input type="number" id="vale-amount" class="form-control" placeholder="1000" required></div>
+              <div class="form-group">
+                <label>Agreed Payroll Deduction Plan</label>
+                <select id="vale-plan" class="form-control" onchange="toggleCustomDeductInput()">
+                  <option value="30">30% Deduction per Payroll (Minimum)</option>
+                  <option value="50">50% Deduction per Payroll</option>
+                  <option value="100">100% Full Deduction next Payroll</option>
+                  <option value="CUSTOM">Custom Repayment Amount (₱)</option>
+                </select>
+              </div>
+              <div class="form-group" id="grp-custom-amt" style="display: none;">
+                <label>Custom Payment Amount per Payday (₱)</label>
+                <input type="number" id="vale-custom-amt" class="form-control" placeholder="Minimum 30% rate required">
+              </div>
               <div class="form-group"><label>Date Issued</label><input type="date" id="vale-date" class="form-control" required></div>
-              <div class="form-group"><label>Reason / Note</label><input type="text" id="vale-notes" class="form-control" placeholder="Family emergency advance" required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Reason / Note</label><input type="text" id="vale-notes" class="form-control" placeholder="Family emergency advance" required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">💸 Issue Vale & Generate Printable Receipt</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Cash Advance (Vale) Transaction Vouchers</div>
+          <div class="panel-title">Cash Advance (Vale) Multi-Voucher FIFO Queue & Status</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Voucher ID</th><th>Date</th><th>Employee</th><th>Amount Issued</th><th>Notes</th><th>Action</th>
+                  <th>Voucher ID</th><th>Date</th><th>Employee</th><th>Issued Amount</th><th>Remaining Balance</th><th>Deduction Agreement</th><th>Queue Status</th><th>Notes</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-vale-vouchers"></tbody>
@@ -587,7 +600,7 @@
 
         <div class="panel">
           <div class="panel-title">
-            <span>Weekly Payroll Ledger (7-Day Payout Cycles with Statutory Deductions)</span>
+            <span>Weekly Payroll Ledger (7-Day Payout Cycles with FIFO CA Repayments)</span>
             <select id="pay-week-select" class="form-control" style="width: auto;" onchange="renderAll()">
               <option value="1">Week 1 (Days 1-7)</option>
               <option value="2">Week 2 (Days 8-14)</option>
@@ -607,7 +620,8 @@
                   <th>Est. SSS (Wk)</th>
                   <th>Est. PH (Wk)</th>
                   <th>Est. Pag-IBIG (Wk)</th>
-                  <th>Vale Deduct</th>
+                  <th>Active CA Target</th>
+                  <th>FIFO Vale Deduct</th>
                   <th>Net Weekly Pay</th>
                   <th>Action</th>
                 </tr>
@@ -810,7 +824,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v21';
+    const STORAGE_KEY = 'cbcm_master_suite_v22';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -876,7 +890,7 @@
         { id: "WB-301", date: "2026-08-05", item: "Spiny Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, inspector: "Amber" }
       ],
       valeVouchers: [
-        { id: "VALE-901", date: "2026-08-01", empName: "Amber", amount: 1000, notes: "Emergency medical expense" }
+        { id: "VALE-901", date: "2026-08-01", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" }
       ],
       logistics: [
         { id: "TICKET-501", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
@@ -885,9 +899,9 @@
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
-        { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, valeBalance: 1000, ytdNetSalary: 92300, attendance: {} },
-        { name: "Beryl", pos: "Plant Shift Supervisor", type: "Regular", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", lifetimePresentDays: 295, valeBalance: 0, ytdNetSalary: 82800, attendance: {} },
-        { name: "Carlos", pos: "Seasonal Sorter", type: "Contractual", rate: 500, phone: "0920-333-4444", email: "carlos@cbcm.ph", emName: "Ana Gomez", emPhone: "0921-555-6666", lifetimePresentDays: 45, valeBalance: 0, ytdNetSalary: 22500, attendance: {} }
+        { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, ytdNetSalary: 92300, attendance: {} },
+        { name: "Beryl", pos: "Plant Shift Supervisor", type: "Regular", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", emName: "Pedro Reyes", emPhone: "0919-444-5555", lifetimePresentDays: 295, ytdNetSalary: 82800, attendance: {} },
+        { name: "Carlos", pos: "Seasonal Sorter", type: "Contractual", rate: 500, phone: "0920-333-4444", email: "carlos@cbcm.ph", emName: "Ana Gomez", emPhone: "0921-555-6666", lifetimePresentDays: 45, ytdNetSalary: 22500, attendance: {} }
       ],
       contacts: [
         { company: "LEYECO II", person: "Customer Service", position: "Utility Provider", type: "Service Provider", phone: "053-321-2000", email: "billing@leyeco2.ph", address: "Tacloban City, Leyte" },
@@ -915,6 +929,12 @@
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       el.classList.add('active');
+    }
+
+    function toggleCustomDeductInput() {
+      const planVal = document.getElementById('vale-plan').value;
+      const grp = document.getElementById('grp-custom-amt');
+      grp.style.display = planVal === 'CUSTOM' ? 'flex' : 'none';
     }
 
     function toggleLogisticsItemOptions() {
@@ -1075,16 +1095,35 @@
       const amt = parseFloat(document.getElementById('vale-amount').value);
       const dateVal = document.getElementById('vale-date').value;
       const notesVal = document.getElementById('vale-notes').value;
-      const emp = state.employees.find(e => e.name === empName);
+      const planVal = document.getElementById('vale-plan').value;
+      
+      let minPct = 30;
+      let customAmt = null;
 
-      if (emp) {
-        emp.valeBalance = (emp.valeBalance || 0) + amt;
-        const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
-        state.valeVouchers.unshift({ id: voucherId, date: dateVal, empName, amount: amt, notes: notesVal });
-
-        saveState(); renderAll(); e.target.reset();
-        printValeVoucher(0);
+      if (planVal === '30') minPct = 30;
+      else if (planVal === '50') minPct = 50;
+      else if (planVal === '100') minPct = 100;
+      else if (planVal === 'CUSTOM') {
+        customAmt = parseFloat(document.getElementById('vale-custom-amt').value) || 0;
       }
+
+      const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
+      state.valeVouchers.unshift({
+        id: voucherId,
+        date: dateVal,
+        empName,
+        amount: amt,
+        remainingBalance: amt,
+        planType: planVal,
+        minPct: minPct,
+        customAmt: customAmt,
+        status: 'ACTIVE',
+        notes: notesVal
+      });
+
+      saveState(); renderAll(); e.target.reset();
+      toggleCustomDeductInput();
+      printValeVoucher(0);
     }
 
     function handleLogisticsTicket(e) {
@@ -1135,7 +1174,7 @@
         phone: empPhone, email: empEmail,
         emName: document.getElementById('m-emp-em-name').value,
         emPhone: document.getElementById('m-emp-em-phone').value,
-        lifetimePresentDays: 0, valeBalance: 0, ytdNetSalary: 0, attendance: {}
+        lifetimePresentDays: 0, ytdNetSalary: 0, attendance: {}
       });
 
       state.contacts.push({
@@ -1307,9 +1346,38 @@
       }
 
       const totalDeductions = sss.ee + ph.ee + pagibig.ee;
-      const valeDeduct = Math.min(emp.valeBalance || 0, weeklyGross - totalDeductions);
-      const netPay = Math.max(0, weeklyGross - totalDeductions - valeDeduct);
-      const remainingVale = (emp.valeBalance || 0) - valeDeduct;
+      const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalDeductions);
+
+      // FIFO CA Deductions
+      const activeVouchers = state.valeVouchers
+        .filter(v => v.empName === emp.name && (v.status === 'ACTIVE' || v.remainingBalance > 0))
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      let valeDeduct = 0;
+      let targetCaId = "None";
+
+      if (activeVouchers.length > 0) {
+        const primaryCa = activeVouchers[0];
+        targetCaId = primaryCa.id;
+
+        let requiredDeduct = 0;
+        if (primaryCa.planType === 'CUSTOM' && primaryCa.customAmt) {
+          requiredDeduct = primaryCa.customAmt;
+        } else {
+          const pct = (primaryCa.minPct || 30) / 100;
+          requiredDeduct = netTakeHomeBeforeVale * pct;
+        }
+
+        const minPctAmt = netTakeHomeBeforeVale * 0.30;
+        if (requiredDeduct < minPctAmt) requiredDeduct = minPctAmt;
+
+        valeDeduct = Math.min(primaryCa.remainingBalance, requiredDeduct, netTakeHomeBeforeVale);
+      }
+
+      const netPay = Math.max(0, netTakeHomeBeforeVale - valeDeduct);
+      const totalRemainingVale = state.valeVouchers
+        .filter(v => v.empName === emp.name)
+        .reduce((s, v) => s + (v.remainingBalance || 0), 0);
 
       const stubHtml = `
         <div class="printable-document">
@@ -1327,11 +1395,11 @@
           <p> · SSS Contribution (EE): -₱${sss.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <p> · PhilHealth Premium (EE): -₱${ph.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <p> · Pag-IBIG Fund (EE): -₱${pagibig.ee.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p> · Cash Advance (Vale) Deduction: -₱${valeDeduct.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p> · FIFO CA Repayment Deduction [Target ${targetCaId}]: -₱${valeDeduct.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
           <p style="font-size: 1.1rem; font-weight: bold;">NET WEEKLY PAYOUT: ₱${netPay.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p>Remaining Outstanding Vale Balance: ₱${remainingVale.toLocaleString()}</p>
+          <p>Cumulative Active CA Balance Across Queue: ₱${totalRemainingVale.toLocaleString()}</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Employee Signature</div>
@@ -1349,13 +1417,14 @@
           <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
           <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">CASH ADVANCE (VALE) RECEIPT VOUCHER</p>
           <hr style="border: 1px dashed #000; margin-bottom: 12px;">
-          <p><strong>Voucher No:</strong> ${v.id}</p>
+          <p><strong>Voucher Control No:</strong> ${v.id}</p>
           <p><strong>Date Issued:</strong> ${v.date}</p>
           <p><strong>Employee Name:</strong> ${v.empName}</p>
           <p style="font-size: 1.2rem; font-weight: bold; margin: 10px 0;">AMOUNT ADVANCED: ₱${v.amount.toLocaleString()}</p>
+          <p><strong>Agreed Deduction Plan:</strong> ${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}/payroll` : `${v.planType}% per payroll`}</p>
           <p><strong>Purpose / Reason:</strong> ${v.notes}</p>
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance amount stated above and authorize its weekly deduction from my payroll payouts.</p>
+          <p style="font-size: 0.78rem;">I hereby acknowledge receipt of the cash advance stated above and agree to the FIFO payroll deduction schedule (minimum 30% per payday) until full liquidation.</p>
           <br><br>
           <div style="display: flex; justify-content: space-between; margin-top: 20px;">
             <div>___________________<br>Borrower Signature</div>
@@ -1434,22 +1503,21 @@
     }
 
     function renderCharts(totalRev, totalExp, netProfit, totalVale) {
-      // Render Financial Bar Chart
       const ctxFin = document.getElementById('financialChart').getContext('2d');
       if (financialChartInstance) financialChartInstance.destroy();
 
       financialChartInstance = new Chart(ctxFin, {
         type: 'bar',
         data: {
-          labels: ['Sales Revenue', 'Plant Expenses', 'Net Profit / (Deficit)', 'Outstanding Vale'],
+          labels: ['Sales Revenue', 'Plant Expenses', 'Net Profit / (Deficit)', 'Outstanding Vale Queue'],
           datasets: [{
             label: 'Amount (₱)',
             data: [totalRev, totalExp, netProfit, totalVale],
             backgroundColor: [
-              '#f26522', // Revenue
-              '#ef4444', // Expense
-              netProfit >= 0 ? '#10b981' : '#b91c1c', // Net Profit
-              '#f59e0b'  // Vale
+              '#f26522',
+              '#ef4444',
+              netProfit >= 0 ? '#10b981' : '#b91c1c',
+              '#f59e0b'
             ],
             borderRadius: 6
           }]
@@ -1462,7 +1530,6 @@
         }
       });
 
-      // Render Inventory Bar Chart
       const ctxInv = document.getElementById('inventoryChart').getContext('2d');
       if (inventoryChartInstance) inventoryChartInstance.destroy();
 
@@ -1622,19 +1689,30 @@
         `;
       }).join('');
 
-      // Vale Voucher Table
-      document.getElementById('tbl-vale-vouchers').innerHTML = state.valeVouchers.map((v, idx) => `
-        <tr>
-          <td><strong>${v.id}</strong></td>
-          <td>${v.date}</td>
-          <td>${v.empName}</td>
-          <td><strong>₱${v.amount.toLocaleString()}</strong></td>
-          <td>${v.notes}</td>
-          <td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printValeVoucher(${idx})">🖨️ Print Receipt</button></td>
-        </tr>
-      `).join('');
+      // Vale Multi-Voucher Table with FIFO Queue Display
+      document.getElementById('tbl-vale-vouchers').innerHTML = (state.valeVouchers || []).map((v, idx) => {
+        const planDisplay = v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`;
+        const isPaid = (v.remainingBalance || 0) <= 0 || v.status === 'PAID';
+        
+        return `
+          <tr>
+            <td><strong>${v.id}</strong></td>
+            <td>${v.date}</td>
+            <td>${v.empName}</td>
+            <td>₱${v.amount.toLocaleString()}</td>
+            <td><strong style="color: ${isPaid ? 'var(--brand-green)' : 'var(--brand-danger)'};">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td>
+            <td><span class="badge badge-blue">${planDisplay}</span></td>
+            <td><span class="badge ${isPaid ? 'badge-pass' : 'badge-warn'}">${isPaid ? 'PAID' : 'ACTIVE QUEUE'}</span></td>
+            <td>${v.notes}</td>
+            <td>
+              <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printValeVoucher(${idx})">🖨️ Voucher</button>
+              <button onclick="deleteEntry('valeVouchers', ${idx})" class="btn-danger">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
 
-      // Weekly Payroll Ledger Summary
+      // Weekly Payroll Ledger Summary with FIFO CA Logic
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
         const weeklyGross = weeklyDays * e.rate;
@@ -1654,9 +1732,36 @@
         }
 
         const totalStatutory = sss.ee + ph.ee + pagibig.ee;
-        const vale = e.valeBalance || 0;
-        const valeDeduct = Math.min(vale, weeklyGross - totalStatutory);
-        const net = Math.max(0, weeklyGross - totalStatutory - valeDeduct);
+        const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
+
+        // Calculate FIFO Deduction
+        const activeVouchers = state.valeVouchers
+          .filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0))
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        let valeDeduct = 0;
+        let targetCaId = "None";
+
+        if (activeVouchers.length > 0) {
+          const primaryCa = activeVouchers[0];
+          targetCaId = primaryCa.id;
+
+          let requiredDeduct = 0;
+          if (primaryCa.planType === 'CUSTOM' && primaryCa.customAmt) {
+            requiredDeduct = primaryCa.customAmt;
+          } else {
+            const pct = (primaryCa.minPct || 30) / 100;
+            requiredDeduct = netTakeHomeBeforeVale * pct;
+          }
+
+          // Enforce 30% absolute minimum floor unless balance is lower
+          const minPctAmt = netTakeHomeBeforeVale * 0.30;
+          if (requiredDeduct < minPctAmt) requiredDeduct = minPctAmt;
+
+          valeDeduct = Math.min(primaryCa.remainingBalance, requiredDeduct, netTakeHomeBeforeVale);
+        }
+
+        const net = Math.max(0, netTakeHomeBeforeVale - valeDeduct);
 
         return `
           <tr>
@@ -1668,6 +1773,7 @@
             <td>-₱${sss.ee.toFixed(2)}</td>
             <td>-₱${ph.ee.toFixed(2)}</td>
             <td>-₱${pagibig.ee.toFixed(2)}</td>
+            <td><span class="badge badge-blue">${targetCaId}</span></td>
             <td><strong style="color: var(--brand-gold);">₱${valeDeduct.toFixed(2)}</strong></td>
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
             <td><button class="btn" style="padding: 4px 10px; font-size: 0.75rem;" onclick="printPaystub(${idx})">🖨️ Weekly Paystub</button></td>
@@ -1761,7 +1867,10 @@
       const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
       const totalFin = state.batches.reduce((s, b) => s + b.yieldKg, 0);
       const avgYield = totalRaw > 0 ? ((totalFin / totalRaw) * 100).toFixed(1) : 0;
-      const totalVale = state.employees.reduce((s, e) => s + (e.valeBalance || 0), 0);
+      
+      const totalVale = (state.valeVouchers || [])
+        .filter(v => v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0)
+        .reduce((s, v) => s + (v.remainingBalance || 0), 0);
       const totalDowntimeHrs = (state.downtime.reduce((s, d) => s + d.duration, 0) / 60).toFixed(1);
 
       document.getElementById('biz-revenue').innerText = `₱${totalRev.toLocaleString()}`;
