@@ -705,7 +705,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>SKU</th><th>Category</th><th>Item Name</th><th>Selling Rate (₱/kg)</th><th>Available Stock (kg)</th><th>Min Threshold</th><th>Stock Status</th>
+                  <th>SKU</th><th>Category</th><th>Item Name</th><th>Selling Rate (₱/kg)</th><th>Available Stock (kg)</th><th>Min Threshold</th><th>Stock Status</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-inventory"></tbody>
@@ -792,6 +792,35 @@
 
       <!-- TAB 15: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
+        
+        <!-- NEW: ADD/EDIT RAW MATERIAL & PRODUCT SKU FORM -->
+        <div class="panel">
+          <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed & Finished Goods)</div>
+          <form onsubmit="handleSaveItem(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Select Item to Edit (or Create New)</label>
+                <select id="sku-select" class="form-control" onchange="populateItemFormForEdit()">
+                  <option value="NEW">+ Create New Item / Material SKU</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Item SKU ID</label><input type="text" id="sku-id" class="form-control" placeholder="RAW-03" required></div>
+              <div class="form-group">
+                <label>Material Category</label>
+                <select id="sku-cat" class="form-control">
+                  <option value="Raw Feed">Raw Feedstock (e.g. Bamboo, Coconut Shell, Rice Husk)</option>
+                  <option value="Finished Goods">Finished Product (e.g. Briquettes, Biochar)</option>
+                </select>
+              </div>
+              <div class="form-group"><label>Item / Material Name</label><input type="text" id="sku-name" class="form-control" placeholder="Rice Husk" required></div>
+              <div class="form-group"><label>Per-Kilo Rate (₱ / kg)</label><input type="number" step="0.01" id="sku-price" class="form-control" placeholder="3.50" required></div>
+              <div class="form-group"><label>Initial / Adjustment Stock (kg)</label><input type="number" id="sku-stock" class="form-control" placeholder="3000" required></div>
+              <div class="form-group"><label>Minimum Safety Reorder Level (kg)</label><input type="number" id="sku-min" class="form-control" placeholder="1000" required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">💾 Save Material / Product SKU</button>
+          </form>
+        </div>
+
         <div class="panel">
           <div class="panel-title">Register Employee Profile (Regular vs Contractual)</div>
           <form onsubmit="handleAddEmployee(event)">
@@ -979,6 +1008,56 @@
       if (invItem && qty > 0) {
         document.getElementById('log-amount').value = (qty * invItem.pricePerKg).toFixed(2);
       }
+    }
+
+    function populateItemFormForEdit() {
+      const skuId = document.getElementById('sku-select').value;
+      if (skuId === 'NEW') {
+        document.getElementById('sku-id').value = `RAW-0${state.inventory.length + 1}`;
+        document.getElementById('sku-cat').value = "Raw Feed";
+        document.getElementById('sku-name').value = "";
+        document.getElementById('sku-price').value = "";
+        document.getElementById('sku-stock').value = "";
+        document.getElementById('sku-min').value = "";
+      } else {
+        const item = state.inventory.find(i => i.id === skuId);
+        if (item) {
+          document.getElementById('sku-id').value = item.id;
+          document.getElementById('sku-cat').value = item.category;
+          document.getElementById('sku-name').value = item.name;
+          document.getElementById('sku-price').value = item.pricePerKg;
+          document.getElementById('sku-stock').value = item.stock;
+          document.getElementById('sku-min').value = item.min;
+        }
+      }
+    }
+
+    function editItemBySku(skuId) {
+      switchTab('settings', document.querySelectorAll('.nav-link')[14]);
+      document.getElementById('sku-select').value = skuId;
+      populateItemFormForEdit();
+    }
+
+    function handleSaveItem(e) {
+      e.preventDefault();
+      const skuId = document.getElementById('sku-id').value.trim();
+      const cat = document.getElementById('sku-cat').value;
+      const name = document.getElementById('sku-name').value.trim();
+      const price = parseFloat(document.getElementById('sku-price').value);
+      const stock = parseFloat(document.getElementById('sku-stock').value);
+      const min = parseFloat(document.getElementById('sku-min').value);
+
+      const existingIndex = state.inventory.findIndex(i => i.id === skuId);
+
+      if (existingIndex >= 0) {
+        state.inventory[existingIndex] = { id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min };
+      } else {
+        state.inventory.push({ id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min });
+      }
+
+      saveState();
+      renderAll();
+      alert(`Saved ${name} (${skuId}) successfully!`);
     }
 
     function handleExpenseLog(e) {
@@ -1699,6 +1778,12 @@
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
       if(document.getElementById('soa-emp-select')) document.getElementById('soa-emp-select').innerHTML = empOpts;
 
+      const skuSelectElem = document.getElementById('sku-select');
+      if (skuSelectElem) {
+        skuSelectElem.innerHTML = `<option value="NEW">+ Create New Item / Material SKU</option>` +
+          state.inventory.map(i => `<option value="${i.id}">${i.id} - ${i.name} (${i.category})</option>`).join('');
+      }
+
       const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail - ₱${i.pricePerKg}/kg)</option>`).join('');
       if(document.getElementById('proc-raw-item')) document.getElementById('proc-raw-item').innerHTML = rawOpts;
       if(document.getElementById('wb-item')) document.getElementById('wb-item').innerHTML = rawOpts;
@@ -1941,8 +2026,8 @@
         `;
       }).join('');
 
-      // Inventory Table with Per-Kilo Selling Prices
-      document.getElementById('tbl-inventory').innerHTML = state.inventory.map(i => `
+      // Inventory Table with Per-Kilo Selling Prices and Direct Edit Action
+      document.getElementById('tbl-inventory').innerHTML = state.inventory.map((i, idx) => `
         <tr>
           <td><strong>${i.id}</strong></td>
           <td>${i.category}</td>
@@ -1951,6 +2036,10 @@
           <td><strong>${i.stock.toLocaleString()} kg</strong></td>
           <td>${i.min.toLocaleString()} kg</td>
           <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'HEALTHY' : 'REORDER ALERT'}</span></td>
+          <td>
+            <button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="editItemBySku('${i.id}')">✏️ Edit SKU / Price</button>
+            <button onclick="deleteEntry('inventory', ${idx})" class="btn-danger">Delete</button>
+          </td>
         </tr>
       `).join('');
 
