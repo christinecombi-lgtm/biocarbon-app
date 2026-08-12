@@ -239,12 +239,12 @@
           <div class="kpi-card orange-accent">
             <div class="kpi-title">TOTAL SALES REVENUE</div>
             <div class="kpi-main-val" id="biz-revenue">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Outbound sales deliveries</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Outbound sales dispatches</div>
           </div>
           <div class="kpi-card danger-accent">
             <div class="kpi-title">TOTAL OPERATING EXPENSES</div>
             <div class="kpi-main-val" id="biz-expenses">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Includes Feedstock, Op-Costs & BIR Taxes</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Feedstock, Op-Costs & BIR Taxes</div>
           </div>
           <div class="kpi-card" id="kpi-net-card">
             <div class="kpi-title">NET PROFIT / (DEFICIT)</div>
@@ -252,14 +252,14 @@
             <div style="font-size: 0.82rem; color: #94a3b8;" id="biz-net-sub">Revenue minus Expenses & Taxes</div>
           </div>
           <div class="kpi-card blue-accent">
-            <div class="kpi-title">RAW CONVERSION YIELD</div>
-            <div class="kpi-main-val" id="biz-yield">0%</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Pyrolysis biochar yield vs raw feed</div>
+            <div class="kpi-title">UNCOLLECTED RECEIVABLES</div>
+            <div class="kpi-main-val" id="biz-ar" style="color: var(--brand-blue);">₱0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Outstanding Customer Sales (15-30D)</div>
           </div>
           <div class="kpi-card gold-accent">
-            <div class="kpi-title">OUTSTANDING VALE / CA</div>
-            <div class="kpi-main-val" id="biz-vale">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Total employee advances</div>
+            <div class="kpi-title">UNPAID SUPPLIER PAYABLES</div>
+            <div class="kpi-main-val" id="biz-ap" style="color: var(--brand-gold);">₱0</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Outstanding Raw Material Purchases</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-title">PLANT DOWNTIME LOSS</div>
@@ -289,7 +289,7 @@
           <div class="panel-title">Operational Health & Owner Action Recommendations</div>
           <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
             <div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-danger);">1. Financial Health & Net Margin Alert</h4>
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-danger);">1. Cashflow & Credit Collection Alert</h4>
               <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-finance-text">Analyzing cashflow...</p>
             </div>
             <div>
@@ -509,6 +509,21 @@
               <div class="form-group"><label>Gross Weight (kg)</label><input type="number" id="wb-gross" class="form-control" placeholder="2500" required></div>
               <div class="form-group"><label>Tare Weight (kg)</label><input type="number" id="wb-tare" class="form-control" placeholder="500" required></div>
               <div class="form-group"><label>Moisture Content (MC %)</label><input type="number" step="0.1" id="wb-mc" class="form-control" placeholder="18.5" required></div>
+              <div class="form-group">
+                <label>Payment Terms</label>
+                <select id="wb-terms" class="form-control">
+                  <option value="COD">COD (Cash On Delivery)</option>
+                  <option value="15 Days Credit">15 Days Credit</option>
+                  <option value="30 Days Credit">30 Days Credit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Payment Status</label>
+                <select id="wb-status" class="form-control">
+                  <option value="PAID">PAID (Settled Immediately)</option>
+                  <option value="OUTSTANDING" selected>OUTSTANDING (Accounts Payable)</option>
+                </select>
+              </div>
               <div class="form-group"><label>Total Amount Paid (₱)</label><input type="number" id="wb-amount" class="form-control" placeholder="10000" required></div>
               <div class="form-group"><label>Intake Inspector</label><select id="wb-inspector" class="form-control"></select></div>
             </div>
@@ -522,7 +537,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Ticket ID</th><th>Date</th><th>Feedstock</th><th>Supplier</th><th>Net Weight</th><th>Moisture %</th><th>Total Paid</th><th>Quality Status</th><th>Inspector</th><th>Action</th>
+                  <th>Ticket ID</th><th>Date</th><th>Feedstock</th><th>Supplier</th><th>Net Weight</th><th>Moisture %</th><th>Total Amount</th><th>Terms</th><th>Status</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-weighbridge-history"></tbody>
@@ -648,7 +663,6 @@
       <!-- TAB 10: EDITABLE GOVERNMENT RATES & BIR TAX CALCULATOR -->
       <div id="gov-remittances" class="tab-pane">
         
-        <!-- EDITABLE GOVERNMENT TAX & STATUTORY RATES PANEL -->
         <div class="panel">
           <div class="panel-title">
             <span>⚙️ Editable Philippine Tax Rates & Statutory Percentage Settings</span>
@@ -702,7 +716,6 @@
           </div>
         </div>
 
-        <!-- BIR COR TAX & STATUTORY REMITTANCE SUMMARY -->
         <div class="panel">
           <div class="panel-title">
             <span>BIR Tax Liability & Statutory Remittance Accounting (Auto-Accounted in Expenses)</span>
@@ -756,14 +769,14 @@
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
-            <span>Contact Directory</span>
+            <span>Contact Directory & Default Payment Credit Terms</span>
             <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search company, person, location...">
           </div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Company / Entity</th><th>Contact Person</th><th>Position / Title</th><th>Category</th><th>Phone Number</th><th>Email Address</th><th>Address / Location</th>
+                  <th>Company / Entity</th><th>Contact Person</th><th>Position / Title</th><th>Category</th><th>Payment Terms</th><th>Phone Number</th><th>Email Address</th><th>Address / Location</th>
                 </tr>
               </thead>
               <tbody id="tbl-contacts"></tbody>
@@ -792,7 +805,7 @@
       <!-- TAB 13: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Record Delivery Ticket & Sales / Inbound Invoice</div>
+          <div class="panel-title">Record Delivery Ticket, Payment Status & Sales / Inbound Invoice</div>
           <form onsubmit="handleLogisticsTicket(event)">
             <div class="form-grid">
               <div class="form-group"><label>Ticket Date</label><input type="date" id="log-date" class="form-control" value="2026-08-08" required></div>
@@ -803,7 +816,22 @@
                   <option value="OUTBOUND_CUSTOMER" selected>Outbound Sales Delivery (Deducts Stock & Generates Revenue)</option>
                 </select>
               </div>
-              <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control"></select></div>
+              <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control" onchange="syncPartyPaymentTerms()"></select></div>
+              <div class="form-group">
+                <label>Agreed Credit Terms</label>
+                <select id="log-terms" class="form-control">
+                  <option value="COD">COD (Cash On Delivery)</option>
+                  <option value="15 Days Credit">15 Days Credit</option>
+                  <option value="30 Days Credit">30 Days Credit</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Current Payment Status</label>
+                <select id="log-status" class="form-control">
+                  <option value="PAID">PAID (Settled / Cleared)</option>
+                  <option value="OUTSTANDING" selected>OUTSTANDING (Credit Pending)</option>
+                </select>
+              </div>
               <div class="form-group"><label>Item (Per-Kilo Priced)</label><select id="log-item" class="form-control" onchange="autoCalculateLogisticsAmount()"></select></div>
               <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="500" oninput="autoCalculateLogisticsAmount()" required></div>
               <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="10000" required></div>
@@ -828,7 +856,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Ticket ID</th><th>Date</th><th>Type</th><th>Party</th><th>Item</th><th>Quantity (kg)</th><th>Total Amount</th><th>Action</th>
+                  <th>Ticket ID</th><th>Date</th><th>Type</th><th>Party</th><th>Terms</th><th>Item</th><th>Qty (kg)</th><th>Total Amount</th><th>Payment Status</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-logistics"></tbody>
@@ -919,7 +947,7 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Register External Contact (Supplier / Customer)</div>
+          <div class="panel-title">Register External Contact (Supplier / Customer) & Credit Terms</div>
           <form onsubmit="handleAddContact(event)">
             <div class="form-grid">
               <div class="form-group"><label>Company / Entity Name</label><input type="text" id="m-con-company" class="form-control" placeholder="Carigara Bamboo Farmers Co-Op" required></div>
@@ -931,6 +959,14 @@
                   <option value="Supplier">Supplier</option>
                   <option value="Customer">Customer</option>
                   <option value="Service Provider">Service Provider / Utility</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Default Payment Terms</label>
+                <select id="m-con-terms" class="form-control">
+                  <option value="COD">COD (Cash On Delivery)</option>
+                  <option value="15 Days Credit">15 Days Credit</option>
+                  <option value="30 Days Credit">30 Days Credit</option>
                 </select>
               </div>
               <div class="form-group"><label>Contact Number</label><input type="text" id="m-con-phone" class="form-control" placeholder="0917-123-4567" required></div>
@@ -949,7 +985,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_tax';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_payterms';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -1000,16 +1036,16 @@
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
       ],
       weighbridgeLogs: [
-        { id: "WB-301", date: "2026-08-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, amount: 8000, inspector: "Amber" }
+        { id: "WB-301", date: "2026-08-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, amount: 8000, terms: "15 Days Credit", status: "OUTSTANDING", inspector: "Amber" }
       ],
       valeVouchers: [
         { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" },
         { id: "VALE-902", date: "2026-08-12", empName: "Amber", amount: 1500, remainingBalance: 1500, planType: "50", minPct: 50, customAmt: null, status: "ACTIVE", notes: "School fees advance" }
       ],
       logistics: [
-        { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Bamboo", qty: 2000, amount: 8000 },
-        { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 },
-        { id: "TICKET-503", date: "2026-08-12", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Fine Biochar Powder", qty: 400, amount: 10000 }
+        { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", terms: "15 Days Credit", status: "PAID", item: "Bamboo", qty: 2000, amount: 8000 },
+        { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "30 Days Credit", status: "OUTSTANDING", item: "Charcoal Briquettes", qty: 500, amount: 15000 },
+        { id: "TICKET-503", date: "2026-08-12", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "COD", status: "PAID", item: "Fine Biochar Powder", qty: 400, amount: 10000 }
       ],
       openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
@@ -1019,11 +1055,11 @@
         { name: "Carlos", pos: "Seasonal Sorter", type: "Contractual", rate: 500, phone: "0920-333-4444", email: "carlos@cbcm.ph", emName: "Ana Gomez", emPhone: "0921-555-6666", lifetimePresentDays: 45, ytdNetSalary: 22500, attendance: {} }
       ],
       contacts: [
-        { company: "Bureau of Internal Revenue (BIR RDO 088)", person: "Revenue District Officer", position: "Tax Authority", type: "Service Provider", phone: "053-888-1234", email: "rdo88@bir.gov.ph", address: "Tacloban City, Leyte" },
-        { company: "LEYECO II", person: "Customer Service", position: "Utility Provider", type: "Service Provider", phone: "053-321-2000", email: "billing@leyeco2.ph", address: "Tacloban City, Leyte" },
-        { company: "Tacloban Industrial Hardware", person: "Mark Tan", position: "Store Manager", type: "Supplier", phone: "0917-888-9999", email: "sales@taclobanhardware.ph", address: "Tacloban City" },
-        { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
-        { company: "AgriGrow Distributors", person: "Elena Gomez", position: "Procurement Manager", type: "Customer", phone: "0920-555-0192", email: "elena@agrigrow.ph", address: "Tacloban City" }
+        { company: "Bureau of Internal Revenue (BIR RDO 088)", person: "Revenue District Officer", position: "Tax Authority", type: "Service Provider", terms: "COD", phone: "053-888-1234", email: "rdo88@bir.gov.ph", address: "Tacloban City, Leyte" },
+        { company: "LEYECO II", person: "Customer Service", position: "Utility Provider", type: "Service Provider", terms: "15 Days Credit", phone: "053-321-2000", email: "billing@leyeco2.ph", address: "Tacloban City, Leyte" },
+        { company: "Tacloban Industrial Hardware", person: "Mark Tan", position: "Store Manager", type: "Supplier", terms: "COD", phone: "0917-888-9999", email: "sales@taclobanhardware.ph", address: "Tacloban City" },
+        { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", terms: "15 Days Credit", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
+        { company: "AgriGrow Distributors", person: "Elena Gomez", position: "Procurement Manager", type: "Customer", terms: "30 Days Credit", phone: "0920-555-0192", email: "elena@agrigrow.ph", address: "Tacloban City" }
       ]
     };
 
@@ -1131,7 +1167,16 @@
       } else {
         itemSelect.innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name} (₱${i.pricePerKg}/kg)</option>`).join('');
       }
+      syncPartyPaymentTerms();
       autoCalculateLogisticsAmount();
+    }
+
+    function syncPartyPaymentTerms() {
+      const partyName = document.getElementById('log-party').value;
+      const contact = state.contacts.find(c => c.company === partyName);
+      if (contact && contact.terms) {
+        document.getElementById('log-terms').value = contact.terms;
+      }
     }
 
     function autoCalculateLogisticsAmount() {
@@ -1169,6 +1214,36 @@
       switchTab('settings', document.querySelectorAll('.nav-link')[14]);
       document.getElementById('sku-select').value = skuId;
       populateItemFormForEdit();
+    }
+
+    function toggleLogisticsPaymentStatus(ticketIndex) {
+      const t = state.logistics[ticketIndex];
+      if (!t) return;
+
+      t.status = (t.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
+      
+      const relatedExp = state.expenses.find(x => x.inv === t.id);
+      if (relatedExp) {
+        relatedExp.notes = `${t.type === 'INBOUND_SUPPLIER' ? 'Inbound feedstock' : 'Sales'} (${t.terms} - ${t.status}): ${t.qty} kg of ${t.item}`;
+      }
+
+      saveState();
+      renderAll();
+    }
+
+    function toggleWeighbridgePaymentStatus(wbIndex) {
+      const w = state.weighbridgeLogs[wbIndex];
+      if (!w) return;
+
+      w.status = (w.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
+
+      const relatedExp = state.expenses.find(x => x.inv === w.id);
+      if (relatedExp) {
+        relatedExp.notes = `Weighbridge feedstock (${w.terms} - ${w.status}): ${w.grossKg - w.tareKg} kg of ${w.item}`;
+      }
+
+      saveState();
+      renderAll();
     }
 
     function handleSaveItem(e) {
@@ -1311,6 +1386,8 @@
       const netKg = Math.max(0, grossKg - tareKg);
       const wbDate = document.getElementById('wb-date').value;
       const totalAmount = parseFloat(document.getElementById('wb-amount').value) || 0;
+      const terms = document.getElementById('wb-terms').value;
+      const status = document.getElementById('wb-status').value;
 
       const invItem = state.inventory.find(i => i.name === itemName);
       if (invItem) invItem.stock += netKg;
@@ -1325,6 +1402,8 @@
         grossKg, tareKg,
         mcPct: parseFloat(document.getElementById('wb-mc').value),
         amount: totalAmount,
+        terms: terms,
+        status: status,
         inspector: document.getElementById('wb-inspector').value
       });
 
@@ -1338,7 +1417,7 @@
           inv: wbTicketId,
           method: "Petty Cash",
           amount: totalAmount,
-          notes: `Weighbridge feedstock purchase: ${netKg} kg of ${itemName}`
+          notes: `Weighbridge feedstock purchase (${terms} - ${status}): ${netKg} kg of ${itemName}`
         });
       }
 
@@ -1388,6 +1467,8 @@
       const date = document.getElementById('log-date').value;
       const type = document.getElementById('log-type').value;
       const party = document.getElementById('log-party').value;
+      const terms = document.getElementById('log-terms').value;
+      const status = document.getElementById('log-status').value;
       const rawItemVal = document.getElementById('log-item').value;
       const invItem = state.inventory.find(i => rawItemVal.includes(i.name));
       const itemName = invItem ? invItem.name : rawItemVal;
@@ -1408,7 +1489,7 @@
           inv: ticketId,
           method: "Bank Transfer",
           amount: amount,
-          notes: `Inbound feedstock delivery: ${qty} kg of ${itemName}`
+          notes: `Inbound feedstock delivery (${terms} - ${status}): ${qty} kg of ${itemName}`
         });
       } else {
         if (!invItem || invItem.stock < qty) {
@@ -1420,7 +1501,7 @@
 
       state.logistics.unshift({
         id: ticketId,
-        date, type, party, item: itemName, qty, amount
+        date, type, party, terms, status, item: itemName, qty, amount
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -1457,7 +1538,7 @@
 
       state.contacts.push({
         company: "Combinido Biocarbon (Staff)", person: empName, position: empPos,
-        type: "Plant Crew", phone: empPhone, email: empEmail, address: "Manloy, Carigara Plant"
+        type: "Plant Crew", terms: "COD", phone: empPhone, email: empEmail, address: "Manloy, Carigara Plant"
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -1470,6 +1551,7 @@
         person: document.getElementById('m-con-person').value,
         position: document.getElementById('m-con-pos').value,
         type: document.getElementById('m-con-type').value,
+        terms: document.getElementById('m-con-terms').value,
         phone: document.getElementById('m-con-phone').value,
         email: document.getElementById('m-con-email').value || '-',
         address: document.getElementById('m-con-addr').value
@@ -1583,6 +1665,8 @@
           party: item.supplier,
           item: item.item,
           qty: item.grossKg - item.tareKg,
+          terms: item.terms || 'COD',
+          status: item.status || 'PAID',
           amount: item.amount || 0
         };
       } else {
@@ -1600,6 +1684,8 @@
           <p><strong>Receiving Control Ticket No:</strong> ${t.id}</p>
           <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
           <p><strong>Supplier / Source:</strong> ${t.party}</p>
+          <p><strong>Agreed Payment Terms:</strong> ${t.terms || 'COD'}</p>
+          <p><strong>Payment Settlement Status:</strong> <span style="font-weight: bold; border: 1px solid #000; padding: 2px 6px;">${t.status || 'PAID'}</span></p>
           <p><strong>Raw Feedstock Delivered:</strong> ${t.item}</p>
           <p><strong>Net Quantity Received:</strong> ${t.qty.toLocaleString()} kg</p>
           <p><strong>Agreed Price per Kg:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
@@ -1630,6 +1716,8 @@
           <p><strong>Official Invoice No:</strong> INV-${t.id}</p>
           <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
           <p><strong>Customer Name:</strong> ${t.party}</p>
+          <p><strong>Payment Credit Terms:</strong> ${t.terms || 'COD'}</p>
+          <p><strong>Payment Collection Status:</strong> <span style="font-weight: bold; border: 1px solid #000; padding: 2px 6px;">${t.status || 'PAID'}</span></p>
           <p><strong>Product Item:</strong> ${t.item}</p>
           <p><strong>Unit Selling Price:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
           <p><strong>Quantity Dispatched:</strong> ${t.qty.toLocaleString()} kg</p>
@@ -1670,7 +1758,8 @@
             <td style="padding: 6px 4px;"><strong>INV-${t.id}</strong></td>
             <td style="padding: 6px 4px;">${t.item}</td>
             <td style="padding: 6px 4px;">${t.qty.toLocaleString()} kg</td>
-            <td style="padding: 6px 4px;">₱${ratePerKg.toFixed(2)}</td>
+            <td style="padding: 6px 4px;">${t.terms || 'COD'}</td>
+            <td style="padding: 6px 4px;"><strong>${t.status || 'PAID'}</strong></td>
             <td style="padding: 6px 4px;"><strong>₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
           </tr>
         `;
@@ -1679,7 +1768,7 @@
       const periodLabel = (fromDate && toDate) ? `${fromDate} to ${toDate}` : 'All On-Record Dispatches';
 
       if (salesTickets.length === 0) {
-        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 12px;">No Sales Transactions found covering period (${periodLabel}).</td></tr>`;
+        rowsHtml = `<tr><td colspan="7" style="text-align: center; padding: 12px;">No Sales Transactions found covering period (${periodLabel}).</td></tr>`;
       }
 
       const salesSoaHtml = `
@@ -1710,7 +1799,8 @@
                 <th style="padding: 6px 4px;">Invoice #</th>
                 <th style="padding: 6px 4px;">Product Item</th>
                 <th style="padding: 6px 4px;">Qty (kg)</th>
-                <th style="padding: 6px 4px;">Rate/kg</th>
+                <th style="padding: 6px 4px;">Terms</th>
+                <th style="padding: 6px 4px;">Status</th>
                 <th style="padding: 6px 4px;">Subtotal</th>
               </tr>
             </thead>
@@ -2023,8 +2113,12 @@
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
 
-      // Financial Revenue & Auto Tax Calculations
+      // Financial Revenue & Credit Receivables/Payables
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
+      const totalAR = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
+      const totalAP = state.logistics.filter(l => l.type === 'INBOUND_SUPPLIER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0) +
+                       (state.weighbridgeLogs || []).filter(w => w.status === 'OUTSTANDING').reduce((s, w) => s + w.amount, 0);
+
       const gov = state.govRates;
 
       let birPercentageTax = 0;
@@ -2123,7 +2217,8 @@
       // Weighbridge Logs Table
       document.getElementById('tbl-weighbridge-history').innerHTML = (state.weighbridgeLogs || []).map((w, idx) => {
         const net = Math.max(0, w.grossKg - w.tareKg);
-        const isPass = w.mcPct <= 20.0;
+        const isPaid = w.status === 'PAID';
+
         return `
           <tr>
             <td><strong>${w.id}</strong></td>
@@ -2133,8 +2228,11 @@
             <td><strong>${net.toLocaleString()} kg</strong></td>
             <td>${w.mcPct}%</td>
             <td><strong>₱${(w.amount || 0).toLocaleString()}</strong></td>
-            <td><span class="badge ${isPass ? 'badge-pass' : 'badge-warn'}">${isPass ? 'PASS (&le;20%)' : 'HIGH MOISTURE'}</span></td>
-            <td>${w.inspector}</td>
+            <td><span class="badge badge-blue">${w.terms || 'COD'}</span></td>
+            <td>
+              <span class="badge ${isPaid ? 'badge-pass' : 'badge-fail'}">${isPaid ? 'PAID' : 'OUTSTANDING'}</span>
+              <button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleWeighbridgePaymentStatus(${idx})">💳 Toggle</button>
+            </td>
             <td>
               <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'weighbridge')">📥 Slip</button>
               <button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button>
@@ -2294,24 +2392,33 @@
         </tr>
       `).join('');
 
-      // Logistics Tickets Ledger with Printable Receipts
-      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
-        <tr>
-          <td><strong>${l.id}</strong></td>
-          <td>${l.date || 'N/A'}</td>
-          <td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound Stock' : 'Outbound Sale'}</span></td>
-          <td>${l.party}</td>
-          <td>${l.item}</td>
-          <td>${l.qty.toLocaleString()} kg</td>
-          <td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-          <td>
-            ${l.type === 'OUTBOUND_CUSTOMER' 
-              ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Invoice</button>` 
-              : `<button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'logistics')">📥 Print Receiving Receipt</button>`}
-            <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
-          </td>
-        </tr>
-      `).join('');
+      // Logistics Tickets Ledger with Printable Receipts and Payment Settlement Buttons
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => {
+        const isPaid = l.status === 'PAID';
+
+        return `
+          <tr>
+            <td><strong>${l.id}</strong></td>
+            <td>${l.date || 'N/A'}</td>
+            <td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound Stock' : 'Outbound Sale'}</span></td>
+            <td>${l.party}</td>
+            <td><span class="badge badge-blue">${l.terms || 'COD'}</span></td>
+            <td>${l.item}</td>
+            <td>${l.qty.toLocaleString()} kg</td>
+            <td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+            <td>
+              <span class="badge ${isPaid ? 'badge-pass' : 'badge-fail'}">${isPaid ? 'PAID' : 'OUTSTANDING'}</span>
+              <button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleLogisticsPaymentStatus(${idx})">💳 Toggle</button>
+            </td>
+            <td>
+              ${l.type === 'OUTBOUND_CUSTOMER' 
+                ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Invoice</button>` 
+                : `<button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'logistics')">📥 Print Receiving Receipt</button>`}
+              <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
 
       // Directory Contacts
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
@@ -2320,6 +2427,7 @@
           <td>${c.person}</td>
           <td>${c.position || '-'}</td>
           <td><span class="badge ${c.type === 'Supplier' ? 'badge-warn' : c.type === 'Customer' ? 'badge-pass' : 'badge-blue'}">${c.type}</span></td>
+          <td><span class="badge badge-blue">${c.terms || 'COD'}</span></td>
           <td>${c.phone}</td>
           <td>${c.email}</td>
           <td>${c.address}</td>
@@ -2328,7 +2436,7 @@
 
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
 
-      // TOTAL EXPENSES (Manual Plant Expenses + BIR Percentage Tax + BIR Estimated Income Tax + Monthly Statutory ER Share)
+      // TOTAL EXPENSES & EXEC NUMBERS
       const loggedOpsExpenses = (state.expenses || []).reduce((s, x) => s + x.amount, 0);
       const totalExp = loggedOpsExpenses + birPercentageTax + birIncomeTax + totalMonthlyEmployerContributions;
       const netProfit = totalRev - totalExp;
@@ -2344,6 +2452,8 @@
 
       document.getElementById('biz-revenue').innerText = `₱${totalRev.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
       document.getElementById('biz-expenses').innerText = `₱${totalExp.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+      document.getElementById('biz-ar').innerText = `₱${totalAR.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+      document.getElementById('biz-ap').innerText = `₱${totalAP.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
       
       const netCard = document.getElementById('kpi-net-card');
       const netValElem = document.getElementById('biz-net');
@@ -2366,10 +2476,12 @@
       document.getElementById('biz-downtime').innerText = `${totalDowntimeHrs} hrs`;
 
       // Smart Recommendation Alerts
-      if (netProfit < 0) {
-        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-danger);">🚨 CASHFLOW DEFICIT ALERT:</strong> Total expenses (including feedstocks, utilities, statutory shares, and BIR taxes) exceed revenue by <strong>₱${Math.abs(netProfit).toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>.`;
+      if (totalAR > 0) {
+        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-blue);">💳 ACCOUNTS RECEIVABLE ALERT:</strong> You have <strong>₱${totalAR.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong> in uncollected customer sales credit. Follow up with buyers on 15/30-day terms to clear pending balances.`;
+      } else if (netProfit < 0) {
+        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-danger);">🚨 CASHFLOW DEFICIT ALERT:</strong> Total expenses exceed revenue by <strong>₱${Math.abs(netProfit).toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>.`;
       } else {
-        document.getElementById('rec-finance-text').innerHTML = `✅ <strong>Cashflow is positive.</strong> Net profit after operating costs and tax obligations is ₱${netProfit.toLocaleString(undefined, {minimumFractionDigits: 2})}.`;
+        document.getElementById('rec-finance-text').innerHTML = `✅ <strong>Cashflow and collections are on track.</strong> All dispatches and receivables are well balanced.`;
       }
 
       const lowItems = state.inventory.filter(i => i.stock < i.min);
