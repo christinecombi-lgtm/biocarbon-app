@@ -226,7 +226,7 @@
       <a class="nav-link" onclick="switchTab('gov-remittances', this)"><span>🏛️</span> Government Remittances</a>
       <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
       <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Per-Kilo Pricing</a>
-      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Sales Dispatches & Official Receipts</a>
+      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Sales Dispatches & Receipts</a>
       <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Downtime & Bottlenecks</a>
       <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
     </aside>
@@ -245,7 +245,7 @@
           <div class="kpi-card danger-accent">
             <div class="kpi-title">TOTAL PLANT EXPENSES</div>
             <div class="kpi-main-val" id="biz-expenses">₱0</div>
-            <div style="font-size: 0.82rem; color: #94a3b8;">Utilities, parts, fuel & op-costs</div>
+            <div style="font-size: 0.82rem; color: #94a3b8;">Feedstock, utilities & op-costs</div>
           </div>
           <div class="kpi-card" id="kpi-net-card">
             <div class="kpi-title">NET PROFIT / (DEFICIT)</div>
@@ -308,13 +308,14 @@
       <!-- TAB 2: EXPENSES, UTILITIES & PARTS -->
       <div id="expenses" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Log Plant Operating Expense, Utility & Spare Parts</div>
+          <div class="panel-title">Log Plant Operating Expense, Feedstock Purchase & Utilities</div>
           <form onsubmit="handleExpenseLog(event)">
             <div class="form-grid">
               <div class="form-group"><label>Expense Date</label><input type="date" id="exp-date" class="form-control" required></div>
               <div class="form-group">
                 <label>Expense Category</label>
                 <select id="exp-cat" class="form-control" required>
+                  <option value="Feedstock Purchase">Feedstock Purchase (Bamboo, Coconut Shell, Rice Husk)</option>
                   <option value="Utilities">Utilities (Grid Electricity / Water / Internet)</option>
                   <option value="Machinery & Refractory Parts">Machinery & Refractory Parts (Kiln, Press, Blower)</option>
                   <option value="Maintenance & Repairs">Maintenance & Repairs (Labor & Servicing)</option>
@@ -325,7 +326,7 @@
                   <option value="Miscellaneous">Miscellaneous Operating Costs</option>
                 </select>
               </div>
-              <div class="form-group"><label>Asset / Machine Affected</label><input type="text" id="exp-asset" class="form-control" placeholder="Furnace #1, Generator, Site General"></div>
+              <div class="form-group"><label>Asset / Machine Affected</label><input type="text" id="exp-asset" class="form-control" placeholder="Raw Material Yard, Site General"></div>
               <div class="form-group"><label>Vendor / Supplier</label><select id="exp-vendor" class="form-control"></select></div>
               <div class="form-group"><label>Invoice / Official Receipt #</label><input type="text" id="exp-inv" class="form-control" placeholder="OR-99182"></div>
               <div class="form-group">
@@ -336,10 +337,10 @@
                   <option value="GCash / E-Wallet">GCash / E-Wallet</option>
                 </select>
               </div>
-              <div class="form-group"><label>Amount Paid (₱)</label><input type="number" id="exp-amount" class="form-control" placeholder="4500" required></div>
-              <div class="form-group" style="grid-column: 1 / -1;"><label>Detailed Particulars / Description</label><input type="text" id="exp-notes" class="form-control" placeholder="Electricity bill payment for July 2026 furnace continuous run" required></div>
+              <div class="form-group"><label>Amount Paid (₱)</label><input type="number" id="exp-amount" class="form-control" placeholder="10000" required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Detailed Particulars / Description</label><input type="text" id="exp-notes" class="form-control" placeholder="Purchase of raw feed for plant inventory" required></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">💸 Log Expense & Generate Disbursement Voucher</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">💸 Log Expense & Deduct from Net Profit</button>
           </form>
         </div>
 
@@ -371,7 +372,7 @@
               <div class="form-group"><label>Closed By (Attendant)</label><select id="oc-closed-by" class="form-control"></select></div>
               <div class="form-group"><label>Closing Time (Out)</label><input type="time" id="oc-time-out" class="form-control"></div>
               <div class="form-group"><label>Run Mode</label><select id="oc-mode" class="form-control"><option value="Standard Shift Day">Standard Day Shift</option><option value="24-hr Continuous">24-hr Continuous Furnace Run</option></select></div>
-              <div class="form-group"><label>Shift Handover Notes</label><input type="text" id="oc-notes" class="form-control" placeholder="All dampers locked; perimeter clear"></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Shift Handover Notes</label><input type="text" id="oc-notes" class="form-control" placeholder="All dampers locked; perimeter clear"></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 16px;">Save Factory Shift Log</button>
           </form>
@@ -421,7 +422,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Start Duty (Loader & Igniter)</th><th>End Duty (Cooler & Unloader)</th><th>Peak Temp</th><th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -474,7 +475,7 @@
               <div class="form-group"><label>Maintenance Category</label><select id="maint-cat" class="form-control"><option value="Preventive">Preventive Maintenance</option><option value="Refractory Brick Repair">Refractory Brick Repair</option><option value="Damper / Vent Seal">Damper / Vent Seal Service</option><option value="Blower Motor Service">Blower Motor / Electrical</option></select></div>
               <div class="form-group"><label>Lead Technician / Staff</label><select id="maint-tech" class="form-control"></select></div>
               <div class="form-group"><label>Parts / Service Cost (₱)</label><input type="number" id="maint-cost" class="form-control" placeholder="2500" required></div>
-              <div class="form-group" style="grid-column: 1 / -1;"><label>Work Performed & Condition Notes</label><input type="text" id="maint-notes" class="form-control" placeholder="Replaced ceramic refractory seal on damper gate; re-calibrated VFD" required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Work Performed & Condition Notes</label><input type="text" id="maint-notes" class="form-control" placeholder="Replaced ceramic refractory seal on damper gate" required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">🔧 Save Maintenance Record</button>
           </form>
@@ -507,9 +508,10 @@
               <div class="form-group"><label>Gross Weight (kg)</label><input type="number" id="wb-gross" class="form-control" placeholder="2500" required></div>
               <div class="form-group"><label>Tare Weight (kg)</label><input type="number" id="wb-tare" class="form-control" placeholder="500" required></div>
               <div class="form-group"><label>Moisture Content (MC %)</label><input type="number" step="0.1" id="wb-mc" class="form-control" placeholder="18.5" required></div>
+              <div class="form-group"><label>Total Amount Paid (₱)</label><input type="number" id="wb-amount" class="form-control" placeholder="10000" required></div>
               <div class="form-group"><label>Intake Inspector</label><select id="wb-inspector" class="form-control"></select></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">⚖️ Save Feedstock Quality Intake & Inventory</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">⚖️ Save Feedstock Intake & Auto-Log Expense</button>
           </form>
         </div>
 
@@ -519,7 +521,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Ticket ID</th><th>Date</th><th>Feedstock</th><th>Supplier</th><th>Net Weight</th><th>Moisture %</th><th>Dry-Basis Weight</th><th>Quality Status</th><th>Inspector</th><th>Action</th>
+                  <th>Ticket ID</th><th>Date</th><th>Feedstock</th><th>Supplier</th><th>Net Weight</th><th>Moisture %</th><th>Total Paid</th><th>Quality Status</th><th>Inspector</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-weighbridge-history"></tbody>
@@ -717,23 +719,23 @@
       <!-- TAB 13: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Record Delivery Ticket & Sales Invoice</div>
+          <div class="panel-title">Record Delivery Ticket & Sales / Inbound Invoice</div>
           <form onsubmit="handleLogisticsTicket(event)">
             <div class="form-grid">
               <div class="form-group"><label>Ticket Date</label><input type="date" id="log-date" class="form-control" value="2026-08-08" required></div>
               <div class="form-group">
                 <label>Ticket Type</label>
                 <select id="log-type" class="form-control" onchange="toggleLogisticsItemOptions()">
-                  <option value="INBOUND_SUPPLIER">Inbound Raw Material Pickup (Increases Stock)</option>
+                  <option value="INBOUND_SUPPLIER">Inbound Raw Material Pickup (Auto-Logs Expense & Stock)</option>
                   <option value="OUTBOUND_CUSTOMER" selected>Outbound Sales Delivery (Deducts Stock & Generates Revenue)</option>
                 </select>
               </div>
               <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control"></select></div>
               <div class="form-group"><label>Item (Per-Kilo Priced)</label><select id="log-item" class="form-control" onchange="autoCalculateLogisticsAmount()"></select></div>
               <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="500" oninput="autoCalculateLogisticsAmount()" required></div>
-              <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="15000" required></div>
+              <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="10000" required></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🚚 Process Logistics Ticket</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🚚 Process Logistics Ticket & Save</button>
           </form>
         </div>
 
@@ -793,7 +795,6 @@
       <!-- TAB 15: MASTER DATA MANAGER -->
       <div id="settings" class="tab-pane">
         
-        <!-- NEW: ADD/EDIT RAW MATERIAL & PRODUCT SKU FORM -->
         <div class="panel">
           <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed & Finished Goods)</div>
           <form onsubmit="handleSaveItem(event)">
@@ -871,7 +872,7 @@
     </main>
   </div>
 
-  <!-- PRINTABLE CONTAINER OUTSIDE MAIN DISPLAY TO PREVENT BLANK PRINTS -->
+  <!-- PRINTABLE CONTAINER -->
   <div id="printable-area" style="display: none;"></div>
 
   <script>
@@ -919,8 +920,9 @@
 
     const defaultState = {
       inventory: [
-        { id: "RAW-01", category: "Raw Feed", name: "Spiny Bamboo", stock: 4800, min: 1000, pricePerKg: 4.00 },
+        { id: "RAW-01", category: "Raw Feed", name: "Bamboo", stock: 4800, min: 1000, pricePerKg: 4.00 },
         { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 1500, pricePerKg: 5.50 },
+        { id: "RAW-03", category: "Raw Feed", name: "Rice Husk", stock: 3000, min: 1000, pricePerKg: 3.50 },
         { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1800, min: 500, pricePerKg: 30.00 },
         { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300, pricePerKg: 25.00 }
       ],
@@ -929,7 +931,7 @@
         { id: "EXP-102", date: "2026-08-06", category: "Machinery & Refractory Parts", asset: "Furnace #1", vendor: "Tacloban Industrial Hardware", inv: "OR-4410", method: "Petty Cash", amount: 3500, notes: "High-temp refractory seal & gaskets" }
       ],
       batches: [
-        { id: "BATCH-101", rawItem: "Spiny Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
+        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, opStart: "Amber", opEnd: "Beryl", maxTemp: 580 }
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" }
@@ -938,14 +940,14 @@
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
       ],
       weighbridgeLogs: [
-        { id: "WB-301", date: "2026-08-05", item: "Spiny Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, inspector: "Amber" }
+        { id: "WB-301", date: "2026-08-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, amount: 8000, inspector: "Amber" }
       ],
       valeVouchers: [
         { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" },
         { id: "VALE-902", date: "2026-08-12", empName: "Amber", amount: 1500, remainingBalance: 1500, planType: "50", minPct: 50, customAmt: null, status: "ACTIVE", notes: "School fees advance" }
       ],
       logistics: [
-        { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Spiny Bamboo", qty: 2000, amount: 8000 },
+        { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", item: "Bamboo", qty: 2000, amount: 8000 },
         { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Charcoal Briquettes", qty: 500, amount: 15000 },
         { id: "TICKET-503", date: "2026-08-12", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", item: "Fine Biochar Powder", qty: 400, amount: 10000 }
       ],
@@ -1172,24 +1174,45 @@
     function handleWeighbridgeLog(e) {
       e.preventDefault();
       const itemName = document.getElementById('wb-item').value;
+      const supplierName = document.getElementById('wb-supplier').value;
       const grossKg = parseFloat(document.getElementById('wb-gross').value);
       const tareKg = parseFloat(document.getElementById('wb-tare').value);
       const netKg = Math.max(0, grossKg - tareKg);
+      const wbDate = document.getElementById('wb-date').value;
+      const totalAmount = parseFloat(document.getElementById('wb-amount').value) || 0;
 
       const invItem = state.inventory.find(i => i.name === itemName);
       if (invItem) invItem.stock += netKg;
 
+      const wbTicketId = `WB-${Date.now().toString().slice(-3)}`;
+
       state.weighbridgeLogs.unshift({
-        id: `WB-${Date.now().toString().slice(-3)}`,
-        date: document.getElementById('wb-date').value,
+        id: wbTicketId,
+        date: wbDate,
         item: itemName,
-        supplier: document.getElementById('wb-supplier').value,
+        supplier: supplierName,
         grossKg, tareKg,
         mcPct: parseFloat(document.getElementById('wb-mc').value),
+        amount: totalAmount,
         inspector: document.getElementById('wb-inspector').value
       });
 
+      if (totalAmount > 0) {
+        state.expenses.unshift({
+          id: `EXP-${wbTicketId}`,
+          date: wbDate,
+          category: "Feedstock Purchase",
+          asset: "Raw Material Yard",
+          vendor: supplierName,
+          inv: wbTicketId,
+          method: "Petty Cash",
+          amount: totalAmount,
+          notes: `Weighbridge feedstock purchase: ${netKg} kg of ${itemName}`
+        });
+      }
+
       saveState(); renderAll(); e.target.reset();
+      printInboundReceipt(0, 'weighbridge');
     }
 
     function handleLogVale(e) {
@@ -1240,8 +1263,22 @@
       const qty = parseFloat(document.getElementById('log-qty').value);
       const amount = parseFloat(document.getElementById('log-amount').value);
 
+      const ticketId = `TICKET-${Date.now().toString().slice(-3)}`;
+
       if (type === 'INBOUND_SUPPLIER') {
         if (invItem) invItem.stock += qty;
+
+        state.expenses.unshift({
+          id: `EXP-${ticketId}`,
+          date: date,
+          category: "Feedstock Purchase",
+          asset: "Raw Material Yard",
+          vendor: party,
+          inv: ticketId,
+          method: "Bank Transfer",
+          amount: amount,
+          notes: `Inbound feedstock delivery: ${qty} kg of ${itemName}`
+        });
       } else {
         if (!invItem || invItem.stock < qty) {
           alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
@@ -1251,11 +1288,17 @@
       }
 
       state.logistics.unshift({
-        id: `TICKET-${Date.now().toString().slice(-3)}`,
+        id: ticketId,
         date, type, party, item: itemName, qty, amount
       });
 
       saveState(); renderAll(); e.target.reset();
+
+      if (type === 'INBOUND_SUPPLIER') {
+        printInboundReceipt(0, 'logistics');
+      } else {
+        printSalesInvoice(0);
+      }
     }
 
     function handleDowntimeLog(e) {
@@ -1395,6 +1438,52 @@
         </div>
       `;
       executePrint(voucherHtml);
+    }
+
+    function printInboundReceipt(index, source = 'logistics') {
+      let t = null;
+      let isWb = source === 'weighbridge';
+
+      if (isWb) {
+        let item = state.weighbridgeLogs[index];
+        t = {
+          id: item.id,
+          date: item.date,
+          party: item.supplier,
+          item: item.item,
+          qty: item.grossKg - item.tareKg,
+          amount: item.amount || 0
+        };
+      } else {
+        t = state.logistics[index];
+      }
+
+      const invItem = state.inventory.find(i => i.name === t.item);
+      const ratePerKg = t.qty > 0 ? (t.amount / t.qty) : (invItem ? invItem.pricePerKg : 0);
+
+      const receiptHtml = `
+        <div class="printable-document">
+          <h3 style="text-align: center; margin-bottom: 4px;">COMBINIDO BIOCARBON MANUFACTURING</h3>
+          <p style="text-align: center; font-size: 0.8rem; margin-bottom: 16px;">Manloy, Carigara, Leyte · RAW MATERIAL RECEIVING SLIP / GOODS RECEIVED NOTE (GRN)</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 12px;">
+          <p><strong>Receiving Control Ticket No:</strong> ${t.id}</p>
+          <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
+          <p><strong>Supplier / Source:</strong> ${t.party}</p>
+          <p><strong>Raw Feedstock Delivered:</strong> ${t.item}</p>
+          <p><strong>Net Quantity Received:</strong> ${t.qty.toLocaleString()} kg</p>
+          <p><strong>Agreed Price per Kg:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL PAYABLE TO SUPPLIER: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <hr style="border: 1px dashed #000; margin: 12px 0;">
+          <p style="font-size: 0.75rem;">Material received and inspected at Manloy Plant Yard. Logged in plant inventory & expense ledger.</p>
+          <br><br>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+            <div>___________________<br>Supplier Representative</div>
+            <div>___________________<br>Plant Receiving Inspector</div>
+          </div>
+        </div>
+      `;
+      executePrint(receiptHtml);
     }
 
     function printSalesInvoice(ticketIndex) {
@@ -1879,7 +1968,6 @@
       // Weighbridge Logs Table
       document.getElementById('tbl-weighbridge-history').innerHTML = (state.weighbridgeLogs || []).map((w, idx) => {
         const net = Math.max(0, w.grossKg - w.tareKg);
-        const dry = (net * (1 - (w.mcPct / 100))).toFixed(1);
         const isPass = w.mcPct <= 20.0;
         return `
           <tr>
@@ -1889,15 +1977,18 @@
             <td>${w.supplier}</td>
             <td><strong>${net.toLocaleString()} kg</strong></td>
             <td>${w.mcPct}%</td>
-            <td>${dry} kg</td>
+            <td><strong>₱${(w.amount || 0).toLocaleString()}</strong></td>
             <td><span class="badge ${isPass ? 'badge-pass' : 'badge-warn'}">${isPass ? 'PASS (&le;20%)' : 'HIGH MOISTURE'}</span></td>
             <td>${w.inspector}</td>
-            <td><button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button></td>
+            <td>
+              <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'weighbridge')">📥 Slip</button>
+              <button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button>
+            </td>
           </tr>
         `;
       }).join('');
 
-      // Vale Multi-Voucher Table with FIFO Queue Display
+      // Vale Multi-Voucher Table
       document.getElementById('tbl-vale-vouchers').innerHTML = (state.valeVouchers || []).map((v, idx) => {
         const planDisplay = v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`;
         const isPaid = (v.remainingBalance || 0) <= 0 || v.status === 'PAID';
@@ -1920,7 +2011,7 @@
         `;
       }).join('');
 
-      // Weekly Payroll Ledger Summary with FIFO CA Logic & SOA Trigger
+      // Weekly Payroll Ledger Summary
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
         const weeklyGross = weeklyDays * e.rate;
@@ -1942,7 +2033,6 @@
         const totalStatutory = sss.ee + ph.ee + pagibig.ee;
         const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
 
-        // Calculate FIFO Deduction
         const activeVouchers = state.valeVouchers
           .filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0))
           .sort((a, b) => new Date(a.date) - new Date(b.date));
@@ -2026,7 +2116,7 @@
         `;
       }).join('');
 
-      // Inventory Table with Per-Kilo Selling Prices and Direct Edit Action
+      // Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map((i, idx) => `
         <tr>
           <td><strong>${i.id}</strong></td>
@@ -2043,7 +2133,7 @@
         </tr>
       `).join('');
 
-      // Logistics Tickets Ledger
+      // Logistics Tickets Ledger with Printable Receipts
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
         <tr>
           <td><strong>${l.id}</strong></td>
@@ -2054,7 +2144,9 @@
           <td>${l.qty.toLocaleString()} kg</td>
           <td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
           <td>
-            ${l.type === 'OUTBOUND_CUSTOMER' ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Official Receipt</button>` : ''}
+            ${l.type === 'OUTBOUND_CUSTOMER' 
+              ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Sales Receipt</button>` 
+              : `<button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'logistics')">📥 Print Receiving Receipt</button>`}
             <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
           </td>
         </tr>
@@ -2113,9 +2205,9 @@
 
       // Smart Recommendation Alerts
       if (netProfit < 0) {
-        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-danger);">🚨 CASHFLOW DEFICIT ALERT:</strong> Operating expenses exceed revenue by <strong>₱${Math.abs(netProfit).toLocaleString()}</strong>. Review high utility bills, diesel intake, or issue sales tickets to balance plant margin.`;
+        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-danger);">🚨 CASHFLOW DEFICIT ALERT:</strong> Operating expenses (including raw materials & utilities) exceed revenue by <strong>₱${Math.abs(netProfit).toLocaleString()}</strong>. Ensure sales dispatches are logged to balance net profit.`;
       } else {
-        document.getElementById('rec-finance-text').innerHTML = `✅ <strong>Cashflow is positive.</strong> Operating margin is generating net income of ₱${netProfit.toLocaleString()}.`;
+        document.getElementById('rec-finance-text').innerHTML = `✅ <strong>Cashflow is positive.</strong> Operating margin is generating net profit of ₱${netProfit.toLocaleString()}.`;
       }
 
       const lowItems = state.inventory.filter(i => i.stock < i.min);
@@ -2126,7 +2218,7 @@
       }
 
       if (parseFloat(avgYield) < 52.0 && totalRaw > 0) {
-        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-gold);">⚡ EFFICIENCY ALERT:</strong> Average conversion rate is <strong>${avgYield}%</strong> (Target: &ge;55%). Inspect furnace dampers or check moisture content in bamboo feed.`;
+        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-gold);">⚡ EFFICIENCY ALERT:</strong> Average conversion rate is <strong>${avgYield}%</strong> (Target: &ge;55%). Inspect furnace dampers or check moisture content in bamboo/coconut/rice husk feed.`;
       } else {
         document.getElementById('rec-yield-text').innerHTML = `✅ <strong>Carbonization conversion efficiency is optimal (${avgYield}%).</strong> Pyrolysis burn cycles are yielding high biochar output.`;
       }
