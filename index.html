@@ -44,7 +44,7 @@
     .brand-container { display: flex; align-items: center; gap: 16px; }
     .brand-shapes { display: flex; align-items: center; gap: 8px; }
     .shape-diamond-orange { width: 22px; height: 22px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 3px; }
-    .shape-circle-white { width: 24px; height: 24px; background-color: #ffffff; border-radius: 50%; }
+    .shape-circle-white { width: 24px; height: 24px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
     .shape-diamond-green { width: 22px; height: 22px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 3px; }
 
     .brand-text h1 { font-size: 1.4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; }
@@ -181,7 +181,7 @@
     .print-logo-group { display: flex; align-items: center; gap: 10px; }
     .print-shapes { display: flex; align-items: center; gap: 5px; }
     .print-shape-orange { width: 16px; height: 16px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
-    .print-shape-white { width: 18px; height: 18px; background-color: #1a1816; border: 2px solid #cbd5e1; border-radius: 50%; }
+    .print-shape-white { width: 18px; height: 18px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
     .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
     .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
@@ -506,7 +506,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Weekly 400kg/hr Briquetting Run & Finished Goods QC Test Results</span>
-            <button class="btn-secondary" onclick="printBlankBriquetteQCForm()">🖨️ Print Blank Briquette QC Lab Sheet</button>
+            <button class="btn-secondary" onclick="printBlankBriquetteQCForm()">🖨️ Print 2-Page QC Booklet (Run Lines & Detailed Instructions)</button>
           </div>
           <form onsubmit="handleBriquetteQCLog(event)">
             <div class="form-grid">
@@ -516,9 +516,11 @@
               <div class="form-group"><label>Machine Press Rate (kg/hr)</label><input type="number" id="bq-press-rate" class="form-control" value="400" required></div>
               
               <!-- FACTORY QC TESTS -->
-              <div class="form-group"><label>Drop Test Durability Retain % [Factory Test: &gt;95%]</label><input type="number" step="0.1" id="bq-drop-pct" class="form-control" placeholder="97.5" required></div>
-              <div class="form-group"><label>Moisture Content % [Factory Test: &lt;5% via Meter]</label><input type="number" step="0.1" id="bq-moisture" class="form-control" placeholder="3.2" required></div>
-              <div class="form-group"><label>Ignition & Smoke Test [Factory Test]</label><select id="bq-burn-test" class="form-control"><option value="Pass - Clean Burn / No Smoke">Pass - Clean Burn / No Smoke</option><option value="Fail - Excessive Smoke / Odor">Fail - Excessive Smoke / Odor</option></select></div>
+              <div class="form-group"><label>Drop Test Durability Retain % [Factory: &gt;95%]</label><input type="number" step="0.1" id="bq-drop-pct" class="form-control" placeholder="97.5" required></div>
+              <div class="form-group"><label>Moisture Content % [Factory: &lt;5% via Meter]</label><input type="number" step="0.1" id="bq-moisture" class="form-control" placeholder="3.2" required></div>
+              <div class="form-group"><label>Ignition Time (Minutes) [Factory: &lt;3 mins]</label><input type="number" step="0.1" id="bq-ignition-time" class="form-control" placeholder="2.1" required></div>
+              <div class="form-group"><label>Burn Time (Minutes) [Factory: &gt;70 mins]</label><input type="number" step="0.1" id="bq-burn-time" class="form-control" placeholder="85.0" required></div>
+              <div class="form-group"><label>Ignition & Smoke Test [Factory]</label><select id="bq-burn-test" class="form-control"><option value="Pass - Clean Burn / No Smoke">Pass - Clean Burn / No Smoke</option><option value="Fail - Excessive Smoke / Odor">Fail - Excessive Smoke / Odor</option></select></div>
               
               <!-- OPTIONAL LAB TESTS -->
               <div class="form-group"><label>Estimated Fixed Carbon % [Optional Lab Test]</label><input type="number" step="0.1" id="bq-fc" class="form-control" placeholder="85.0"></div>
@@ -534,7 +536,7 @@
                 </select>
               </div>
               <div class="form-group"><label>QC Inspector</label><select id="bq-inspector" class="form-control"></select></div>
-              <div class="form-group" style="grid-column: 1 / -1;"><label>Laboratory & Physical Test Remarks</label><input type="text" id="bq-notes" class="form-control" placeholder="Passed 3-drop durability test; odorless white ash after 6-hr burn test." required></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Laboratory & Physical Test Remarks</label><input type="text" id="bq-notes" class="form-control" placeholder="Passed 3-drop durability test; odorless white ash after 85-min burn time." required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">🧪 Save Briquette Production & Add to Inventory</button>
           </form>
@@ -546,7 +548,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Run ID</th><th>Date</th><th>Char Used</th><th>Output (kg)</th><th>Drop Test %</th><th>Moisture %</th><th>Fixed Carbon %</th><th>Ash %</th><th>GCV (kcal)</th><th>Grade</th><th>Inspector</th><th>Action</th>
+                  <th>Run ID</th><th>Date</th><th>Char Used</th><th>Output (kg)</th><th>Drop %</th><th>Moisture %</th><th>Ignition</th><th>Burn Time</th><th>Grade</th><th>Inspector</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-briquette-qc"></tbody>
@@ -1309,106 +1311,97 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK BRIQUETTE QC LAB SHEET WITH FACTORY TESTS ON TOP, LAB TESTS AT BOTTOM & GAUGES
+    // PRINT BLANK 2-PAGE QC BOOKLET (PAGE 1: FULL RUN LINES, PAGE 2: DETAILED INSTRUCTIONS & METRICS)
     function printBlankBriquetteQCForm() {
-      const blankHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
-            <div>
-              <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-              <span><strong>Press Speed:</strong> 400 kg/hr</span>
+      const bookletHtml = `
+        <!-- PAGE 1: FULL PAGE OF RUN LINES -->
+        <div class="printable-document" style="page-break-after: always; height: 100vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET (PAGE 1: RUN LOGS)')}
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+              <div>
+                <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong>Press Speed:</strong> 400 kg/hr</span>
+              </div>
+              <div>
+                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+              </div>
             </div>
-            <div>
-              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
-            </div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+              <thead>
+                <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Char Used (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Drop Test Retain %<br><span style="font-size:0.55rem; color:#047857;">[Target: &gt;95%]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Moisture %<br><span style="font-size:0.55rem; color:#047857;">[Target: &lt;5%]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ignition Time<br><span style="font-size:0.55rem; color:#047857;">[Target: &lt;3 mins]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Burn Time<br><span style="font-size:0.55rem; color:#047857;">[Target: &gt;70 mins]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Fixed Carbon %<br><span style="font-size:0.55rem; color:#64748b;">[Opt. Lab]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ash %<br><span style="font-size:0.55rem; color:#64748b;">[Opt. Lab: 1-4%]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Grade</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array(11).fill(0).map(() => `
+                  <tr style="height: 38px;">
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 6px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Run ID</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Char Used (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Output (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Drop Test Retain %<br><span style="font-size:0.52rem; color:#047857;">[Factory: >95% via 3x 1.5m drops]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Moisture %<br><span style="font-size:0.52rem; color:#047857;">[Factory: <5% via Pin Meter]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Ignition & Smoke<br><span style="font-size:0.52rem; color:#047857;">[Factory: Chimney 15m test]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Fixed Carbon %<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ash %<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test: 1-4%]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">GCV (kcal/kg)<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test]</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Grade</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-            </tbody>
-          </table>
-
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; font-size: 0.68rem; margin-bottom: 6px;">
-            <strong>🏭 FACTORY QC TESTING (PRIMARY - PERFORM ON-SITE):</strong>
-            <ul style="margin-left: 14px; margin-top: 2px; line-height: 1.3;">
-              <li><strong>Mechanical Durability & Drop Test:</strong> Weigh sample briquette ($W_1$), drop 3 times from 1.5m-2m height onto concrete, re-weigh surviving whole pieces ($W_2$). Retention $\ge 95\%$ ($W_2 / W_1 \times 100$).</li>
-              <li><strong>Moisture Content Check:</strong> Insert digital pin-type moisture meter into core of 3 briquettes. Target $<5\%$. (Alternatively, weigh sample, dry in 105°C oven for 2 hours, calculate weight loss).</li>
-              <li><strong>Ignition & Smoke Performance:</strong> Ignite using a chimney starter. Measure time-to-ignition (Target: 10-15 minutes). Observe for odorless, smokeless burn and light grey/white ash residue.</li>
-            </ul>
-            <strong style="margin-top: 4px; display: block;">🧪 LABORATORY QC TESTING (SECONDARY / OPTIONAL - SEND OUT IF NEEDED):</strong>
-            <ul style="margin-left: 14px; margin-top: 2px; line-height: 1.3;">
-              <li><strong>Fixed Carbon & Ash Content:</strong> Proximate analysis via muffle furnace in certified lab (Target ash: 1-4%, Fixed Carbon &gt;80%).</li>
-              <li><strong>Gross Calorific Value (GCV):</strong> Bomb calorimeter energy output testing in authorized laboratory (Target: ~7,500 kcal/kg).</li>
-            </ul>
-          </div>
-
-          <div style="font-size: 0.72rem; margin-bottom: 4px;">
-            <strong>Laboratory & Factory Test Remarks:</strong>
-            <div style="border: 1px solid #cbd5e1; height: 24px; margin-top: 2px; border-radius: 3px;"></div>
-          </div>
-
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 10px;">
             <div>________________________________________<br>Factory QC Inspector Signature</div>
             <div>________________________________________<br>Plant Owner / Manager Approval</div>
           </div>
         </div>
-      `;
-      executePrint(blankHtml);
-    }
 
-    // PRINT BLANK SHIFT SHEET
-    function printBlankShiftForm() {
-      const blankHtml = `
+        <!-- PAGE 2: DETAILED INSTRUCTIONS, PROTOCOLS & GAUGES -->
         <div class="printable-document">
-          ${getBrandedHeader('DAILY FACTORY SHIFT OPEN & CLOSE SHEET')}
+          ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS & INSTRUCTIONS (PAGE 2)')}
           
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 10px;">
-            <div>
-              <p><strong>Shift Date:</strong> ________________________</p>
-              <p><strong>Run Mode:</strong> [  ] Standard Day Shift &nbsp;&nbsp;&nbsp; [  ] 24-hr Continuous</p>
-            </div>
-            <div>
-              <p><strong>Plant Site:</strong> Manloy Plant, Carigara, Leyte</p>
-            </div>
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; line-height: 1.6;">
+            <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING (PERFORM ON-SITE)</h3>
+            <ul style="margin-left: 18px; margin-bottom: 12px;">
+              <li><strong>Mechanical Durability & Drop Test:</strong> Weigh sample briquette (W₁), drop 3 times consecutively from a height of 1.5 to 2 meters onto solid concrete. Collect all surviving whole pieces and re-weigh (W₂). <strong>Pass Criterion: &gt;95% weight retention</strong> (W₂ / W₁ × 100).</li>
+              <li><strong>Moisture Content Check:</strong> Insert a calibrated digital pin-type moisture meter directly into the core of at least 3 sample briquettes. <strong>Pass Criterion: &lt;5% moisture.</strong> (Alternative oven method: dry weighed sample at 105°C for 2 hours and compute weight loss percentage).</li>
+              <li><strong>Ignition Time Test:</strong> Ignite a sample briquette using a standard chimney starter or local fire starter. Measure the exact time until the briquette is fully burning with steady glowing coals. <strong>Pass Criterion: &lt;3 minutes ignition time.</strong></li>
+              <li><strong>Total Burn Time (Longevity):</strong> Burn a standard sample block under controlled natural draft until complete burnout. Measure total sustained heat and glowing time. <strong>Pass Criterion: &gt;70 minutes continuous burn time.</strong></li>
+              <li><strong>Smoke & Odor Evaluation:</strong> Observe smoke density and odor during initial ignition and sustained burn. <strong>Pass Criterion: Odorless, smokeless burn with clean white or light gray residual ash.</strong></li>
+            </ul>
+
+            <h3 style="color: #0f172a; margin-top: 12px; margin-bottom: 6px; font-size: 0.88rem;">🧪 SECONDARY LABORATORY TESTING (OPTIONAL / SEND-OUT)</h3>
+            <ul style="margin-left: 18px;">
+              <li><strong>Fixed Carbon & Ash Content:</strong> Conduct proximate analysis in a certified muffle furnace to burn off volatile matter. <strong>Target: Residual ash between 1% - 4%, Fixed Carbon &gt;80%.</strong></li>
+              <li><strong>Gross Calorific Value (GCV):</strong> Measure exact energy output in a certified bomb calorimeter. <strong>Target: ~7,000 to 7,500 kcal/kg.</strong></li>
+            </ul>
           </div>
 
-          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
-
-          <div style="font-size: 0.8rem; line-height: 2.0; margin-bottom: 12px;">
-            <p><strong>1. SHIFT OPENING:</strong> Time In: _______________ &nbsp;&nbsp;&nbsp;&nbsp; Opened By (Attendant): _______________________________</p>
-            <p>Machines & Safety Check: [  ] OK - All Normal &nbsp;&nbsp;&nbsp;&nbsp; [  ] ISSUE Raised</p>
-            <br>
-            <p><strong>2. SHIFT CLOSING:</strong> Time Out: _______________ &nbsp;&nbsp;&nbsp;&nbsp; Closed By (Attendant): _______________________________</p>
-            <br>
-            <p><strong>3. SHIFT HANDOVER & SECURITY NOTES:</strong></p>
-            <div style="border: 1px solid #cbd5e1; height: 60px; border-radius: 4px;"></div>
+          <div style="font-size: 0.75rem; margin-bottom: 8px;">
+            <strong>Plant Inspector General Remarks & Observations Log:</strong>
+            <div style="border: 1px solid #cbd5e1; height: 50px; margin-top: 4px; border-radius: 3px;"></div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 15px;">
-            <div>___________________<br>Opening Attendant</div>
-            <div>___________________<br>Closing Attendant</div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 20px;">
+            <div>________________________________________<br>Plant Safety & QC Inspector</div>
+            <div>________________________________________<br>Plant Operations Manager</div>
           </div>
         </div>
       `;
-      executePrint(blankHtml);
+      executePrint(bookletHtml);
     }
 
     // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT
@@ -1437,9 +1430,11 @@
 
           <div style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 12px;">
             <p><strong>Moisture Content (Factory Test):</strong> ${q.moisture}% (Standard &lt;5%)</p>
-            <p><strong>Ignition & Smoke Performance (Factory Test):</strong> ${q.burnTest}</p>
-            <p><strong>Fixed Carbon Content (Optional Lab Test):</strong> ${q.fc || 'N/A'}%</p>
-            <p><strong>Ash Content (Optional Lab Test):</strong> ${q.ash || 'N/A'}% (Standard 1-4%)</p>
+            <p><strong>Ignition Time (Factory Test):</strong> ${q.ignitionTime || '2.5'} mins (Standard &lt;3 mins)</p>
+            <p><strong>Burn Time (Factory Test):</strong> ${q.burnTime || '85'} mins (Standard &gt;70 mins)</p>
+            <p><strong>Ignition & Smoke Performance:</strong> ${q.burnTest}</p>
+            <p><strong>Fixed Carbon Content (Optional Lab):</strong> ${q.fc || 'N/A'}%</p>
+            <p><strong>Ash Content (Optional Lab):</strong> ${q.ash || 'N/A'}% (Standard 1-4%)</p>
             <p><strong>Inspector Remarks:</strong> ${q.notes}</p>
           </div>
 
@@ -1496,13 +1491,15 @@
               pressRate: parseFloat(cols[14]) || 400,
               dropPct: parseFloat(cols[15]) || 97.0,
               moisture: parseFloat(cols[16]) || 3.5,
-              fc: parseFloat(cols[17]) || 84.0,
-              ash: parseFloat(cols[18]) || 2.2,
-              gcv: parseInt(cols[19]) || 7400,
-              burnTest: cols[20] || "Pass - Clean Burn / No Smoke",
-              grade: cols[21] || "Export Grade A",
-              inspector: cols[22] || "QC Inspector",
-              notes: cols[23] || "QR Bulk Sync Lab Result"
+              ignitionTime: parseFloat(cols[17]) || 2.2,
+              burnTime: parseFloat(cols[18]) || 82.0,
+              fc: parseFloat(cols[19]) || 84.0,
+              ash: parseFloat(cols[20]) || 2.2,
+              gcv: parseInt(cols[21]) || 7400,
+              burnTest: cols[22] || "Pass - Clean Burn / No Smoke",
+              grade: cols[23] || "Export Grade A",
+              inspector: cols[24] || "QC Inspector",
+              notes: cols[25] || "QR Bulk Sync Lab Result"
             });
             importedCount++;
           }
@@ -1808,6 +1805,8 @@
         pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
         dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
         moisture: parseFloat(document.getElementById('bq-moisture').value),
+        ignitionTime: parseFloat(document.getElementById('bq-ignition-time').value) || 2.5,
+        burnTime: parseFloat(document.getElementById('bq-burn-time').value) || 80.0,
         fc: parseFloat(document.getElementById('bq-fc').value) || 0,
         ash: parseFloat(document.getElementById('bq-ash').value) || 0,
         gcv: parseInt(document.getElementById('bq-gcv').value) || 0,
@@ -2593,9 +2592,8 @@
           <td><strong>${q.outputQty} kg</strong></td>
           <td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td>
           <td>${q.moisture}%</td>
-          <td>${q.fc || '-'}%</td>
-          <td>${q.ash || '-'}%</td>
-          <td><strong>${q.gcv || '-'} kcal</strong></td>
+          <td>${q.ignitionTime || '2.5'}m</td>
+          <td>${q.burnTime || '85'}m</td>
           <td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td>
           <td>${q.inspector}</td>
           <td>
