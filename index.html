@@ -988,6 +988,15 @@
       <!-- TAB 16: MASTER DATA MANAGER & CSV QR IMPORTER -->
       <div id="settings" class="tab-pane">
         
+        <!-- NEW ONE-CLICK CSV BACKUP ARCHIVE PANEL -->
+        <div class="panel" style="background-color: #f8fafc; border: 2px dashed var(--brand-blue);">
+          <div class="panel-title">📥 Instant Excel / CSV Backup Archive</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Click the button below to instantly download a clean spreadsheet (`.csv`) containing your plant master data, expenses, inventory, and ledger history. You can open this file directly in Microsoft Excel anytime!
+          </p>
+          <button class="btn" style="background-color: var(--brand-blue);" onclick="downloadExcelCsvArchive()">💾 Download Plant Data Archive (.CSV for Excel)</button>
+        </div>
+
         <div class="panel">
           <div class="panel-title">📥 Bulk Sync Google Form Crew QR Submissions (.CSV)</div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
@@ -1185,6 +1194,45 @@
     let state = loadState();
     let financialChartInstance = null;
     let inventoryChartInstance = null;
+
+    // ONE-CLICK EXCEL / CSV ARCHIVE DOWNLOAD FUNCTION
+    function downloadExcelCsvArchive() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      
+      csvContent += "=== COMBINIDO BIOCARBON CHARCOAL MANUFACTURING PLANT ARCHIVE ===\n\n";
+      
+      csvContent += "--- INVENTORY STOCK BALANCES ---\n";
+      csvContent += "SKU,Category,Name,PricePerKg,StockKg,MinThreshold\n";
+      state.inventory.forEach(i => {
+        csvContent += `"${i.id}","${i.category}","${i.name}",${i.pricePerKg},${i.stock},${i.min}\n`;
+      });
+
+      csvContent += "\n--- OPERATING EXPENSES ---\n";
+      csvContent += "ID,Date,Category,Asset,Vendor,Amount,Notes\n";
+      state.expenses.forEach(x => {
+        csvContent += `"${x.id}","${x.date}","${x.category}","${x.asset}","${x.vendor}",${x.amount},"${x.notes}"\n`;
+      });
+
+      csvContent += "\n--- PYROLYSIS BATCH STACKING ---\n";
+      csvContent += "BatchID,RawItem,ConsumedKg,YieldKg,CookHours,MaxTemp\n";
+      state.batches.forEach(b => {
+        csvContent += `"${b.id}","${b.rawItem}",${b.consumedKg},${b.yieldKg},${b.cookHours},${b.maxTemp}\n`;
+      });
+
+      csvContent += "\n--- LOGISTICS & SALES DISPATCHES ---\n";
+      csvContent += "TicketID,Date,Type,Party,Item,QtyKg,Amount,Status\n";
+      state.logistics.forEach(l => {
+        csvContent += `"${l.id}","${l.date}","${l.type}","${l.party}","${l.item}",${l.qty},${l.amount},"${l.status}"\n`;
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `CBCM_Plant_Archive_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
 
     // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES & FULL COMPANY NAME
     function getBrandedHeader(documentTitle) {
