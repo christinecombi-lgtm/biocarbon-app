@@ -241,29 +241,29 @@
     <div class="header-meta">
       <div class="tagline">One carbon. Two lives.</div>
       <div class="ops-subtitle">MANLOY PLANT SITE, LEYTE</div>
-      <button class="btn-refresh" onclick="renderAll()">🔄 Sync Data Model</button>
+      <button class="btn-refresh" id="btn-sync">🔄 Sync Data Model</button>
     </div>
   </header>
 
   <div class="app-body">
     <!-- NAVIGATION SIDEBAR -->
     <aside class="sidebar">
-      <a class="nav-link active" onclick="switchTab('owner-suite', this)"><span>📈</span> Business Health & Decisions</a>
-      <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
-      <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
-      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> Pyrolysis Batch Stacking Log</a>
-      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> Furnace Safety Watch</a>
-      <a class="nav-link" onclick="switchTab('briquette-qc', this)"><span>🧪</span> Briquette Production & QC Lab</a>
-      <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
-      <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
-      <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
-      <a class="nav-link" onclick="switchTab('payroll-vale', this)"><span>💰</span> Weekly Payroll, Vale & Paystubs</a>
-      <a class="nav-link" onclick="switchTab('gov-remittances', this)"><span>🏛️</span> BIR Taxes & Gov't Rates</a>
-      <a class="nav-link" onclick="switchTab('contacts', this)"><span>📖</span> Contact Directory & Search</a>
-      <a class="nav-link" onclick="switchTab('inventory', this)"><span>📦</span> Stock & Per-Kilo Pricing</a>
-      <a class="nav-link" onclick="switchTab('logistics', this)"><span>🚚</span> Sales Dispatches & Receipts</a>
-      <a class="nav-link" onclick="switchTab('downtime', this)"><span>⚙️</span> Downtime & Bottlenecks</a>
-      <a class="nav-link" onclick="switchTab('settings', this)" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
+      <a class="nav-link active" data-target="owner-suite"><span>📈</span> Business Health & Decisions</a>
+      <a class="nav-link" data-target="expenses"><span>💸</span> Plant Expenses & Utilities</a>
+      <a class="nav-link" data-target="openclose"><span>🏭</span> Factory Shift Open/Close</a>
+      <a class="nav-link" data-target="furnace-batches"><span>🔥</span> Pyrolysis Batch Stacking Log</a>
+      <a class="nav-link" data-target="furnace-monitor"><span>🌡️</span> Furnace Safety Watch</a>
+      <a class="nav-link" data-target="briquette-qc"><span>🧪</span> Briquette Production & QC Lab</a>
+      <a class="nav-link" data-target="furnace-maint"><span>🔧</span> Furnace & Kiln Maintenance</a>
+      <a class="nav-link" data-target="weighbridge"><span>⚖️</span> Feedstock Moisture & Weight</a>
+      <a class="nav-link" data-target="attendance-cal"><span>📅</span> Philippine Crew Calendar</a>
+      <a class="nav-link" data-target="payroll-vale"><span>💰</span> Weekly Payroll, Vale & Paystubs</a>
+      <a class="nav-link" data-target="gov-remittances"><span>🏛️</span> BIR Taxes & Gov't Rates</a>
+      <a class="nav-link" data-target="contacts"><span>📖</span> Contact Directory & Search</a>
+      <a class="nav-link" data-target="inventory"><span>📦</span> Stock & Per-Kilo Pricing</a>
+      <a class="nav-link" data-target="logistics"><span>🚚</span> Sales Dispatches & Receipts</a>
+      <a class="nav-link" data-target="downtime"><span>⚙️</span> Downtime & Bottlenecks</a>
+      <a class="nav-link" data-target="settings" style="margin-top: 16px; border-top: 1px solid #334155; padding-top: 12px;"><span>⚙️</span> Master Data Manager</a>
     </aside>
 
     <!-- MAIN CONTENT -->
@@ -360,7 +360,7 @@
       <div id="expenses" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Plant Operating Expense, Feedstock Purchase & Utilities</div>
-          <form onsubmit="handleExpenseLog(event)">
+          <form id="form-expense">
             <div class="form-grid">
               <div class="form-group"><label>Expense Date</label><input type="date" id="exp-date" class="form-control" required></div>
               <div class="form-group">
@@ -417,9 +417,9 @@
         <div class="panel">
           <div class="panel-title">
             <span>Daily Factory Shift Open & Close Log (Pagbukas ug Pagsara)</span>
-            <button class="btn-secondary" onclick="printBlankShiftForm()">🖨️ Print Blank Shift Sheet</button>
+            <button class="btn-secondary" id="btnPrintShift">🖨️ Print Blank Shift Sheet</button>
           </div>
-          <form onsubmit="handleOpenCloseLog(event)">
+          <form id="form-openclose">
             <div class="form-grid">
               <div class="form-group"><label>Shift Date</label><input type="date" id="oc-date" class="form-control" required></div>
               <div class="form-group"><label>Opened By (Attendant)</label><select id="oc-opened-by" class="form-control"></select></div>
@@ -454,9 +454,9 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Pyrolysis Batch Cook & Raw Char Stacking (300kg+ per Batch)</span>
-            <button class="btn-secondary" onclick="printBlankBatchLogsheet()">🖨️ Print Blank Pyrolysis Stacking Sheet (1-Page)</button>
+            <button class="btn-secondary" id="btnPrintBatch">🖨️ Print Blank Pyrolysis Stacking Sheet (1-Page)</button>
           </div>
-          <form onsubmit="handleProcessBatch(event)">
+          <form id="form-batches">
             <div class="form-grid">
               <div class="form-group"><label>Batch / Run ID (Editable)</label><input type="text" id="proc-batch-id" class="form-control" required></div>
               <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
@@ -499,9 +499,9 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Furnace Inspection (Safety & Temperature Check)</span>
-            <button class="btn-secondary" onclick="printBlankFurnaceWatchForm()">🖨️ Print Blank Furnace Watch Sheet</button>
+            <button class="btn-secondary" id="btnPrintFurnace">🖨️ Print Blank Furnace Watch Sheet</button>
           </div>
-          <form onsubmit="handleFurnaceWatchLog(event)">
+          <form id="form-furnace-watch">
             <div class="form-grid">
               <div class="form-group"><label>Inspection Date & Time</label><input type="datetime-local" id="fw-datetime" class="form-control" required></div>
               <div class="form-group"><label>Furnace Unit</label><select id="fw-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option></select></div>
@@ -536,11 +536,11 @@
           <div class="panel-title">
             <span>Log Weekly 400kg/hr Briquetting Run & Finished Goods QC Test Results</span>
             <div style="display: flex; gap: 8px;">
-              <button class="btn-secondary" onclick="printBlankProductionForm()">🖨️ Print Blank Production Form</button>
-              <button class="btn-secondary" onclick="printBlankQCForm()">🖨️ Print Blank QC Form</button>
+              <button class="btn-secondary" id="btnPrintProd">🖨️ Print Blank Production Form</button>
+              <button class="btn-secondary" id="btnPrintQc">🖨️ Print Blank QC Form</button>
             </div>
           </div>
-          <form onsubmit="handleBriquetteQCLog(event)">
+          <form id="form-briquette-qc">
             <div class="form-grid">
               <div class="form-group"><label>Run ID (Editable)</label><input type="text" id="bq-id" class="form-control" required></div>
               <div class="form-group"><label>Production Date</label><input type="date" id="bq-date" class="form-control" required></div>
@@ -595,7 +595,7 @@
       <div id="furnace-maint" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Furnace & Kiln Maintenance Service</div>
-          <form onsubmit="handleMaintenanceLog(event)">
+          <form id="form-maintenance">
             <div class="form-grid">
               <div class="form-group"><label>Service Date</label><input type="date" id="maint-date" class="form-control" required></div>
               <div class="form-group"><label>Equipment Unit</label><select id="maint-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option><option value="400kg/hr Briquette Press">400kg/hr Briquette Press</option><option value="Blower & VFD Drive">Blower & VFD Drive</option></select></div>
@@ -627,7 +627,7 @@
       <div id="weighbridge" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Feedstock Intake Weighbridge & Moisture Content (MC%)</div>
-          <form onsubmit="handleWeighbridgeLog(event)">
+          <form id="form-weighbridge">
             <div class="form-grid">
               <div class="form-group"><label>Ticket Date</label><input type="date" id="wb-date" class="form-control" required></div>
               <div class="form-group"><label>Feedstock Material</label><select id="wb-item" class="form-control"></select></div>
@@ -678,13 +678,13 @@
           <div class="panel-title">
             <span>Philippine Factory Interactive Attendance Grid</span>
             <div style="display: flex; gap: 12px; align-items: center;">
-              <select id="cal-month" class="form-control" onchange="renderAttendanceCalendar()">
+              <select id="cal-month" class="form-control">
                 <option value="0">January</option><option value="1">February</option><option value="2">March</option>
                 <option value="3">April</option><option value="4">May</option><option value="5">June</option>
                 <option value="6">July</option><option value="7" selected>August</option><option value="8">September</option>
                 <option value="9">October</option><option value="10">November</option><option value="11">December</option>
               </select>
-              <select id="cal-year" class="form-control" onchange="renderAttendanceCalendar()">
+              <select id="cal-year" class="form-control">
                 <option value="2025">2025</option><option value="2026" selected>2026</option><option value="2027">2027</option>
               </select>
             </div>
@@ -704,13 +704,13 @@
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
-          <form onsubmit="handleLogVale(event)">
+          <form id="form-vale">
             <div class="form-grid">
               <div class="form-group"><label>Employee</label><select id="vale-emp" class="form-control"></select></div>
               <div class="form-group"><label>Cash Advance Amount (₱)</label><input type="number" id="vale-amount" class="form-control" placeholder="1000" required></div>
               <div class="form-group">
                 <label>Agreed Payroll Deduction Plan</label>
-                <select id="vale-plan" class="form-control" onchange="toggleCustomDeductInput()">
+                <select id="vale-plan" class="form-control">
                   <option value="30">30% Deduction per Payroll (Minimum)</option>
                   <option value="50">50% Deduction per Payroll</option>
                   <option value="100">100% Full Deduction next Payroll</option>
@@ -737,7 +737,7 @@
               <input type="date" id="soa-date-from" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-01">
               <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To Date:</span>
               <input type="date" id="soa-date-to" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-15">
-              <button class="btn-secondary" onclick="printSOAFromDropdown()">📄 Print / Save Employee CA SOA PDF</button>
+              <button class="btn-secondary" id="btnPrintSoa">📄 Print / Save Employee CA SOA PDF</button>
             </div>
           </div>
           <div class="table-container">
@@ -755,7 +755,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Weekly Payroll Ledger (7-Day Payout Cycles with FIFO CA Repayments)</span>
-            <select id="pay-week-select" class="form-control" style="width: auto;" onchange="renderAll()">
+            <select id="pay-week-select" class="form-control" style="width: auto;">
               <option value="1">Week 1 (Days 1-7)</option>
               <option value="2">Week 2 (Days 8-14)</option>
               <option value="3" selected>Week 3 (Days 15-21)</option>
@@ -850,12 +850,12 @@
         <div class="panel">
           <div class="panel-title">
             <span>⚙️ Editable Philippine Tax Rates & Statutory Percentage Settings</span>
-            <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="saveGovRates()">💾 Save Rate Changes</button>
+            <button class="btn" id="btnSaveGovRates" style="padding: 6px 12px; font-size: 0.8rem;">💾 Save Rate Changes</button>
           </div>
           <div class="form-grid">
             <div class="form-group">
               <label>Tax System Elected (per BIR Form 2303)</label>
-              <select id="cfg-tax-system" class="form-control" onchange="toggleTaxSystemDisplay()">
+              <select id="cfg-tax-system" class="form-control">
                 <option value="GRADUATED" selected>Graduated Tax Rates (0% - 35%) + 3% Percentage Tax</option>
                 <option value="FLAT8">8% Flat Income Tax (Replaces Percentage Tax)</option>
               </select>
@@ -950,7 +950,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Contact Directory & Default Payment Credit Terms</span>
-            <input type="text" class="search-input" id="contact-search" onkeyup="filterContacts()" placeholder="🔍 Search company, person, location...">
+            <input type="text" class="search-input" id="contact-search" placeholder="🔍 Search company, person, location...">
           </div>
           <div class="table-container">
             <table>
@@ -986,17 +986,17 @@
       <div id="logistics" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Delivery Ticket, Payment Status & Sales / Inbound Invoice</div>
-          <form onsubmit="handleLogisticsTicket(event)">
+          <form id="form-logistics">
             <div class="form-grid">
               <div class="form-group"><label>Ticket Date</label><input type="date" id="log-date" class="form-control" value="2026-08-08" required></div>
               <div class="form-group">
                 <label>Ticket Type</label>
-                <select id="log-type" class="form-control" onchange="toggleLogisticsItemOptions()">
+                <select id="log-type" class="form-control">
                   <option value="INBOUND_SUPPLIER">Inbound Raw Material Pickup (Auto-Logs Expense & Stock)</option>
                   <option value="OUTBOUND_CUSTOMER" selected>Outbound Sales Delivery (Deducts Stock & Generates Revenue)</option>
                 </select>
               </div>
-              <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control" onchange="syncPartyPaymentTerms()"></select></div>
+              <div class="form-group"><label>Party / Company</label><select id="log-party" class="form-control"></select></div>
               <div class="form-group">
                 <label>Agreed Credit Terms</label>
                 <select id="log-terms" class="form-control">
@@ -1012,8 +1012,8 @@
                   <option value="OUTSTANDING" selected>OUTSTANDING (Credit Pending)</option>
                 </select>
               </div>
-              <div class="form-group"><label>Item (Per-Kilo Priced)</label><select id="log-item" class="form-control" onchange="autoCalculateLogisticsAmount()"></select></div>
-              <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="500" oninput="autoCalculateLogisticsAmount()" required></div>
+              <div class="form-group"><label>Item (Per-Kilo Priced)</label><select id="log-item" class="form-control"></select></div>
+              <div class="form-group"><label>Quantity (kg)</label><input type="number" id="log-qty" class="form-control" placeholder="500" required></div>
               <div class="form-group"><label>Total Amount (₱)</label><input type="number" id="log-amount" class="form-control" placeholder="10000" required></div>
             </div>
             <button type="submit" class="btn" style="margin-top: 14px;">🚚 Process Logistics Ticket & Save</button>
@@ -1029,7 +1029,7 @@
               <input type="date" id="sales-soa-date-from" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-01">
               <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">To Date:</span>
               <input type="date" id="sales-soa-date-to" class="form-control" style="padding: 4px 8px; font-size: 0.78rem; width: auto;" value="2026-08-15">
-              <button class="btn-secondary" onclick="printSalesSOAFromDropdown()">📄 Print Customer Sales SOA</button>
+              <button class="btn-secondary" id="btnPrintSalesSoa">📄 Print Customer Sales SOA</button>
             </div>
           </div>
           <div class="table-container">
@@ -1049,7 +1049,7 @@
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
-          <form onsubmit="handleDowntimeLog(event)">
+          <form id="form-downtime">
             <div class="form-grid">
               <div class="form-group"><label>Stoppage Reason</label><input type="text" id="dt-reason" class="form-control" placeholder="Grid Power Outage" required></div>
               <div class="form-group"><label>Duration (Minutes)</label><input type="number" id="dt-dur" class="form-control" placeholder="45" required></div>
@@ -1082,7 +1082,7 @@
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
             Click the button below to instantly download a clean spreadsheet (`.csv`) containing your plant master data, expenses, inventory, and ledger history. You can open this file directly in Microsoft Excel anytime!
           </p>
-          <button class="btn" style="background-color: var(--brand-blue);" onclick="downloadExcelCsvArchive()">💾 Download Plant Data Archive (.CSV for Excel)</button>
+          <button class="btn" style="background-color: var(--brand-blue);" id="btnDownloadArchive">💾 Download Plant Data Archive (.CSV for Excel)</button>
         </div>
 
         <div class="panel">
@@ -1092,17 +1092,17 @@
           </p>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
             <input type="file" id="qr-csv-file" accept=".csv" class="form-control" style="max-width: 380px;">
-            <button class="btn" onclick="importQRFormCSV()">⚡ Bulk Sync QR Submissions to Plant Ledger</button>
+            <button class="btn" id="btnImportQr">⚡ Bulk Sync QR Submissions to Plant Ledger</button>
           </div>
         </div>
 
         <div class="panel">
           <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed, Raw Char & Finished Goods)</div>
-          <form onsubmit="handleSaveItem(event)">
+          <form id="form-sku">
             <div class="form-grid">
               <div class="form-group">
                 <label>Select Item to Edit (or Create New)</label>
-                <select id="sku-select" class="form-control" onchange="populateItemFormForEdit()">
+                <select id="sku-select" class="form-control">
                   <option value="NEW">+ Create New Item / Material SKU</option>
                 </select>
               </div>
@@ -1126,7 +1126,7 @@
 
         <div class="panel">
           <div class="panel-title">Register Employee Profile (Regular vs Contractual)</div>
-          <form onsubmit="handleAddEmployee(event)">
+          <form id="form-employee">
             <div class="form-grid">
               <div class="form-group"><label>Full Name</label><input type="text" id="m-emp-name" class="form-control" placeholder="Amber" required></div>
               <div class="form-group"><label>Job Title / Position</label><input type="text" id="m-emp-pos" class="form-control" placeholder="Furnace Lead Operator" required></div>
@@ -1149,7 +1149,7 @@
 
         <div class="panel">
           <div class="panel-title">Register External Contact (Supplier / Customer) & Credit Terms</div>
-          <form onsubmit="handleAddContact(event)">
+          <form id="form-contact">
             <div class="form-grid">
               <div class="form-group"><label>Company / Entity Name</label><input type="text" id="m-con-company" class="form-control" placeholder="Carigara Bamboo Farmers Co-Op" required></div>
               <div class="form-group"><label>Contact Person</label><input type="text" id="m-con-person" class="form-control" placeholder="Juan Dela Cruz" required></div>
@@ -1893,19 +1893,6 @@
       return 2202500 + (taxableIncome - 8000000) * 0.35;
     }
 
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-      document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      el.classList.add('active');
-
-      if (tabId === 'furnace-batches') {
-        document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
-      } else if (tabId === 'briquette-qc') {
-        document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
-      }
-    }
-
     function toggleCustomDeductInput() {
       const planVal = document.getElementById('vale-plan').value;
       const grp = document.getElementById('grp-custom-amt');
@@ -1963,299 +1950,88 @@
       }
     }
 
-    function editItemBySku(skuId) {
-      switchTab('settings', document.querySelectorAll('.nav-link')[15]);
+    window.editItemBySku = function(skuId) {
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelector('[data-target="settings"]').classList.add('active');
+      document.getElementById('settings').classList.add('active');
+      
       document.getElementById('sku-select').value = skuId;
       populateItemFormForEdit();
-    }
+    };
 
-    function toggleLogisticsPaymentStatus(ticketIndex) {
+    window.toggleLogisticsPaymentStatus = function(ticketIndex) {
       const t = state.logistics[ticketIndex];
       if (!t) return;
       t.status = (t.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
       saveState();
       renderAll();
-    }
+    };
 
-    function toggleWeighbridgePaymentStatus(wbIndex) {
+    window.toggleWeighbridgePaymentStatus = function(wbIndex) {
       const w = state.weighbridgeLogs[wbIndex];
       if (!w) return;
       w.status = (w.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
       saveState();
       renderAll();
-    }
+    };
 
-    function handleSaveItem(e) {
-      e.preventDefault();
-      const skuId = document.getElementById('sku-id').value.trim();
-      const cat = document.getElementById('sku-cat').value;
-      const name = document.getElementById('sku-name').value.trim();
-      const price = parseFloat(document.getElementById('sku-price').value);
-      const stock = parseFloat(document.getElementById('sku-stock').value);
-      const min = parseFloat(document.getElementById('sku-min').value);
-
-      const existingIndex = state.inventory.findIndex(i => i.id === skuId);
-      if (existingIndex >= 0) {
-        state.inventory[existingIndex] = { id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min };
-      } else {
-        state.inventory.push({ id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min });
+    window.deleteEntry = function(arrayKey, index) {
+      if (confirm("Delete this entry?")) {
+        state[arrayKey].splice(index, 1);
+        saveState(); renderAll();
       }
-      saveState(); renderAll(); alert(`Saved ${name} (${skuId}) successfully!`);
-    }
+    };
 
-    function handleExpenseLog(e) {
-      e.preventDefault();
-      const expId = `EXP-${Date.now().toString().slice(-3)}`;
-      state.expenses.unshift({
-        id: expId,
-        date: document.getElementById('exp-date').value,
-        category: document.getElementById('exp-cat').value,
-        asset: document.getElementById('exp-asset').value || 'Site General',
-        vendor: document.getElementById('exp-vendor').value,
-        inv: document.getElementById('exp-inv').value || '-',
-        method: document.getElementById('exp-pay-method').value,
-        amount: parseFloat(document.getElementById('exp-amount').value),
-        notes: document.getElementById('exp-notes').value
-      });
-      saveState(); renderAll(); e.target.reset();
-      printExpenseVoucher(0);
-    }
+    window.printExpenseVoucher = function(expIndex) {
+      const exp = state.expenses[expIndex];
+      const voucherHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('DISBURSEMENT EXPENSE VOUCHER')}
+          <p><strong>Voucher Control ID:</strong> ${exp.id}</p>
+          <p><strong>Expense Date:</strong> ${exp.date}</p>
+          <p><strong>Category:</strong> ${exp.category}</p>
+          <p><strong>Payee / Vendor:</strong> ${exp.vendor}</p>
+          <p style="font-size: 1.1rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p><strong>Particulars:</strong> ${exp.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
+            <div>___________________<br>Prepared / Paid By</div>
+            <div>___________________<br>Approved By (Plant Owner)</div>
+          </div>
+        </div>
+      `;
+      executePrint(voucherHtml);
+    };
 
-    function handleOpenCloseLog(e) {
-      e.preventDefault();
-      state.openclose.unshift({
-        date: document.getElementById('oc-date').value,
-        openedBy: document.getElementById('oc-opened-by').value,
-        timeIn: document.getElementById('oc-time-in').value,
-        machOk: document.getElementById('oc-mach-ok').value,
-        closedBy: document.getElementById('oc-closed-by').value,
-        timeOut: document.getElementById('oc-time-out').value,
-        mode: document.getElementById('oc-mode').value,
-        notes: document.getElementById('oc-notes').value
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
+    window.printValeVoucher = function(valeIndex) {
+      const v = state.valeVouchers[valeIndex];
+      const voucherHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('CASH ADVANCE (VALE) VOUCHER')}
+          <p><strong>Voucher ID:</strong> ${v.id} | <strong>Date:</strong> ${v.date}</p>
+          <p><strong>Employee Name:</strong> ${v.empName}</p>
+          <p style="font-size: 1.2rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p><strong>Reason / Note:</strong> ${v.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
+            <div>___________________<br>Employee Signature</div>
+            <div>___________________<br>Authorized Cashier</div>
+          </div>
+        </div>
+      `;
+      executePrint(voucherHtml);
+    };
 
-    function handleProcessBatch(e) {
-      e.preventDefault();
-      const batchId = document.getElementById('proc-batch-id').value.trim();
-      const rawItemName = document.getElementById('proc-raw-item').value;
-      const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
-      const rawCharQty = parseFloat(document.getElementById('proc-fin-qty').value);
-
-      const rawStock = state.inventory.find(i => i.name === rawItemName);
-      if (!rawStock || rawStock.stock < rawQty) {
-        alert(`Insufficient raw stock of ${rawItemName}! Available: ${rawStock ? rawStock.stock : 0} kg`);
-        return;
-      }
-      rawStock.stock -= rawQty;
-      const charStock = state.inventory.find(i => i.category === 'Raw Char');
-      if (charStock) charStock.stock += rawCharQty;
-
-      state.batches.unshift({
-        id: batchId,
-        rawItem: rawItemName, consumedKg: rawQty, yieldKg: rawCharQty,
-        cookHours: parseFloat(document.getElementById('proc-cook-hours').value) || 7.5,
-        opStart: document.getElementById('proc-op-start').value,
-        opEnd: document.getElementById('proc-op-end').value,
-        maxTemp: parseInt(document.getElementById('proc-temp').value) || 580,
-        preMcPct: parseFloat(document.getElementById('proc-pre-mc').value) || 18.5,
-        qcNotes: document.getElementById('proc-qc-notes').value || 'Accumulated to raw char stockpile'
-      });
-      saveState(); renderAll(); e.target.reset();
-      document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
-    }
-
-    function handleFurnaceWatchLog(e) {
-      e.preventDefault();
-      state.furnaceWatch.unshift({
-        datetime: document.getElementById('fw-datetime').value.replace('T', ' '),
-        unit: document.getElementById('fw-unit').value,
-        temp: parseInt(document.getElementById('fw-temp').value),
-        vent: document.getElementById('fw-vent').value,
-        safety: document.getElementById('fw-safety').value,
-        attendant: document.getElementById('fw-attendant').value,
-        notes: document.getElementById('fw-notes').value
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleBriquetteQCLog(e) {
-      e.preventDefault();
-      const bqId = document.getElementById('bq-id').value.trim();
-      const sourceBatch = document.getElementById('bq-source-batch').value.trim();
-      const charUsed = parseFloat(document.getElementById('bq-char-used').value);
-      const outputQty = parseFloat(document.getElementById('bq-output-qty').value);
-      const grade = document.getElementById('bq-grade').value;
-
-      const charStock = state.inventory.find(i => i.category === 'Raw Char');
-      if (!charStock || charStock.stock < charUsed) {
-        alert(`Insufficient raw char in stockpile! Available: ${charStock ? charStock.stock : 0} kg`);
-        return;
-      }
-      charStock.stock -= charUsed;
-
-      const targetFinName = grade.includes('Export') ? 'Charcoal Briquettes (Export Grade A)' : 'Charcoal Briquettes (Standard Grade B)';
-      const finStock = state.inventory.find(i => i.name === targetFinName);
-      if (finStock) finStock.stock += outputQty;
-
-      state.briquetteQcLogs.unshift({
-        id: bqId,
-        date: document.getElementById('bq-date').value,
-        sourceBatch,
-        charUsed, outputQty,
-        pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
-        dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
-        moisture: parseFloat(document.getElementById('bq-moisture').value),
-        ignitionTime: parseFloat(document.getElementById('bq-ignition-time').value) || 2.5,
-        burnTime: parseFloat(document.getElementById('bq-burn-time').value) || 80.0,
-        fc: parseFloat(document.getElementById('bq-fc').value) || 0,
-        ash: parseFloat(document.getElementById('bq-ash').value) || 0,
-        gcv: parseInt(document.getElementById('bq-gcv').value) || 0,
-        burnTest: document.getElementById('bq-burn-test').value,
-        grade,
-        inspector: document.getElementById('bq-inspector').value,
-        notes: document.getElementById('bq-notes').value
-      });
-      saveState(); renderAll(); e.target.reset();
-      document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
-      printBriquetteQCReport(0);
-    }
-
-    function handleMaintenanceLog(e) {
-      e.preventDefault();
-      const mntCost = parseFloat(document.getElementById('maint-cost').value);
-      const mntNotes = document.getElementById('maint-notes').value;
-      const mntDate = document.getElementById('maint-date').value;
-      const mntUnit = document.getElementById('maint-unit').value;
-
-      state.maintenanceLogs.unshift({
-        id: `MNT-${Date.now().toString().slice(-3)}`,
-        date: mntDate, unit: mntUnit,
-        cat: document.getElementById('maint-cat').value,
-        tech: document.getElementById('maint-tech').value,
-        cost: mntCost, notes: mntNotes
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleWeighbridgeLog(e) {
-      e.preventDefault();
-      const itemName = document.getElementById('wb-item').value;
-      const supplierName = document.getElementById('wb-supplier').value;
-      const grossKg = parseFloat(document.getElementById('wb-gross').value);
-      const tareKg = parseFloat(document.getElementById('wb-tare').value);
-      const netKg = Math.max(0, grossKg - tareKg);
-
-      const invItem = state.inventory.find(i => i.name === itemName);
-      if (invItem) invItem.stock += netKg;
-
-      state.weighbridgeLogs.unshift({
-        id: `WB-${Date.now().toString().slice(-3)}`,
-        date: document.getElementById('wb-date').value,
-        item: itemName, supplier: supplierName,
-        grossKg, tareKg,
-        mcPct: parseFloat(document.getElementById('wb-mc').value),
-        amount: parseFloat(document.getElementById('wb-amount').value) || 0,
-        terms: document.getElementById('wb-terms').value,
-        status: document.getElementById('wb-status').value,
-        inspector: document.getElementById('wb-inspector').value
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleLogVale(e) {
-      e.preventDefault();
-      const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
-      const amt = parseFloat(document.getElementById('vale-amount').value);
-      state.valeVouchers.unshift({
-        id: voucherId,
-        date: document.getElementById('vale-date').value,
-        empName: document.getElementById('vale-emp').value,
-        amount: amt,
-        remainingBalance: amt,
-        planType: document.getElementById('vale-plan').value,
-        minPct: 30,
-        customAmt: parseFloat(document.getElementById('vale-custom-amt').value) || null,
-        status: 'ACTIVE',
-        notes: document.getElementById('vale-notes').value
-      });
-      saveState(); renderAll(); e.target.reset();
-      printValeVoucher(0);
-    }
-
-    function handleLogisticsTicket(e) {
-      e.preventDefault();
-      const date = document.getElementById('log-date').value;
-      const type = document.getElementById('log-type').value;
-      const party = document.getElementById('log-party').value;
-      const terms = document.getElementById('log-terms').value;
-      const status = document.getElementById('log-status').value;
-      const rawItemVal = document.getElementById('log-item').value;
-      const invItem = state.inventory.find(i => rawItemVal.includes(i.name));
-      const itemName = invItem ? invItem.name : rawItemVal;
-      const qty = parseFloat(document.getElementById('log-qty').value);
-      const amount = parseFloat(document.getElementById('log-amount').value);
-
-      if (type === 'OUTBOUND_CUSTOMER' && (!invItem || invItem.stock < qty)) {
-        alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
-        return;
-      }
-      if (type === 'INBOUND_SUPPLIER' && invItem) invItem.stock += qty;
-      if (type === 'OUTBOUND_CUSTOMER' && invItem) invItem.stock -= qty;
-
-      state.logistics.unshift({
-        id: `TICKET-${Date.now().toString().slice(-3)}`,
-        date, type, party, terms, status, item: itemName, qty, amount
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleDowntimeLog(e) {
-      e.preventDefault();
-      state.downtime.unshift({ id: `DT-${Date.now().toString().slice(-2)}`, reason: document.getElementById('dt-reason').value, duration: parseInt(document.getElementById('dt-dur').value) });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleAddEmployee(e) {
-      e.preventDefault();
-      state.employees.push({
-        name: document.getElementById('m-emp-name').value,
-        pos: document.getElementById('m-emp-pos').value,
-        type: document.getElementById('m-emp-type').value,
-        rate: parseFloat(document.getElementById('m-emp-rate').value),
-        phone: document.getElementById('m-emp-phone').value,
-        email: document.getElementById('m-emp-email').value || '-',
-        emName: document.getElementById('m-emp-em-name').value,
-        emPhone: document.getElementById('m-emp-em-phone').value,
-        lifetimePresentDays: 0, ytdNetSalary: 0, attendance: {}
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function handleAddContact(e) {
-      e.preventDefault();
-      state.contacts.push({
-        company: document.getElementById('m-con-company').value,
-        person: document.getElementById('m-con-person').value,
-        position: document.getElementById('m-con-pos').value,
-        type: document.getElementById('m-con-type').value,
-        terms: document.getElementById('m-con-terms').value,
-        phone: document.getElementById('m-con-phone').value,
-        email: document.getElementById('m-con-email').value || '-',
-        address: document.getElementById('m-con-addr').value
-      });
-      saveState(); renderAll(); e.target.reset();
-    }
-
-    function toggleAttendanceCell(empName, dateKey, isSunday) {
+    window.printBriquetteQCReport = printBriquetteQCReport;
+    window.printPaystub = printPaystub;
+    window.printEmployeeCaSOAByName = printEmployeeCaSOAByName;
+    window.toggleAttendanceCell = function(empName, dateKey, isSunday) {
       const emp = state.employees.find(e => e.name === empName);
       if (!emp) return;
       if (!emp.attendance) emp.attendance = {};
       const current = emp.attendance[dateKey] || (isSunday ? 'OFF' : 'P');
       emp.attendance[dateKey] = current === 'P' ? 'H' : current === 'H' ? 'A' : current === 'A' ? 'OFF' : 'P';
       saveState(); renderAll();
-    }
+    };
 
     function calculateEmployeeWeeklyPresent(emp, month, year, weekNum) {
       const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -2280,7 +2056,7 @@
         const dayOfWeek = new Date(year, month, d).getDay();
         const holKey = `${month}-${d}`;
         const dateKey = `${year}-${month}-${d}`;
-        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (dayOfWeek === 0 ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P'));
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (dayOfWeek === 0 ? 'OFF' : 'P');
         if (status === 'P' || status === 'PAY') total += 1.0;
         else if (status === 'H') total += 0.5;
       }
@@ -2296,56 +2072,6 @@
         area.style.display = 'none';
         area.innerHTML = '';
       }, 150);
-    }
-
-    function printExpenseVoucher(expIndex) {
-      const exp = state.expenses[expIndex];
-      const voucherHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('DISBURSEMENT EXPENSE VOUCHER')}
-          <p><strong>Voucher Control ID:</strong> ${exp.id}</p>
-          <p><strong>Expense Date:</strong> ${exp.date}</p>
-          <p><strong>Category:</strong> ${exp.category}</p>
-          <p><strong>Payee / Vendor:</strong> ${exp.vendor}</p>
-          <p style="font-size: 1.1rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p><strong>Particulars:</strong> ${exp.notes}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Prepared / Paid By</div>
-            <div>___________________<br>Approved By (Plant Owner)</div>
-          </div>
-        </div>
-      `;
-      executePrint(voucherHtml);
-    }
-
-    function printValeVoucher(valeIndex) {
-      const v = state.valeVouchers[valeIndex];
-      const voucherHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('CASH ADVANCE (VALE) VOUCHER')}
-          <p><strong>Voucher ID:</strong> ${v.id} | <strong>Date:</strong> ${v.date}</p>
-          <p><strong>Employee Name:</strong> ${v.empName}</p>
-          <p style="font-size: 1.2rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p><strong>Reason / Note:</strong> ${v.notes}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Employee Signature</div>
-            <div>___________________<br>Authorized Cashier</div>
-          </div>
-        </div>
-      `;
-      executePrint(voucherHtml);
-    }
-
-    function filterContacts() {
-      const q = document.getElementById('contact-search').value.toLowerCase();
-      document.querySelectorAll('#tbl-contacts tr').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; });
-    }
-
-    function deleteEntry(arrayKey, index) {
-      if (confirm("Delete this entry?")) {
-        state[arrayKey].splice(index, 1);
-        saveState(); renderAll();
-      }
     }
 
     function renderAttendanceCalendar() {
@@ -2409,7 +2135,7 @@
       loadGovRatesToForm();
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
-      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select'].value : 3);
+      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
 
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
       ['oc-opened-by', 'oc-closed-by', 'proc-op-start', 'proc-op-end', 'fw-attendant', 'maint-tech', 'wb-inspector', 'bq-inspector', 'vale-emp', 'soa-emp-select'].forEach(id => {
@@ -2620,12 +2346,318 @@
       renderCharts(totalRev, totalExp, netProfit, totalVale);
     }
 
-    // Immediate execution fallback to prevent blank tabs
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', renderAll);
-    } else {
+    // ROBUST EVENT BINDINGS ON DOM LOAD
+    document.addEventListener('DOMContentLoaded', () => {
+      // Sidebar Navigation Click Handlers
+      document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('data-target');
+          
+          document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+          document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+          
+          const targetPane = document.getElementById(targetId);
+          if (targetPane) {
+            targetPane.classList.add('active');
+            link.classList.add('active');
+          }
+
+          if (targetId === 'furnace-batches') {
+            document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
+          } else if (targetId === 'briquette-qc') {
+            document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
+          }
+        });
+      });
+
+      // Action Button Bindings
+      document.getElementById('btn-sync').addEventListener('click', renderAll);
+      document.getElementById('btnPrintShift').addEventListener('click', printBlankShiftForm);
+      document.getElementById('btnPrintBatch').addEventListener('click', printBlankBatchLogsheet);
+      document.getElementById('btnPrintFurnace').addEventListener('click', printBlankFurnaceWatchForm);
+      document.getElementById('btnPrintProd').addEventListener('click', printBlankProductionForm);
+      document.getElementById('btnPrintQc').addEventListener('click', printBlankQCForm);
+      document.getElementById('btnPrintSoa').addEventListener('click', printSOAFromDropdown);
+      document.getElementById('btnPrintSalesSoa').addEventListener('click', printSalesSOAFromDropdown);
+      document.getElementById('btnSaveGovRates').addEventListener('click', saveGovRates);
+      document.getElementById('btnDownloadArchive').addEventListener('click', downloadExcelCsvArchive);
+      document.getElementById('btnImportQr').addEventListener('click', importQRFormCSV);
+
+      // Form Submissions
+      document.getElementById('form-expense').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const expId = `EXP-${Date.now().toString().slice(-3)}`;
+        state.expenses.unshift({
+          id: expId,
+          date: document.getElementById('exp-date').value,
+          category: document.getElementById('exp-cat').value,
+          asset: document.getElementById('exp-asset').value || 'Site General',
+          vendor: document.getElementById('exp-vendor').value,
+          inv: document.getElementById('exp-inv').value || '-',
+          method: document.getElementById('exp-pay-method').value,
+          amount: parseFloat(document.getElementById('exp-amount').value),
+          notes: document.getElementById('exp-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+        printExpenseVoucher(0);
+      });
+
+      document.getElementById('form-openclose').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.openclose.unshift({
+          date: document.getElementById('oc-date').value,
+          openedBy: document.getElementById('oc-opened-by').value,
+          timeIn: document.getElementById('oc-time-in').value,
+          machOk: document.getElementById('oc-mach-ok').value,
+          closedBy: document.getElementById('oc-closed-by').value,
+          timeOut: document.getElementById('oc-time-out').value,
+          mode: document.getElementById('oc-mode').value,
+          notes: document.getElementById('oc-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-batches').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const batchId = document.getElementById('proc-batch-id').value.trim();
+        const rawItemName = document.getElementById('proc-raw-item').value;
+        const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
+        const rawCharQty = parseFloat(document.getElementById('proc-fin-qty').value);
+
+        const rawStock = state.inventory.find(i => i.name === rawItemName);
+        if (!rawStock || rawStock.stock < rawQty) {
+          alert(`Insufficient raw stock of ${rawItemName}! Available: ${rawStock ? rawStock.stock : 0} kg`);
+          return;
+        }
+        rawStock.stock -= rawQty;
+        const charStock = state.inventory.find(i => i.category === 'Raw Char');
+        if (charStock) charStock.stock += rawCharQty;
+
+        state.batches.unshift({
+          id: batchId,
+          rawItem: rawItemName, consumedKg: rawQty, yieldKg: rawCharQty,
+          cookHours: parseFloat(document.getElementById('proc-cook-hours').value) || 7.5,
+          opStart: document.getElementById('proc-op-start').value,
+          opEnd: document.getElementById('proc-op-end').value,
+          maxTemp: parseInt(document.getElementById('proc-temp').value) || 580,
+          preMcPct: parseFloat(document.getElementById('proc-pre-mc').value) || 18.5,
+          qcNotes: document.getElementById('proc-qc-notes').value || 'Accumulated to raw char stockpile'
+        });
+        saveState(); renderAll(); e.target.reset();
+        document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
+      });
+
+      document.getElementById('form-furnace-watch').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.furnaceWatch.unshift({
+          datetime: document.getElementById('fw-datetime').value.replace('T', ' '),
+          unit: document.getElementById('fw-unit').value,
+          temp: parseInt(document.getElementById('fw-temp').value),
+          vent: document.getElementById('fw-vent').value,
+          safety: document.getElementById('fw-safety').value,
+          attendant: document.getElementById('fw-attendant').value,
+          notes: document.getElementById('fw-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-briquette-qc').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const bqId = document.getElementById('bq-id').value.trim();
+        const sourceBatch = document.getElementById('bq-source-batch').value.trim();
+        const charUsed = parseFloat(document.getElementById('bq-char-used').value);
+        const outputQty = parseFloat(document.getElementById('bq-output-qty').value);
+        const grade = document.getElementById('bq-grade').value;
+
+        const charStock = state.inventory.find(i => i.category === 'Raw Char');
+        if (!charStock || charStock.stock < charUsed) {
+          alert(`Insufficient raw char in stockpile! Available: ${charStock ? charStock.stock : 0} kg`);
+          return;
+        }
+        charStock.stock -= charUsed;
+
+        const targetFinName = grade.includes('Export') ? 'Charcoal Briquettes (Export Grade A)' : 'Charcoal Briquettes (Standard Grade B)';
+        const finStock = state.inventory.find(i => i.name === targetFinName);
+        if (finStock) finStock.stock += outputQty;
+
+        state.briquetteQcLogs.unshift({
+          id: bqId,
+          date: document.getElementById('bq-date').value,
+          sourceBatch,
+          charUsed, outputQty,
+          pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
+          dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
+          moisture: parseFloat(document.getElementById('bq-moisture').value),
+          ignitionTime: parseFloat(document.getElementById('bq-ignition-time').value) || 2.5,
+          burnTime: parseFloat(document.getElementById('bq-burn-time').value) || 80.0,
+          fc: parseFloat(document.getElementById('bq-fc').value) || 0,
+          ash: parseFloat(document.getElementById('bq-ash').value) || 0,
+          gcv: parseInt(document.getElementById('bq-gcv').value) || 0,
+          burnTest: document.getElementById('bq-burn-test').value,
+          grade,
+          inspector: document.getElementById('bq-inspector').value,
+          notes: document.getElementById('bq-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+        document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
+        printBriquetteQCReport(0);
+      });
+
+      document.getElementById('form-maintenance').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.maintenanceLogs.unshift({
+          id: `MNT-${Date.now().toString().slice(-3)}`,
+          date: document.getElementById('maint-date').value,
+          unit: document.getElementById('maint-unit').value,
+          cat: document.getElementById('maint-cat').value,
+          tech: document.getElementById('maint-tech').value,
+          cost: parseFloat(document.getElementById('maint-cost').value),
+          notes: document.getElementById('maint-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-weighbridge').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const itemName = document.getElementById('wb-item').value;
+        const supplierName = document.getElementById('wb-supplier').value;
+        const grossKg = parseFloat(document.getElementById('wb-gross').value);
+        const tareKg = parseFloat(document.getElementById('wb-tare').value);
+        const netKg = Math.max(0, grossKg - tareKg);
+
+        const invItem = state.inventory.find(i => i.name === itemName);
+        if (invItem) invItem.stock += netKg;
+
+        state.weighbridgeLogs.unshift({
+          id: `WB-${Date.now().toString().slice(-3)}`,
+          date: document.getElementById('wb-date').value,
+          item: itemName, supplier: supplierName,
+          grossKg, tareKg,
+          mcPct: parseFloat(document.getElementById('wb-mc').value),
+          amount: parseFloat(document.getElementById('wb-amount').value) || 0,
+          terms: document.getElementById('wb-terms').value,
+          status: document.getElementById('wb-status').value,
+          inspector: document.getElementById('wb-inspector').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-vale').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
+        const amt = parseFloat(document.getElementById('vale-amount').value);
+        state.valeVouchers.unshift({
+          id: voucherId,
+          date: document.getElementById('vale-date').value,
+          empName: document.getElementById('vale-emp').value,
+          amount: amt,
+          remainingBalance: amt,
+          planType: document.getElementById('vale-plan').value,
+          minPct: 30,
+          customAmt: parseFloat(document.getElementById('vale-custom-amt').value) || null,
+          status: 'ACTIVE',
+          notes: document.getElementById('vale-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+        printValeVoucher(0);
+      });
+
+      document.getElementById('form-logistics').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const date = document.getElementById('log-date').value;
+        const type = document.getElementById('log-type').value;
+        const party = document.getElementById('log-party').value;
+        const terms = document.getElementById('log-terms').value;
+        const status = document.getElementById('log-status').value;
+        const rawItemVal = document.getElementById('log-item').value;
+        const invItem = state.inventory.find(i => rawItemVal.includes(i.name));
+        const itemName = invItem ? invItem.name : rawItemVal;
+        const qty = parseFloat(document.getElementById('log-qty').value);
+        const amount = parseFloat(document.getElementById('log-amount').value);
+
+        if (type === 'OUTBOUND_CUSTOMER' && (!invItem || invItem.stock < qty)) {
+          alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
+          return;
+        }
+        if (type === 'INBOUND_SUPPLIER' && invItem) invItem.stock += qty;
+        if (type === 'OUTBOUND_CUSTOMER' && invItem) invItem.stock -= qty;
+
+        state.logistics.unshift({
+          id: `TICKET-${Date.now().toString().slice(-3)}`,
+          date, type, party, terms, status, item: itemName, qty, amount
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-downtime').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.downtime.unshift({ id: `DT-${Date.now().toString().slice(-2)}`, reason: document.getElementById('dt-reason').value, duration: parseInt(document.getElementById('dt-dur').value) });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-sku').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const skuId = document.getElementById('sku-id').value.trim();
+        const cat = document.getElementById('sku-cat').value;
+        const name = document.getElementById('sku-name').value.trim();
+        const price = parseFloat(document.getElementById('sku-price').value);
+        const stock = parseFloat(document.getElementById('sku-stock').value);
+        const min = parseFloat(document.getElementById('sku-min').value);
+
+        const existingIndex = state.inventory.findIndex(i => i.id === skuId);
+        if (existingIndex >= 0) {
+          state.inventory[existingIndex] = { id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min };
+        } else {
+          state.inventory.push({ id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min });
+        }
+        saveState(); renderAll(); alert(`Saved ${name} (${skuId}) successfully!`);
+      });
+
+      document.getElementById('form-employee').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.employees.push({
+          name: document.getElementById('m-emp-name').value,
+          pos: document.getElementById('m-emp-pos').value,
+          type: document.getElementById('m-emp-type').value,
+          rate: parseFloat(document.getElementById('m-emp-rate').value),
+          phone: document.getElementById('m-emp-phone').value,
+          email: document.getElementById('m-emp-email').value || '-',
+          emName: document.getElementById('m-emp-em-name').value,
+          emPhone: document.getElementById('m-emp-em-phone').value,
+          lifetimePresentDays: 0, ytdNetSalary: 0, attendance: {}
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-contact').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.contacts.push({
+          company: document.getElementById('m-con-company').value,
+          person: document.getElementById('m-con-person').value,
+          position: document.getElementById('m-con-pos').value,
+          type: document.getElementById('m-con-type').value,
+          terms: document.getElementById('m-con-terms').value,
+          phone: document.getElementById('m-con-phone').value,
+          email: document.getElementById('m-con-email').value || '-',
+          address: document.getElementById('m-con-addr').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      // Change listeners
+      document.getElementById('cal-month').addEventListener('change', renderAttendanceCalendar);
+      document.getElementById('cal-year').addEventListener('change', renderAttendanceCalendar);
+      document.getElementById('pay-week-select').addEventListener('change', renderAll);
+      document.getElementById('vale-plan').addEventListener('change', toggleCustomDeductInput);
+      document.getElementById('log-type').addEventListener('change', toggleLogisticsItemOptions);
+      document.getElementById('log-party').addEventListener('change', syncPartyPaymentTerms);
+      document.getElementById('log-qty').addEventListener('input', autoCalculateLogisticsAmount);
+      document.getElementById('sku-select').addEventListener('change', populateItemFormForEdit);
+      document.getElementById('contact-search').addEventListener('input', filterContacts);
+
       renderAll();
-    }
+    });
   </script>
 </body>
 </html>
