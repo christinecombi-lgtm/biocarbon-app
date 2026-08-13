@@ -44,7 +44,6 @@
     .brand-container { display: flex; align-items: center; gap: 16px; }
     .brand-shapes { display: flex; align-items: center; gap: 8px; }
     .shape-diamond-orange { width: 22px; height: 22px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 3px; }
-    /* Dark background header circle -> white */
     .shape-circle-dynamic { width: 24px; height: 24px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
     .shape-diamond-green { width: 22px; height: 22px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 3px; }
 
@@ -162,7 +161,7 @@
     .printable-document {
       background: #ffffff;
       border: 1px solid #1a1816;
-      padding: 14px 18px;
+      padding: 12px 16px;
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
@@ -175,8 +174,8 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid var(--brand-orange);
-      padding-bottom: 6px;
-      margin-bottom: 8px;
+      padding-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .print-logo-group { display: flex; align-items: center; gap: 10px; }
@@ -193,7 +192,7 @@
 
     /* STRICT LANDSCAPE SINGLE PAGE PRINT RULES */
     @media print {
-      @page { size: landscape; margin: 6mm; }
+      @page { size: landscape; margin: 5mm; }
       body * { visibility: hidden !important; }
       #printable-area, #printable-area * { visibility: visible !important; }
       #printable-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
@@ -242,7 +241,7 @@
       <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
       <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> Pyrolysis Batch Stacking Log</a>
-      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 1.5-Hr Furnace Safety Watch</a>
+      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> Furnace Safety Watch</a>
       <a class="nav-link" onclick="switchTab('briquette-qc', this)"><span>🧪</span> Briquette Production & QC Lab</a>
       <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
       <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
@@ -467,16 +466,16 @@
         </div>
       </div>
 
-      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR -->
+      <!-- TAB 5: FURNACE MONITOR -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
-            <span>Log Scheduled 1.5-Hour Furnace Inspection (Enhanced Safety Check)</span>
-            <button class="btn-secondary" onclick="printBlankFurnaceWatchForm()">🖨️ Print Blank 1.5-Hour Watch Sheet</button>
+            <span>Log Furnace Inspection (Safety & Temperature Check)</span>
+            <button class="btn-secondary" onclick="printBlankFurnaceWatchForm()">🖨️ Print Blank Furnace Watch Sheet</button>
           </div>
           <form onsubmit="handleFurnaceWatchLog(event)">
             <div class="form-grid">
-              <div class="form-group"><label>Inspection Time</label><input type="datetime-local" id="fw-datetime" class="form-control" required></div>
+              <div class="form-group"><label>Inspection Date & Time</label><input type="datetime-local" id="fw-datetime" class="form-control" required></div>
               <div class="form-group"><label>Furnace Unit</label><select id="fw-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option></select></div>
               <div class="form-group"><label>Current Temp (°C)</label><input type="number" id="fw-temp" class="form-control" placeholder="450" required></div>
               <div class="form-group"><label>Flue Gas / Vent Status</label><select id="fw-vent" class="form-control"><option value="NORMAL">Normal - Clean Pyrolysis Gas</option><option value="EXCESS_SMOKE">Excess Smoke Detected</option><option value="BLOCKED">Exhaust Blocked</option></select></div>
@@ -484,12 +483,12 @@
               <div class="form-group"><label>Inspector / Operator</label><select id="fw-attendant" class="form-control"></select></div>
               <div class="form-group" style="grid-column: 1 / -1;"><label>Unusual Observations / Maintenance Notes</label><input type="text" id="fw-notes" class="form-control" placeholder="No refractory leaks; blower motor operating normally"></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🌡️ Save 1.5-Hour Furnace Inspection</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🌡️ Save Furnace Inspection</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Regular 1.5-Hour Furnace Check Ledger</div>
+          <div class="panel-title">Furnace Check Ledger</div>
           <div class="table-container">
             <table>
               <thead>
@@ -1146,7 +1145,7 @@
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" },
-        { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "1.5-hr safety check passed; peak carbonization.", attendant: "Beryl" }
+        { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Safety check passed; peak carbonization.", attendant: "Beryl" }
       ],
       briquetteQcLogs: [
         { id: "BQ-201", date: "2026-08-07", charUsed: 1200, outputQty: 1150, pressRate: 400, dropPct: 97.5, moisture: 3.2, fc: 85.0, ash: 2.1, gcv: 7500, burnTest: "Pass - Clean Burn / No Smoke", grade: "Export Grade A", inspector: "Beryl", notes: "Weekly high-speed run at 400kg/hr. Passed 3-drop test." }
@@ -1197,10 +1196,8 @@
     let financialChartInstance = null;
     let inventoryChartInstance = null;
 
-    // ONE-CLICK EXCEL / CSV ARCHIVE DOWNLOAD FUNCTION
     function downloadExcelCsvArchive() {
       let csvContent = "data:text/csv;charset=utf-8,";
-      
       csvContent += "=== COMBINIDO BIOCARBON CHARCOAL MANUFACTURING PLANT ARCHIVE ===\n\n";
       
       csvContent += "--- INVENTORY STOCK BALANCES ---\n";
@@ -1215,18 +1212,6 @@
         csvContent += `"${x.id}","${x.date}","${x.category}","${x.asset}","${x.vendor}",${x.amount},"${x.notes}"\n`;
       });
 
-      csvContent += "\n--- PYROLYSIS BATCH STACKING ---\n";
-      csvContent += "BatchID,RawItem,ConsumedKg,YieldKg,CookHours,MaxTemp\n";
-      state.batches.forEach(b => {
-        csvContent += `"${b.id}","${b.rawItem}",${b.consumedKg},${b.yieldKg},${b.cookHours},${b.maxTemp}\n`;
-      });
-
-      csvContent += "\n--- LOGISTICS & SALES DISPATCHES ---\n";
-      csvContent += "TicketID,Date,Type,Party,Item,QtyKg,Amount,Status\n";
-      state.logistics.forEach(l => {
-        csvContent += `"${l.id}","${l.date}","${l.type}","${l.party}","${l.item}",${l.qty},${l.amount},"${l.status}"\n`;
-      });
-
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
@@ -1236,7 +1221,6 @@
       document.body.removeChild(link);
     }
 
-    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES & FULL COMPANY NAME (Circle is black on white document background)
     function getBrandedHeader(documentTitle) {
       return `
         <div class="print-letterhead">
@@ -1260,48 +1244,50 @@
       `;
     }
 
-    // PRINT BLANK SHIFT OPEN/CLOSE FORM (Fixed & Restored)
+    // 1. BLANK SHIFT OPEN/CLOSE FORM (MAXIMIZED TO FILL ENTIRE PAGE)
     function printBlankShiftForm() {
       const blankHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('DAILY FACTORY SHIFT OPEN & CLOSE LOGSHEET')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 10px;">
-            <div>
-              <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-              <span><strong>Run Mode:</strong> [  ] Standard Day &nbsp;&nbsp; [  ] 24-hr Continuous</span>
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('DAILY FACTORY OPEN & CLOSE SHIFT LOGSHEET')}
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+              <div>
+                <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong>Run Mode:</strong> [  ] Standard Day &nbsp;&nbsp; [  ] 24-hr Continuous</span>
+              </div>
+              <div>
+                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+              </div>
             </div>
-            <div>
-              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
-            </div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+              <thead>
+                <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Time In</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Opened By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Machinery & Safety Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Time Out</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Closed By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Handover / Perimeter Security Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array(14).fill(0).map(() => `
+                  <tr style="height: 34px;">
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 10px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Opening Time (In)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Opened By (Attendant)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Machines & Safety Check</th>
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Closing Time (Out)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Closed By (Attendant)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 6px;">Handover / Safety Notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${Array(8).fill(0).map(() => `
-                <tr style="height: 38px;">
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                  <td style="border: 1px solid #cbd5e1;"></td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 15px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Plant Supervisor Signature</div>
             <div>________________________________________<br>Plant Manager Review</div>
           </div>
@@ -1310,51 +1296,48 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET
+    // 2. BLANK PYROLYSIS BATCH STACKING SHEET (MAXIMIZED TO FILL ENTIRE PAGE)
     function printBlankBatchLogsheet() {
       const blankHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('PYROLYSIS BATCH STACKING & RAW CHAR LOGSHEET')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
-            <div>
-              <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-              <span><strong>Shift Supervisor:</strong> ________________________</span>
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('PYROLYSIS BATCH COOK & RAW CHAR STACKING LOGSHEET')}
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+              <div>
+                <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong>Shift Supervisor:</strong> ________________________</span>
+              </div>
+              <div>
+                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+              </div>
             </div>
-            <div>
-              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
-            </div>
-          </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 6px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Batch ID</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Feed Used</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Consumed (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Char Output (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Start Time & Duty</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">End Time & Duty</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Total Cook (hrs)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Peak Temp (°C)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Pre-MC %</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${Array(6).fill(0).map(() => `
-                <tr style="height: 30px;">
-                  <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
+              <thead>
+                <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Batch ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Feed Used</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Consumed (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Char Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Start Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">End Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Cook (hrs)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Peak Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Pre-MC %</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
-
-          <div style="font-size: 0.7rem; margin-bottom: 4px;">
-            <strong>Stockpile & Stoppage Notes (Accumulating for Weekly 400kg/hr Briquetting Run):</strong>
-            <div style="border: 1px solid #cbd5e1; height: 28px; margin-top: 2px; border-radius: 3px;"></div>
+              </thead>
+              <tbody>
+                ${Array(12).fill(0).map(() => `
+                  <tr style="height: 31px;">
+                    <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Plant Operator Signature</div>
             <div>________________________________________<br>Plant Owner / Supervisor Review</div>
           </div>
@@ -1363,45 +1346,50 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK 1.5-HOUR FURNACE WATCH SHEET
+    // 3. BLANK FURNACE SAFETY WATCH SHEET (CLEARED TIME PRE-FILL & MAXIMIZED TO FILL PAGE)
     function printBlankFurnaceWatchForm() {
       const blankHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('1.5-HOUR FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
-            <div>
-              <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-              <span><strong>Furnace Unit:</strong> [  ] Furnace #1 &nbsp;&nbsp; [  ] Furnace #2</span>
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
+            
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+              <div>
+                <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong>Furnace Unit:</strong> [  ] Furnace #1 &nbsp;&nbsp; [  ] Furnace #2 &nbsp;&nbsp; [  ] 24-hr Continuous Run</span>
+              </div>
+              <div>
+                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+              </div>
             </div>
-            <div>
-              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
-            </div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+              <thead>
+                <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 14%;">Time Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 12%;">Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 20%;">Ventilation / Flue Gas</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 18%;">Fire & CO Safety</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 22%;">Observations / Notes</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 14%;">Inspector Signature</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array(12).fill(0).map(() => `
+                  <tr style="height: 31px;">
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
-            <thead>
-              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Time Slot</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Temp (°C)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Ventilation / Flue Gas</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Fire & CO Safety</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Observations / Notes</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Inspector Signature</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">07:30 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">09:00 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">10:30 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">12:00 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">01:30 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">03:00 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">04:30 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-            </tbody>
-          </table>
-
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Shift Safety Inspector Signature</div>
             <div>________________________________________<br>Plant Supervisor Review</div>
           </div>
@@ -1410,13 +1398,13 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK 2-PAGE QC BOOKLET
+    // 4. BLANK 2-PAGE QC BOOKLET (MAXIMIZED TO FILL PAGE)
     function printBlankBriquetteQCForm() {
       const bookletHtml = `
-        <div class="printable-document" style="page-break-after: always; height: 100vh; display: flex; flex-direction: column; justify-content: space-between;">
+        <div class="printable-document" style="page-break-after: always; height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET (PAGE 1)')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
               <div>
                 <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 <span><strong>Press Speed:</strong> 400 kg/hr</span>
@@ -1426,46 +1414,62 @@
               </div>
             </div>
 
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Char Used (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Output (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Drop Retain %</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Moisture %</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ignition Time</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Burn Time</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Grade</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Char Used (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Drop Retain %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Moisture %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Ignition Time</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Burn Time</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Grade</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(11).fill(0).map(() => `
-                  <tr style="height: 38px;">
+                ${Array(13).fill(0).map(() => `
+                  <tr style="height: 31px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 10px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Factory QC Inspector Signature</div>
             <div>________________________________________<br>Plant Owner / Manager Approval</div>
           </div>
         </div>
 
-        <div class="printable-document">
-          ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS (PAGE 2)')}
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; line-height: 1.6;">
-            <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING</h3>
-            <ul style="margin-left: 18px; margin-bottom: 12px;">
-              <li><strong>Drop Test:</strong> Drop 3 times from 1.5-2m onto concrete. <strong>Pass Criterion: &gt;95% weight retention.</strong></li>
-              <li><strong>Moisture Content:</strong> Test with pin-type meter. <strong>Pass Criterion: &lt;5% moisture.</strong></li>
-              <li><strong>Ignition Time:</strong> <strong>Pass Criterion: &lt;3 minutes.</strong></li>
-              <li><strong>Total Burn Time:</strong> <strong>Pass Criterion: &gt;70 minutes.</strong></li>
-            </ul>
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS (PAGE 2)')}
+            <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; line-height: 1.6;">
+              <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING</h3>
+              <ul style="margin-left: 18px; margin-bottom: 12px;">
+                <li><strong>Drop Test:</strong> Drop 3 times from 1.5-2m onto concrete. <strong>Pass Criterion: &gt;95% weight retention.</strong></li>
+                <li><strong>Moisture Content:</strong> Test with pin-type meter. <strong>Pass Criterion: &lt;5% moisture.</strong></li>
+                <li><strong>Ignition Time:</strong> <strong>Pass Criterion: &lt;3 minutes.</strong></li>
+                <li><strong>Total Burn Time:</strong> <strong>Pass Criterion: &gt;70 minutes.</strong></li>
+              </ul>
+            </div>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-top: 10px;">
+              <thead>
+                <tr style="background-color: #f1f5f9;">
+                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Additional Lab Parameter</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Observed Test Result</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Lab Technician Sign-off</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array(6).fill(0).map(() => `
+                  <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+                `).join('')}
+              </tbody>
+            </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 20px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Plant Safety & QC Inspector</div>
             <div>________________________________________<br>Plant Operations Manager</div>
           </div>
@@ -1474,7 +1478,6 @@
       executePrint(bookletHtml);
     }
 
-    // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT
     function printBriquetteQCReport(qcIndex) {
       const q = state.briquetteQcLogs[qcIndex];
       const reportHtml = `
@@ -1493,7 +1496,6 @@
       executePrint(reportHtml);
     }
 
-    // PRINT PAYSTUB FUNCTION (Fixed & Restored)
     function printPaystub(empIndex) {
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
@@ -1565,7 +1567,6 @@
       executePrint(paystubHtml);
     }
 
-    // PRINT EMPLOYEE CA SOA FUNCTION (Fixed & Restored)
     function printEmployeeCaSOAByName(empName, fromDate = null, toDate = null) {
       const vList = (state.valeVouchers || []).filter(v => v.empName === empName);
       let totalIssued = 0;
@@ -1625,7 +1626,6 @@
       if (empName) printEmployeeCaSOAByName(empName, fromDate, toDate);
     }
 
-    // PRINT CUSTOMER SALES SOA FUNCTION
     function printSalesSOAFromDropdown() {
       const custName = document.getElementById('sales-soa-cust-select').value;
       const fromDate = document.getElementById('sales-soa-date-from').value;
@@ -1682,7 +1682,6 @@
       executePrint(salesSoaHtml);
     }
 
-    // CSV IMPORT UTILITY
     function importQRFormCSV() {
       const fileInput = document.getElementById('qr-csv-file');
       const file = fileInput.files[0];
@@ -2343,7 +2342,7 @@
       `).join('');
 
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
-        <tr><td><strong>${fw.datetime}</strong></td><td>${fw.unit}</td><td><strong>${fw.temp} °C</strong></td><td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td><td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td><td>${fw.notes || '1.5-hr check normal'}</td><td>${fw.attendant}</td><td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td></tr>
+        <tr><td><strong>${fw.datetime}</strong></td><td>${fw.unit}</td><td><strong>${fw.temp} °C</strong></td><td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td><td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td><td>${fw.notes || 'Inspection check normal'}</td><td>${fw.attendant}</td><td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
       document.getElementById('tbl-briquette-qc').innerHTML = (state.briquetteQcLogs || []).map((q, idx) => `
