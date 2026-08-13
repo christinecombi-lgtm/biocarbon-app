@@ -421,7 +421,7 @@
         </div>
       </div>
 
-      <!-- TAB 4: PYROLYSIS BATCH STACKING LOG (NO QC BOX) -->
+      <!-- TAB 4: PYROLYSIS BATCH STACKING LOG -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -465,7 +465,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR (SAFETY WATCH) -->
+      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -988,7 +988,7 @@
       <!-- TAB 16: MASTER DATA MANAGER & CSV QR IMPORTER -->
       <div id="settings" class="tab-pane">
         
-        <!-- NEW ONE-CLICK CSV BACKUP ARCHIVE PANEL -->
+        <!-- ONE-CLICK CSV BACKUP ARCHIVE PANEL -->
         <div class="panel" style="background-color: #f8fafc; border: 2px dashed var(--brand-blue);">
           <div class="panel-title">📥 Instant Excel / CSV Backup Archive</div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
@@ -1258,7 +1258,7 @@
       `;
     }
 
-    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET (EXPANDED TO 6+ LINES TO SAVE PAPER)
+    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET
     function printBlankBatchLogsheet() {
       const blankHtml = `
         <div class="printable-document">
@@ -1289,12 +1289,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              ${Array(6).fill(0).map(() => `
+                <tr style="height: 30px;">
+                  <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
+                </tr>
+              `).join('')}
             </tbody>
           </table>
 
@@ -1359,14 +1358,12 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK 2-PAGE QC BOOKLET (PAGE 1: FULL RUN LINES, PAGE 2: DETAILED INSTRUCTIONS & METRICS)
+    // PRINT BLANK 2-PAGE QC BOOKLET
     function printBlankBriquetteQCForm() {
       const bookletHtml = `
-        <!-- PAGE 1: FULL PAGE OF RUN LINES -->
         <div class="printable-document" style="page-break-after: always; height: 100vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET (PAGE 1: RUN LOGS)')}
-            
+            ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET (PAGE 1)')}
             <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
               <div>
                 <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1383,66 +1380,39 @@
                   <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Run ID</th>
                   <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Char Used (kg)</th>
                   <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Output (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Drop Test Retain %<br><span style="font-size:0.55rem; color:#047857;">[Target: &gt;95%]</span></th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Moisture %<br><span style="font-size:0.55rem; color:#047857;">[Target: &lt;5%]</span></th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ignition Time<br><span style="font-size:0.55rem; color:#047857;">[Target: &lt;3 mins]</span></th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Burn Time<br><span style="font-size:0.55rem; color:#047857;">[Target: &gt;70 mins]</span></th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Fixed Carbon %<br><span style="font-size:0.55rem; color:#64748b;">[Opt. Lab]</span></th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ash %<br><span style="font-size:0.55rem; color:#64748b;">[Opt. Lab: 1-4%]</span></th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Drop Retain %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Moisture %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Ignition Time</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Burn Time</th>
                   <th style="border: 1px solid #cbd5e1; padding: 6px 3px;">Grade</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(11).fill(0).map(() => `
                   <tr style="height: 38px;">
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
-                    <td style="border: 1px solid #cbd5e1;"></td>
+                    <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-
           <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 10px;">
             <div>________________________________________<br>Factory QC Inspector Signature</div>
             <div>________________________________________<br>Plant Owner / Manager Approval</div>
           </div>
         </div>
 
-        <!-- PAGE 2: DETAILED INSTRUCTIONS, PROTOCOLS & GAUGES -->
         <div class="printable-document">
-          ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS & INSTRUCTIONS (PAGE 2)')}
-          
+          ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS (PAGE 2)')}
           <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; line-height: 1.6;">
-            <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING (PERFORM ON-SITE)</h3>
+            <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING</h3>
             <ul style="margin-left: 18px; margin-bottom: 12px;">
-              <li><strong>Mechanical Durability & Drop Test:</strong> Weigh sample briquette (W₁), drop 3 times consecutively from a height of 1.5 to 2 meters onto solid concrete. Collect all surviving whole pieces and re-weigh (W₂). <strong>Pass Criterion: &gt;95% weight retention</strong> (W₂ / W₁ × 100).</li>
-              <li><strong>Moisture Content Check:</strong> Insert a calibrated digital pin-type moisture meter directly into the core of at least 3 sample briquettes. <strong>Pass Criterion: &lt;5% moisture.</strong> (Alternative oven method: dry weighed sample at 105°C for 2 hours and compute weight loss percentage).</li>
-              <li><strong>Ignition Time Test:</strong> Ignite a sample briquette using a standard chimney starter or local fire starter. Measure the exact time until the briquette is fully burning with steady glowing coals. <strong>Pass Criterion: &lt;3 minutes ignition time.</strong></li>
-              <li><strong>Total Burn Time (Longevity):</strong> Burn a standard sample block under controlled natural draft until complete burnout. Measure total sustained heat and glowing time. <strong>Pass Criterion: &gt;70 minutes continuous burn time.</strong></li>
-              <li><strong>Smoke & Odor Evaluation:</strong> Observe smoke density and odor during initial ignition and sustained burn. <strong>Pass Criterion: Odorless, smokeless burn with clean white or light gray residual ash.</strong></li>
-            </ul>
-
-            <h3 style="color: #0f172a; margin-top: 12px; margin-bottom: 6px; font-size: 0.88rem;">🧪 SECONDARY LABORATORY TESTING (OPTIONAL / SEND-OUT)</h3>
-            <ul style="margin-left: 18px;">
-              <li><strong>Fixed Carbon & Ash Content:</strong> Conduct proximate analysis in a certified muffle furnace to burn off volatile matter. <strong>Target: Residual ash between 1% - 4%, Fixed Carbon &gt;80%.</strong></li>
-              <li><strong>Gross Calorific Value (GCV):</strong> Measure exact energy output in a certified bomb calorimeter. <strong>Target: ~7,000 to 7,500 kcal/kg.</strong></li>
+              <li><strong>Drop Test:</strong> Drop 3 times from 1.5-2m onto concrete. <strong>Pass Criterion: &gt;95% weight retention.</strong></li>
+              <li><strong>Moisture Content:</strong> Test with pin-type meter. <strong>Pass Criterion: &lt;5% moisture.</strong></li>
+              <li><strong>Ignition Time:</strong> <strong>Pass Criterion: &lt;3 minutes.</strong></li>
+              <li><strong>Total Burn Time:</strong> <strong>Pass Criterion: &gt;70 minutes.</strong></li>
             </ul>
           </div>
-
-          <div style="font-size: 0.75rem; margin-bottom: 8px;">
-            <strong>Plant Inspector General Remarks & Observations Log:</strong>
-            <div style="border: 1px solid #cbd5e1; height: 50px; margin-top: 4px; border-radius: 3px;"></div>
-          </div>
-
           <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 20px;">
             <div>________________________________________<br>Plant Safety & QC Inspector</div>
             <div>________________________________________<br>Plant Operations Manager</div>
@@ -1455,47 +1425,152 @@
     // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT
     function printBriquetteQCReport(qcIndex) {
       const q = state.briquetteQcLogs[qcIndex];
-
       const reportHtml = `
         <div class="printable-document">
           ${getBrandedHeader('OFFICIAL CHARCOAL BRIQUETTE QC & LABORATORY CERTIFICATE')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 12px;">
-            <div>
-              <p><strong>Run ID:</strong> ${q.id}</p>
-              <p><strong>Production Date:</strong> ${q.date}</p>
-              <p><strong>Raw Char Consumed:</strong> ${q.charUsed.toLocaleString()} kg</p>
-              <p><strong>Finished Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
-            </div>
-            <div style="text-align: right;">
-              <p><strong>Press Feed Rate:</strong> <span style="font-size: 1.1rem; color: #0284c7; font-weight: bold;">${q.pressRate || 400} kg/hr</span></p>
-              <p><strong>Drop Test Retain (Factory):</strong> <span style="font-size: 1.1rem; color: #10b981; font-weight: bold;">${q.dropPct}%</span></p>
-              <p><strong>Calorific Value / GCV (Lab):</strong> ${q.gcv || 'N/A'} kcal/kg</p>
-            </div>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
-
-          <div style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 12px;">
-            <p><strong>Moisture Content (Factory Test):</strong> ${q.moisture}% (Standard &lt;5%)</p>
-            <p><strong>Ignition Time (Factory Test):</strong> ${q.ignitionTime || '2.5'} mins (Standard &lt;3 mins)</p>
-            <p><strong>Burn Time (Factory Test):</strong> ${q.burnTime || '85'} mins (Standard &gt;70 mins)</p>
-            <p><strong>Ignition & Smoke Performance:</strong> ${q.burnTest}</p>
-            <p><strong>Fixed Carbon Content (Optional Lab):</strong> ${q.fc || 'N/A'}%</p>
-            <p><strong>Ash Content (Optional Lab):</strong> ${q.ash || 'N/A'}% (Standard 1-4%)</p>
-            <p><strong>Inspector Remarks:</strong> ${q.notes}</p>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 0.7rem; font-style: italic;">Certified tested and approved at Combinido Biocarbon Charcoal Manufacturing Plant, Manloy, Carigara, Leyte.</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
+          <p><strong>Run ID:</strong> ${q.id} | <strong>Date:</strong> ${q.date}</p>
+          <p><strong>Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
+          <p><strong>Drop Test Retain:</strong> ${q.dropPct}% | <strong>Moisture:</strong> ${q.moisture}%</p>
+          <p><strong>Burn Time:</strong> ${q.burnTime} mins | <strong>Inspector Remarks:</strong> ${q.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
             <div>___________________<br>QC Inspector</div>
-            <div>___________________<br>Plant Owner / Manager Review</div>
+            <div>___________________<br>Plant Owner Review</div>
           </div>
         </div>
       `;
       executePrint(reportHtml);
+    }
+
+    // PRINT PAYSTUB FUNCTION (Fixed & Restored)
+    function printPaystub(empIndex) {
+      const month = parseInt(document.getElementById('cal-month').value || 7);
+      const year = parseInt(document.getElementById('cal-year').value || 2026);
+      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
+      const e = state.employees[empIndex];
+      
+      const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
+      const weeklyGross = weeklyDays * e.rate;
+      const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
+      const estMonthlyGross = monthlyDays * e.rate;
+
+      let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
+      if (e.type === 'Regular') {
+        let fullSss = computeSSS(estMonthlyGross);
+        let fullPh = computePhilHealth(estMonthlyGross);
+        let fullPagibig = computePagIBIG(estMonthlyGross);
+        sss.ee = fullSss.ee / 4;
+        ph.ee = fullPh.ee / 4;
+        pagibig.ee = fullPagibig.ee / 4;
+      }
+
+      const totalStatutory = sss.ee + ph.ee + pagibig.ee;
+      const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
+
+      const activeVouchers = state.valeVouchers
+        .filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0))
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      let valeDeduct = 0;
+      if (activeVouchers.length > 0) {
+        const primaryCa = activeVouchers[0];
+        let requiredDeduct = primaryCa.planType === 'CUSTOM' && primaryCa.customAmt ? primaryCa.customAmt : netTakeHomeBeforeVale * ((primaryCa.minPct || 30) / 100);
+        valeDeduct = Math.min(primaryCa.remainingBalance, requiredDeduct, netTakeHomeBeforeVale);
+      }
+
+      const netTakeHome = Math.max(0, netTakeHomeBeforeVale - valeDeduct);
+
+      const paystubHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('OFFICIAL WEEKLY EMPLOYEE PAYSTUB')}
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 12px;">
+            <div>
+              <p><strong>Employee Name:</strong> ${e.name}</p>
+              <p><strong>Job Position:</strong> ${e.pos} (${e.type})</p>
+              <p><strong>Payout Cycle:</strong> Week ${weekNum} (Month: ${month + 1}, Year: ${year})</p>
+            </div>
+            <div style="text-align: right;">
+              <p><strong>Daily Rate:</strong> ₱${e.rate.toLocaleString()}</p>
+              <p><strong>Days Present:</strong> ${weeklyDays} days</p>
+            </div>
+          </div>
+          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 12px;">
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;"><strong>Gross Weekly Earnings (${weeklyDays} days @ ₱${e.rate}):</strong></td><td style="text-align: right; padding: 6px;">₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: SSS Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${sss.ee.toFixed(2)}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: PhilHealth Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${ph.ee.toFixed(2)}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: Pag-IBIG Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${pagibig.ee.toFixed(2)}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: Cash Advance (Vale) FIFO Repayment:</td><td style="text-align: right; color: var(--brand-gold); padding: 6px;">-₱${valeDeduct.toFixed(2)}</td></tr>
+          </table>
+          <hr style="border: 1px dashed #000; margin: 10px 0;">
+          <p style="font-size: 1.2rem; font-weight: bold; color: var(--brand-green);">NET TAKE-HOME PAY: ₱${netTakeHome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <hr style="border: 1px dashed #000; margin: 10px 0;">
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem;">
+            <div>___________________<br>Employee Signature</div>
+            <div>___________________<br>Plant Payroll Cashier</div>
+          </div>
+        </div>
+      `;
+      executePrint(paystubHtml);
+    }
+
+    // PRINT EMPLOYEE CA SOA FUNCTION (Fixed & Restored)
+    function printEmployeeCaSOAByName(empName, fromDate = null, toDate = null) {
+      const vList = (state.valeVouchers || []).filter(v => v.empName === empName);
+      let totalIssued = 0;
+      let totalBal = 0;
+
+      let rowsHtml = vList.map(v => {
+        totalIssued += v.amount;
+        totalBal += (v.remainingBalance || 0);
+        return `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 6px;">${v.date}</td>
+            <td style="padding: 6px;"><strong>${v.id}</strong></td>
+            <td style="padding: 6px;">₱${v.amount.toLocaleString()}</td>
+            <td style="padding: 6px;"><strong style="color: var(--brand-danger);">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td>
+            <td style="padding: 6px;">${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% per payroll`}</td>
+            <td style="padding: 6px;">${v.notes}</td>
+          </tr>
+        `;
+      }).join('');
+
+      if (vList.length === 0) {
+        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 12px;">No Cash Advance (Vale) vouchers on record for ${empName}.</td></tr>`;
+      }
+
+      const soaHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('EMPLOYEE CASH ADVANCE (VALE) STATEMENT OF ACCOUNT')}
+          <p><strong>Employee Name:</strong> ${empName}</p>
+          <p><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; margin-bottom: 12px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #000;">
+                <th style="padding: 6px;">Date Issued</th><th style="padding: 6px;">Voucher ID</th><th style="padding: 6px;">Issued Amount</th><th style="padding: 6px;">Remaining Balance</th><th style="padding: 6px;">Repayment Plan</th><th style="padding: 6px;">Particulars</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+          <hr style="border: 1px dashed #000; margin: 10px 0;">
+          <p><strong>Total Lifetime Cash Advances Issued:</strong> ₱${totalIssued.toLocaleString()}</p>
+          <p style="font-size: 1.1rem; font-weight: bold; color: var(--brand-danger);">TOTAL OUTSTANDING CA BALANCE: ₱${totalBal.toLocaleString()}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
+            <div>___________________<br>Employee Acknowledgment</div>
+            <div>___________________<br>Plant Accounting Review</div>
+          </div>
+        </div>
+      `;
+      executePrint(soaHtml);
+    }
+
+    function printSOAFromDropdown() {
+      const empName = document.getElementById('soa-emp-select').value;
+      const fromDate = document.getElementById('soa-date-from').value;
+      const toDate = document.getElementById('soa-date-to').value;
+      if (empName) printEmployeeCaSOAByName(empName, fromDate, toDate);
     }
 
     // CSV IMPORT UTILITY
@@ -1512,7 +1587,6 @@
 
         for (let i = 1; i < lines.length; i++) {
           if (!lines[i].trim()) continue;
-          
           const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
           const category = cols[1] || "";
 
@@ -1530,29 +1604,8 @@
               qcNotes: cols[12] || "QR Stacking Stockpile Log"
             });
             importedCount++;
-          } else if (category.includes("Briquette") || category.includes("QC")) {
-            state.briquetteQcLogs.unshift({
-              id: `BQ-QR-${Date.now().toString().slice(-3)}-${i}`,
-              date: cols[11] || new Date().toISOString().split('T')[0],
-              charUsed: parseFloat(cols[12]) || 1200,
-              outputQty: parseFloat(cols[13]) || 1150,
-              pressRate: parseFloat(cols[14]) || 400,
-              dropPct: parseFloat(cols[15]) || 97.0,
-              moisture: parseFloat(cols[16]) || 3.5,
-              ignitionTime: parseFloat(cols[17]) || 2.2,
-              burnTime: parseFloat(cols[18]) || 82.0,
-              fc: parseFloat(cols[19]) || 84.0,
-              ash: parseFloat(cols[20]) || 2.2,
-              gcv: parseInt(cols[21]) || 7400,
-              burnTest: cols[22] || "Pass - Clean Burn / No Smoke",
-              grade: cols[23] || "Export Grade A",
-              inspector: cols[24] || "QC Inspector",
-              notes: cols[25] || "QR Bulk Sync Lab Result"
-            });
-            importedCount++;
           }
         }
-
         saveState();
         renderAll();
         alert(`Successfully imported ${importedCount} QR factory logs into your plant ledger!`);
@@ -1700,14 +1753,7 @@
     function toggleLogisticsPaymentStatus(ticketIndex) {
       const t = state.logistics[ticketIndex];
       if (!t) return;
-
       t.status = (t.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
-      
-      const relatedExp = state.expenses.find(x => x.inv === t.id);
-      if (relatedExp) {
-        relatedExp.notes = `${t.type === 'INBOUND_SUPPLIER' ? 'Inbound feedstock' : 'Sales'} (${t.terms} - ${t.status}): ${t.qty} kg of ${t.item}`;
-      }
-
       saveState();
       renderAll();
     }
@@ -1715,14 +1761,7 @@
     function toggleWeighbridgePaymentStatus(wbIndex) {
       const w = state.weighbridgeLogs[wbIndex];
       if (!w) return;
-
       w.status = (w.status === 'PAID') ? 'OUTSTANDING' : 'PAID';
-
-      const relatedExp = state.expenses.find(x => x.inv === w.id);
-      if (relatedExp) {
-        relatedExp.notes = `Weighbridge feedstock (${w.terms} - ${w.status}): ${w.grossKg - w.tareKg} kg of ${w.item}`;
-      }
-
       saveState();
       renderAll();
     }
@@ -1737,16 +1776,12 @@
       const min = parseFloat(document.getElementById('sku-min').value);
 
       const existingIndex = state.inventory.findIndex(i => i.id === skuId);
-
       if (existingIndex >= 0) {
         state.inventory[existingIndex] = { id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min };
       } else {
         state.inventory.push({ id: skuId, category: cat, name: name, pricePerKg: price, stock: stock, min: min });
       }
-
-      saveState();
-      renderAll();
-      alert(`Saved ${name} (${skuId}) successfully!`);
+      saveState(); renderAll(); alert(`Saved ${name} (${skuId}) successfully!`);
     }
 
     function handleExpenseLog(e) {
@@ -1763,7 +1798,6 @@
         amount: parseFloat(document.getElementById('exp-amount').value),
         notes: document.getElementById('exp-notes').value
       });
-
       saveState(); renderAll(); e.target.reset();
       printExpenseVoucher(0);
     }
@@ -1794,7 +1828,6 @@
         alert(`Insufficient raw stock of ${rawItemName}! Available: ${rawStock ? rawStock.stock : 0} kg`);
         return;
       }
-
       rawStock.stock -= rawQty;
       const charStock = state.inventory.find(i => i.category === 'Raw Char');
       if (charStock) charStock.stock += rawCharQty;
@@ -1809,7 +1842,6 @@
         preMcPct: parseFloat(document.getElementById('proc-pre-mc').value) || 18.5,
         qcNotes: document.getElementById('proc-qc-notes').value || 'Accumulated to raw char stockpile'
       });
-
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -1824,7 +1856,6 @@
         attendant: document.getElementById('fw-attendant').value,
         notes: document.getElementById('fw-notes').value
       });
-
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -1839,7 +1870,6 @@
         alert(`Insufficient raw char in stockpile! Available: ${charStock ? charStock.stock : 0} kg`);
         return;
       }
-
       charStock.stock -= charUsed;
 
       const targetFinName = grade.includes('Export') ? 'Charcoal Briquettes (Export Grade A)' : 'Charcoal Briquettes (Standard Grade B)';
@@ -1863,7 +1893,6 @@
         inspector: document.getElementById('bq-inspector').value,
         notes: document.getElementById('bq-notes').value
       });
-
       saveState(); renderAll(); e.target.reset();
       printBriquetteQCReport(0);
     }
@@ -1877,26 +1906,11 @@
 
       state.maintenanceLogs.unshift({
         id: `MNT-${Date.now().toString().slice(-3)}`,
-        date: mntDate,
-        unit: mntUnit,
+        date: mntDate, unit: mntUnit,
         cat: document.getElementById('maint-cat').value,
         tech: document.getElementById('maint-tech').value,
-        cost: mntCost,
-        notes: mntNotes
+        cost: mntCost, notes: mntNotes
       });
-
-      state.expenses.unshift({
-        id: `EXP-MNT-${Date.now().toString().slice(-3)}`,
-        date: mntDate,
-        category: "Maintenance & Repairs",
-        asset: mntUnit,
-        vendor: "Internal Maintenance",
-        inv: "-",
-        method: "Petty Cash",
-        amount: mntCost,
-        notes: mntNotes
-      });
-
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -1907,81 +1921,41 @@
       const grossKg = parseFloat(document.getElementById('wb-gross').value);
       const tareKg = parseFloat(document.getElementById('wb-tare').value);
       const netKg = Math.max(0, grossKg - tareKg);
-      const wbDate = document.getElementById('wb-date').value;
-      const totalAmount = parseFloat(document.getElementById('wb-amount').value) || 0;
-      const terms = document.getElementById('wb-terms').value;
-      const status = document.getElementById('wb-status').value;
 
       const invItem = state.inventory.find(i => i.name === itemName);
       if (invItem) invItem.stock += netKg;
 
-      const wbTicketId = `WB-${Date.now().toString().slice(-3)}`;
-
       state.weighbridgeLogs.unshift({
-        id: wbTicketId,
-        date: wbDate,
-        item: itemName,
-        supplier: supplierName,
+        id: `WB-${Date.now().toString().slice(-3)}`,
+        date: document.getElementById('wb-date').value,
+        item: itemName, supplier: supplierName,
         grossKg, tareKg,
         mcPct: parseFloat(document.getElementById('wb-mc').value),
-        amount: totalAmount,
-        terms: terms,
-        status: status,
+        amount: parseFloat(document.getElementById('wb-amount').value) || 0,
+        terms: document.getElementById('wb-terms').value,
+        status: document.getElementById('wb-status').value,
         inspector: document.getElementById('wb-inspector').value
       });
-
-      if (totalAmount > 0) {
-        state.expenses.unshift({
-          id: `EXP-${wbTicketId}`,
-          date: wbDate,
-          category: "Feedstock Purchase",
-          asset: "Raw Material Yard",
-          vendor: supplierName,
-          inv: wbTicketId,
-          method: "Petty Cash",
-          amount: totalAmount,
-          notes: `Weighbridge feedstock purchase (${terms} - ${status}): ${netKg} kg of ${itemName}`
-        });
-      }
-
       saveState(); renderAll(); e.target.reset();
-      printInboundReceipt(0, 'weighbridge');
     }
 
     function handleLogVale(e) {
       e.preventDefault();
-      const empName = document.getElementById('vale-emp').value;
-      const amt = parseFloat(document.getElementById('vale-amount').value);
-      const dateVal = document.getElementById('vale-date').value;
-      const notesVal = document.getElementById('vale-notes').value;
-      const planVal = document.getElementById('vale-plan').value;
-      
-      let minPct = 30;
-      let customAmt = null;
-
-      if (planVal === '30') minPct = 30;
-      else if (planVal === '50') minPct = 50;
-      else if (planVal === '100') minPct = 100;
-      else if (planVal === 'CUSTOM') {
-        customAmt = parseFloat(document.getElementById('vale-custom-amt').value) || 0;
-      }
-
       const voucherId = `VALE-${Date.now().toString().slice(-3)}`;
+      const amt = parseFloat(document.getElementById('vale-amount').value);
       state.valeVouchers.unshift({
         id: voucherId,
-        date: dateVal,
-        empName,
+        date: document.getElementById('vale-date').value,
+        empName: document.getElementById('vale-emp').value,
         amount: amt,
         remainingBalance: amt,
-        planType: planVal,
-        minPct: minPct,
-        customAmt: customAmt,
+        planType: document.getElementById('vale-plan').value,
+        minPct: 30,
+        customAmt: parseFloat(document.getElementById('vale-custom-amt').value) || null,
         status: 'ACTIVE',
-        notes: notesVal
+        notes: document.getElementById('vale-notes').value
       });
-
       saveState(); renderAll(); e.target.reset();
-      toggleCustomDeductInput();
       printValeVoucher(0);
     }
 
@@ -1998,42 +1972,18 @@
       const qty = parseFloat(document.getElementById('log-qty').value);
       const amount = parseFloat(document.getElementById('log-amount').value);
 
-      const ticketId = `TICKET-${Date.now().toString().slice(-3)}`;
-
-      if (type === 'INBOUND_SUPPLIER') {
-        if (invItem) invItem.stock += qty;
-
-        state.expenses.unshift({
-          id: `EXP-${ticketId}`,
-          date: date,
-          category: "Feedstock Purchase",
-          asset: "Raw Material Yard",
-          vendor: party,
-          inv: ticketId,
-          method: "Bank Transfer",
-          amount: amount,
-          notes: `Inbound feedstock delivery (${terms} - ${status}): ${qty} kg of ${itemName}`
-        });
-      } else {
-        if (!invItem || invItem.stock < qty) {
-          alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
-          return;
-        }
-        invItem.stock -= qty;
+      if (type === 'OUTBOUND_CUSTOMER' && (!invItem || invItem.stock < qty)) {
+        alert(`Cannot deliver ${qty} kg of ${itemName}. Stock available: ${invItem ? invItem.stock : 0} kg`);
+        return;
       }
+      if (type === 'INBOUND_SUPPLIER' && invItem) invItem.stock += qty;
+      if (type === 'OUTBOUND_CUSTOMER' && invItem) invItem.stock -= qty;
 
       state.logistics.unshift({
-        id: ticketId,
+        id: `TICKET-${Date.now().toString().slice(-3)}`,
         date, type, party, terms, status, item: itemName, qty, amount
       });
-
       saveState(); renderAll(); e.target.reset();
-
-      if (type === 'INBOUND_SUPPLIER') {
-        printInboundReceipt(0, 'logistics');
-      } else {
-        printSalesInvoice(0);
-      }
     }
 
     function handleDowntimeLog(e) {
@@ -2044,26 +1994,17 @@
 
     function handleAddEmployee(e) {
       e.preventDefault();
-      const empName = document.getElementById('m-emp-name').value;
-      const empPos = document.getElementById('m-emp-pos').value;
-      const empType = document.getElementById('m-emp-type').value;
-      const empPhone = document.getElementById('m-emp-phone').value;
-      const empEmail = document.getElementById('m-emp-email').value || '-';
-
       state.employees.push({
-        name: empName, pos: empPos, type: empType,
+        name: document.getElementById('m-emp-name').value,
+        pos: document.getElementById('m-emp-pos').value,
+        type: document.getElementById('m-emp-type').value,
         rate: parseFloat(document.getElementById('m-emp-rate').value),
-        phone: empPhone, email: empEmail,
+        phone: document.getElementById('m-emp-phone').value,
+        email: document.getElementById('m-emp-email').value || '-',
         emName: document.getElementById('m-emp-em-name').value,
         emPhone: document.getElementById('m-emp-em-phone').value,
         lifetimePresentDays: 0, ytdNetSalary: 0, attendance: {}
       });
-
-      state.contacts.push({
-        company: "Combinido Biocarbon Charcoal Manufacturing (Staff)", person: empName, position: empPos,
-        type: "Plant Crew", terms: "COD", phone: empPhone, email: empEmail, address: "Manloy, Carigara Plant"
-      });
-
       saveState(); renderAll(); e.target.reset();
     }
 
@@ -2085,15 +2026,9 @@
     function toggleAttendanceCell(empName, dateKey, isSunday) {
       const emp = state.employees.find(e => e.name === empName);
       if (!emp) return;
-
       if (!emp.attendance) emp.attendance = {};
       const current = emp.attendance[dateKey] || (isSunday ? 'OFF' : 'P');
-      
-      if (current === 'P') emp.attendance[dateKey] = 'H';
-      else if (current === 'H') emp.attendance[dateKey] = 'A';
-      else if (current === 'A') emp.attendance[dateKey] = 'OFF';
-      else emp.attendance[dateKey] = 'P';
-
+      emp.attendance[dateKey] = current === 'P' ? 'H' : current === 'H' ? 'A' : current === 'A' ? 'OFF' : 'P';
       saveState(); renderAll();
     }
 
@@ -2102,16 +2037,11 @@
       let startDay = (weekNum - 1) * 7 + 1;
       let endDay = weekNum === 4 ? daysInMonth : Math.min(daysInMonth, weekNum * 7);
       let total = 0;
-
       for (let d = startDay; d <= endDay; d++) {
         const dayOfWeek = new Date(year, month, d).getDay();
         const holKey = `${month}-${d}`;
         const dateKey = `${year}-${month}-${d}`;
-
-        const isSunday = (dayOfWeek === 0);
-        const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
-        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
-
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (dayOfWeek === 0 ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P'));
         if (status === 'P' || status === 'PAY') total += 1.0;
         else if (status === 'H') total += 0.5;
       }
@@ -2121,16 +2051,11 @@
     function calculateEmployeeMonthlyPresent(emp, month, year) {
       const daysInMonth = new Date(year, month + 1, 0).getDate();
       let total = 0;
-
       for (let d = 1; d <= daysInMonth; d++) {
         const dayOfWeek = new Date(year, month, d).getDay();
         const holKey = `${month}-${d}`;
         const dateKey = `${year}-${month}-${d}`;
-
-        const isSunday = (dayOfWeek === 0);
-        const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
-        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
-
+        const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (dayOfWeek === 0 ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P'));
         if (status === 'P' || status === 'PAY') total += 1.0;
         else if (status === 'H') total += 0.5;
       }
@@ -2156,14 +2081,9 @@
           <p><strong>Voucher Control ID:</strong> ${exp.id}</p>
           <p><strong>Expense Date:</strong> ${exp.date}</p>
           <p><strong>Category:</strong> ${exp.category}</p>
-          <p><strong>Asset / Unit:</strong> ${exp.asset}</p>
           <p><strong>Payee / Vendor:</strong> ${exp.vendor}</p>
-          <p><strong>Ref / Invoice No:</strong> ${exp.inv}</p>
-          <p><strong>Payment Mode:</strong> ${exp.method}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
           <p style="font-size: 1.1rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <p><strong>Particulars:</strong> ${exp.notes}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
             <div>___________________<br>Prepared / Paid By</div>
             <div>___________________<br>Approved By (Plant Owner)</div>
@@ -2178,15 +2098,10 @@
       const voucherHtml = `
         <div class="printable-document">
           ${getBrandedHeader('CASH ADVANCE (VALE) VOUCHER')}
-          <p><strong>Voucher ID:</strong> ${v.id}</p>
-          <p><strong>Date Issued:</strong> ${v.date}</p>
+          <p><strong>Voucher ID:</strong> ${v.id} | <strong>Date:</strong> ${v.date}</p>
           <p><strong>Employee Name:</strong> ${v.empName}</p>
-          <p><strong>Deduction Terms:</strong> ${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% per payroll`}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
           <p style="font-size: 1.2rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
           <p><strong>Reason / Note:</strong> ${v.notes}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 0.7rem;">Received cash advance subject to automatic weekly payroll deductions.</p>
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
             <div>___________________<br>Employee Signature</div>
             <div>___________________<br>Authorized Cashier</div>
@@ -2196,183 +2111,9 @@
       executePrint(voucherHtml);
     }
 
-    function printInboundReceipt(index, source = 'logistics') {
-      let t = null;
-      let isWb = source === 'weighbridge';
-
-      if (isWb) {
-        let item = state.weighbridgeLogs[index];
-        t = {
-          id: item.id,
-          date: item.date,
-          party: item.supplier,
-          item: item.item,
-          qty: item.grossKg - item.tareKg,
-          terms: item.terms || 'COD',
-          status: item.status || 'PAID',
-          amount: item.amount || 0
-        };
-      } else {
-        t = state.logistics[index];
-      }
-
-      const invItem = state.inventory.find(i => i.name === t.item);
-      const ratePerKg = t.qty > 0 ? (t.amount / t.qty) : (invItem ? invItem.pricePerKg : 0);
-
-      const receiptHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('RAW MATERIAL RECEIVING SLIP / GRN')}
-          <p><strong>Receiving Control Ticket No:</strong> ${t.id}</p>
-          <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
-          <p><strong>Supplier / Source:</strong> ${t.party}</p>
-          <p><strong>Agreed Payment Terms:</strong> ${t.terms || 'COD'}</p>
-          <p><strong>Payment Settlement Status:</strong> <span style="font-weight: bold; border: 1px solid #000; padding: 2px 6px;">${t.status || 'PAID'}</span></p>
-          <p><strong>Raw Feedstock Delivered:</strong> ${t.item}</p>
-          <p><strong>Net Quantity Received:</strong> ${t.qty.toLocaleString()} kg</p>
-          <p><strong>Agreed Price per Kg:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL PAYABLE TO SUPPLIER: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 0.7rem;">Material received and inspected at Manloy Plant Yard. Logged in plant inventory & expense ledger.</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Supplier Representative</div>
-            <div>___________________<br>Plant Receiving Inspector</div>
-          </div>
-        </div>
-      `;
-      executePrint(receiptHtml);
-    }
-
-    function printSalesInvoice(ticketIndex) {
-      const t = state.logistics[ticketIndex];
-      const invItem = state.inventory.find(i => i.name === t.item);
-      const ratePerKg = invItem ? invItem.pricePerKg : (t.amount / t.qty);
-
-      const invoiceHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('BIR OFFICIAL SALES INVOICE')}
-          <p><strong>Official Invoice No:</strong> INV-${t.id}</p>
-          <p><strong>Delivery Date:</strong> ${t.date || 'N/A'}</p>
-          <p><strong>Customer Name:</strong> ${t.party}</p>
-          <p><strong>Payment Credit Terms:</strong> ${t.terms || 'COD'}</p>
-          <p><strong>Payment Collection Status:</strong> <span style="font-weight: bold; border: 1px solid #000; padding: 2px 6px;">${t.status || 'PAID'}</span></p>
-          <p><strong>Product Item:</strong> ${t.item}</p>
-          <p><strong>Unit Selling Price:</strong> ₱${ratePerKg.toFixed(2)} / kg</p>
-          <p><strong>Quantity Dispatched:</strong> ${t.qty.toLocaleString()} kg</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 1.2rem; font-weight: bold;">TOTAL SALES AMOUNT: ₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-          <p style="font-size: 0.7rem;">Received in full and good order. Non-VAT Registered Business per BIR COR 2303.</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Customer Received By</div>
-            <div>___________________<br>Authorized Plant Cashier</div>
-          </div>
-        </div>
-      `;
-      executePrint(invoiceHtml);
-    }
-
-    function printCustomerSalesSOA(customerName, fromDate = null, toDate = null) {
-      const contact = state.contacts.find(c => c.company === customerName) || { company: customerName, person: 'Procurement Lead', address: 'Tacloban City' };
-
-      let salesTickets = (state.logistics || []).filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.party === customerName);
-
-      if (fromDate && toDate) {
-        salesTickets = salesTickets.filter(l => !l.date || (l.date >= fromDate && l.date <= toDate));
-      }
-
-      let totalQty = 0;
-      let totalSalesAmt = 0;
-
-      let rowsHtml = salesTickets.map(t => {
-        totalQty += t.qty;
-        totalSalesAmt += t.amount;
-
-        return `
-          <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 5px 3px;">${t.date || 'N/A'}</td>
-            <td style="padding: 5px 3px;"><strong>INV-${t.id}</strong></td>
-            <td style="padding: 5px 3px;">${t.item}</td>
-            <td style="padding: 5px 3px;">${t.qty.toLocaleString()} kg</td>
-            <td style="padding: 5px 3px;">${t.terms || 'COD'}</td>
-            <td style="padding: 5px 3px;"><strong>${t.status || 'PAID'}</strong></td>
-            <td style="padding: 5px 3px;"><strong>₱${t.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
-          </tr>
-        `;
-      }).join('');
-
-      const periodLabel = (fromDate && toDate) ? `${fromDate} to ${toDate}` : 'All On-Record Dispatches';
-
-      if (salesTickets.length === 0) {
-        rowsHtml = `<tr><td colspan="7" style="text-align: center; padding: 10px;">No Sales Transactions found covering period (${periodLabel}).</td></tr>`;
-      }
-
-      const salesSoaHtml = `
-        <div class="printable-document">
-          ${getBrandedHeader('CUSTOMER SALES STATEMENT OF ACCOUNT (SOA)')}
-          
-          <div style="display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 10px;">
-            <div>
-              <p><strong>Customer / Buyer:</strong> ${contact.company}</p>
-              <p><strong>Attention:</strong> ${contact.person || 'Procurement Lead'}</p>
-              <p><strong>Location:</strong> ${contact.address || 'Leyte'}</p>
-            </div>
-            <div style="text-align: right;">
-              <p><strong>Statement Date:</strong> ${new Date().toISOString().split('T')[0]}</p>
-              <p><strong>Coverage Period:</strong> ${periodLabel}</p>
-              <p><strong>Account Status:</strong> ACTIVE BUYER</p>
-            </div>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
-
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.72rem; text-align: left; margin-bottom: 12px;">
-            <thead>
-              <tr style="border-bottom: 2px solid #000;">
-                <th style="padding: 5px 3px;">Date</th>
-                <th style="padding: 5px 3px;">Invoice #</th>
-                <th style="padding: 5px 3px;">Product Item</th>
-                <th style="padding: 5px 3px;">Qty (kg)</th>
-                <th style="padding: 5px 3px;">Terms</th>
-                <th style="padding: 5px 3px;">Status</th>
-                <th style="padding: 5px 3px;">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rowsHtml}
-            </tbody>
-          </table>
-
-          <hr style="border: 1px dashed #000; margin: 10px 0;">
-
-          <div style="font-size: 0.8rem; line-height: 1.5;">
-            <p><strong>Total Biochar/Briquet Volume Delivered:</strong> ${totalQty.toLocaleString()} kg</p>
-            <p style="font-size: 1.1rem; font-weight: bold; margin-top: 4px;">TOTAL BILLABLE SALES AMOUNT: ₱${totalSalesAmt.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          </div>
-
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.7rem; font-style: italic;">Thank you for your business. Please make payments via bank transfer to Combinido Biocarbon Charcoal Manufacturing.</p>
-          
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Customer Representative</div>
-            <div>___________________<br>Plant Sales Manager</div>
-          </div>
-        </div>
-      `;
-      executePrint(salesSoaHtml);
-    }
-
-    function printSalesSOAFromDropdown() {
-      const custName = document.getElementById('sales-soa-cust-select').value;
-      const fromDate = document.getElementById('sales-soa-date-from').value;
-      const toDate = document.getElementById('sales-soa-date-to').value;
-      if (custName) printCustomerSalesSOA(custName, fromDate, toDate);
-    }
-
     function filterContacts() {
       const q = document.getElementById('contact-search').value.toLowerCase();
-      const rows = document.querySelectorAll('#tbl-contacts tr');
-      rows.forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; });
+      document.querySelectorAll('#tbl-contacts tr').forEach(r => { r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none'; });
     }
 
     function deleteEntry(arrayKey, index) {
@@ -2388,50 +2129,26 @@
       const daysInMonth = new Date(year, month + 1, 0).getDate();
 
       let tableHtml = `<table class="cal-table"><thead><tr><th>Employee Name</th><th>Type</th>`;
-
       for (let d = 1; d <= daysInMonth; d++) {
         const dayIdx = new Date(year, month, d).getDay();
-        const dayLabel = dayNames[dayIdx];
-        const holKey = `${month}-${d}`;
-        let colClass = '';
-
-        if (dayIdx === 0) colClass = 'cal-day-sun';
-        else if (dayIdx === 6) colClass = 'cal-day-sat';
-        if (phHolidays[holKey]) colClass = 'cal-day-hol';
-
-        const titleAttr = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
-        tableHtml += `<th class="${colClass}" ${titleAttr}>${d}<br><span style="font-size: 0.65rem;">${dayLabel}</span></th>`;
+        tableHtml += `<th class="${dayIdx === 0 ? 'cal-day-sun' : dayIdx === 6 ? 'cal-day-sat' : ''}">${d}<br><span style="font-size: 0.65rem;">${dayNames[dayIdx]}</span></th>`;
       }
-
       tableHtml += `<th>Monthly Total Days</th><th>Lifetime Total Days</th></tr></thead><tbody>`;
 
       state.employees.forEach(emp => {
         let monthlyTotal = 0;
-        tableHtml += `<tr>
-          <td><strong>${emp.name}</strong></td>
-          <td><span class="badge ${emp.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${emp.type || 'Regular'}</span></td>`;
-
+        tableHtml += `<tr><td><strong>${emp.name}</strong></td><td><span class="badge ${emp.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${emp.type || 'Regular'}</span></td>`;
         for (let d = 1; d <= daysInMonth; d++) {
           const dayIdx = new Date(year, month, d).getDay();
-          const isSunday = (dayIdx === 0);
-          const holKey = `${month}-${d}`;
           const dateKey = `${year}-${month}-${d}`;
-
-          const defaultStatus = isSunday ? 'OFF' : (phHolidays[holKey] ? 'HOL' : 'P');
-          const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : defaultStatus;
-
-          if (status === 'P') monthlyTotal += 1.0;
+          const status = (emp.attendance && emp.attendance[dateKey]) ? emp.attendance[dateKey] : (dayIdx === 0 ? 'OFF' : 'P');
+          if (status === 'P' || status === 'PAY') monthlyTotal += 1.0;
           else if (status === 'H') monthlyTotal += 0.5;
-
-          const holTitle = phHolidays[holKey] ? `title="${phHolidays[holKey]}"` : '';
-          tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" ${holTitle} onclick="toggleAttendanceCell('${emp.name}', '${dateKey}', ${isSunday})">${status}</div></td>`;
+          tableHtml += `<td><div class="att-toggle ${status.toLowerCase()}" onclick="toggleAttendanceCell('${emp.name}', '${dateKey}', ${dayIdx === 0})">${status}</div></td>`;
         }
-
-        const lifetimeTotal = (emp.lifetimePresentDays || 0) + monthlyTotal;
         tableHtml += `<td><strong style="color: var(--brand-blue);">${monthlyTotal} days</strong></td>`;
-        tableHtml += `<td><strong style="color: var(--brand-green);">${lifetimeTotal} days</strong></td></tr>`;
+        tableHtml += `<td><strong style="color: var(--brand-green);">${(emp.lifetimePresentDays || 0) + monthlyTotal} days</strong></td></tr>`;
       });
-
       tableHtml += `</tbody></table>`;
       document.getElementById('calendar-table-container').innerHTML = tableHtml;
     }
@@ -2439,88 +2156,45 @@
     function renderCharts(totalRev, totalExp, netProfit, totalVale) {
       const ctxFin = document.getElementById('financialChart').getContext('2d');
       if (financialChartInstance) financialChartInstance.destroy();
-
       financialChartInstance = new Chart(ctxFin, {
         type: 'bar',
         data: {
           labels: ['Sales Revenue', 'Total Operating Costs', 'Net Profit / (Deficit)', 'Outstanding Vale Queue'],
-          datasets: [{
-            label: 'Amount (₱)',
-            data: [totalRev, totalExp, netProfit, totalVale],
-            backgroundColor: [
-              '#f26522',
-              '#ef4444',
-              netProfit >= 0 ? '#10b981' : '#b91c1c',
-              '#f59e0b'
-            ],
-            borderRadius: 6
-          }]
+          datasets: [{ data: [totalRev, totalExp, netProfit, totalVale], backgroundColor: ['#f26522', '#ef4444', netProfit >= 0 ? '#10b981' : '#b91c1c', '#f59e0b'], borderRadius: 6 }]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
 
       const ctxInv = document.getElementById('inventoryChart').getContext('2d');
       if (inventoryChartInstance) inventoryChartInstance.destroy();
-
-      const labels = state.inventory.map(i => i.name);
-      const currentStock = state.inventory.map(i => i.stock);
-      const minStock = state.inventory.map(i => i.min);
-
       inventoryChartInstance = new Chart(ctxInv, {
         type: 'bar',
         data: {
-          labels: labels,
+          labels: state.inventory.map(i => i.name),
           datasets: [
-            {
-              label: 'Available Stock (kg)',
-              data: currentStock,
-              backgroundColor: '#0284c7',
-              borderRadius: 4
-            },
-            {
-              label: 'Safety Threshold (kg)',
-              data: minStock,
-              backgroundColor: '#cbd5e1',
-              borderRadius: 4
-            }
+            { label: 'Available Stock (kg)', data: state.inventory.map(i => i.stock), backgroundColor: '#0284c7', borderRadius: 4 },
+            { label: 'Safety Threshold (kg)', data: state.inventory.map(i => i.min), backgroundColor: '#cbd5e1', borderRadius: 4 }
           ]
         },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: { y: { beginAtZero: true } }
-        }
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
     }
 
     function renderAll() {
       loadGovRatesToForm();
-
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
       const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
 
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
-      if(document.getElementById('oc-opened-by')) document.getElementById('oc-opened-by').innerHTML = empOpts;
-      if(document.getElementById('oc-closed-by')) document.getElementById('oc-closed-by').innerHTML = empOpts;
-      if(document.getElementById('proc-op-start')) document.getElementById('proc-op-start').innerHTML = empOpts;
-      if(document.getElementById('proc-op-end')) document.getElementById('proc-op-end').innerHTML = empOpts;
-      if(document.getElementById('fw-attendant')) document.getElementById('fw-attendant').innerHTML = empOpts;
-      if(document.getElementById('maint-tech')) document.getElementById('maint-tech').innerHTML = empOpts;
-      if(document.getElementById('wb-inspector')) document.getElementById('wb-inspector').innerHTML = empOpts;
-      if(document.getElementById('bq-inspector')) document.getElementById('bq-inspector').innerHTML = empOpts;
-      if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
-      if(document.getElementById('soa-emp-select')) document.getElementById('soa-emp-select').innerHTML = empOpts;
+      ['oc-opened-by', 'oc-closed-by', 'proc-op-start', 'proc-op-end', 'fw-attendant', 'maint-tech', 'wb-inspector', 'bq-inspector', 'vale-emp', 'soa-emp-select'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = empOpts;
+      });
 
       const skuSelectElem = document.getElementById('sku-select');
       if (skuSelectElem) {
-        skuSelectElem.innerHTML = `<option value="NEW">+ Create New Item / Material SKU</option>` +
-          state.inventory.map(i => `<option value="${i.id}">${i.id} - ${i.name} (${i.category})</option>`).join('');
+        skuSelectElem.innerHTML = `<option value="NEW">+ Create New Item / Material SKU</option>` + state.inventory.map(i => `<option value="${i.id}">${i.id} - ${i.name} (${i.category})</option>`).join('');
       }
 
       const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail - ₱${i.pricePerKg}/kg)</option>`).join('');
@@ -2528,9 +2202,7 @@
       if(document.getElementById('wb-item')) document.getElementById('wb-item').innerHTML = rawOpts;
       
       const supplierOpts = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
-      if(document.getElementById('log-party')) document.getElementById('log-party').innerHTML = supplierOpts;
-      if(document.getElementById('wb-supplier')) document.getElementById('wb-supplier').innerHTML = supplierOpts;
-      if(document.getElementById('exp-vendor')) document.getElementById('exp-vendor').innerHTML = supplierOpts;
+      ['log-party', 'wb-supplier', 'exp-vendor'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = supplierOpts; });
 
       const customerOpts = state.contacts.filter(c => c.type === 'Customer').map(c => `<option value="${c.company}">${c.company}</option>`).join('');
       if(document.getElementById('sales-soa-cust-select')) document.getElementById('sales-soa-cust-select').innerHTML = customerOpts || supplierOpts;
@@ -2538,227 +2210,80 @@
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
 
-      // Financial Revenue & Credit Receivables/Payables
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
       const totalAR = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
-      const totalAP = state.logistics.filter(l => l.type === 'INBOUND_SUPPLIER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0) +
-                       (state.weighbridgeLogs || []).filter(w => w.status === 'OUTSTANDING').reduce((s, w) => s + w.amount, 0);
+      const totalAP = state.logistics.filter(l => l.type === 'INBOUND_SUPPLIER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0) + (state.weighbridgeLogs || []).filter(w => w.status === 'OUTSTANDING').reduce((s, w) => s + w.amount, 0);
 
       const gov = state.govRates;
-
-      let birPercentageTax = 0;
-      let birIncomeTax = 0;
-
-      if (gov.taxSystem === 'FLAT8') {
-        const taxableRev = Math.max(0, totalRev - (gov.flatExemptThreshold || 250000));
-        birIncomeTax = taxableRev * ((gov.flatTaxRate || 8) / 100);
-        birPercentageTax = 0;
-      } else {
-        birPercentageTax = totalRev * ((gov.percentageTaxRate || 3) / 100);
-        const loggedOpsExpenses = (state.expenses || []).reduce((s, x) => s + x.amount, 0);
-        const estNetTaxableIncome = Math.max(0, totalRev - loggedOpsExpenses);
-        birIncomeTax = computeGraduatedIncomeTax(estNetTaxableIncome);
-      }
+      let birPercentageTax = gov.taxSystem === 'FLAT8' ? 0 : totalRev * ((gov.percentageTaxRate || 3) / 100);
+      let birIncomeTax = gov.taxSystem === 'FLAT8' ? Math.max(0, totalRev - (gov.flatExemptThreshold || 250000)) * ((gov.flatTaxRate || 8) / 100) : computeGraduatedIncomeTax(Math.max(0, totalRev - (state.expenses || []).reduce((s, x) => s + x.amount, 0)));
 
       document.getElementById('disp-bir-pt').innerText = `₱${birPercentageTax.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-      document.getElementById('disp-bir-pt-sub').innerText = `${gov.percentageTaxRate || 3}% of Total Gross Revenue`;
       document.getElementById('disp-bir-it').innerText = `₱${birIncomeTax.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
 
-      // Operating Expenses Table
       document.getElementById('tbl-expenses').innerHTML = (state.expenses || []).map((x, idx) => `
-        <tr>
-          <td><strong>${x.id}</strong></td>
-          <td>${x.date}</td>
-          <td><span class="badge badge-blue">${x.category}</span></td>
-          <td>${x.asset}</td>
-          <td>${x.notes}</td>
-          <td>${x.vendor}</td>
-          <td><span class="badge badge-warn">${x.method}</span></td>
-          <td><strong style="color: var(--brand-danger);">₱${x.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
-          <td>
-            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printExpenseVoucher(${idx})">🖨️ Voucher</button>
-            <button onclick="deleteEntry('expenses', ${idx})" class="btn-danger">Delete</button>
-          </td>
-        </tr>
+        <tr><td><strong>${x.id}</strong></td><td>${x.date}</td><td><span class="badge badge-blue">${x.category}</span></td><td>${x.asset}</td><td>${x.notes}</td><td>${x.vendor}</td><td><span class="badge badge-warn">${x.method}</span></td><td><strong style="color: var(--brand-danger);">₱${x.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td><td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printExpenseVoucher(${idx})">🖨️ Voucher</button><button onclick="deleteEntry('expenses', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Shift Open/Close Table
       document.getElementById('tbl-openclose').innerHTML = state.openclose.map((o, idx) => `
-        <tr>
-          <td><strong>${o.date}</strong></td>
-          <td>${o.openedBy}</td>
-          <td>${o.timeIn}</td>
-          <td><span class="badge ${o.machOk === 'OK' ? 'badge-pass' : 'badge-fail'}">${o.machOk}</span></td>
-          <td>${o.closedBy || '-'}</td>
-          <td>${o.timeOut || '-'}</td>
-          <td><span class="badge badge-warn">${o.mode}</span></td>
-          <td>${o.notes || '-'}</td>
-          <td><button onclick="deleteEntry('openclose', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
+        <tr><td><strong>${o.date}</strong></td><td>${o.openedBy}</td><td>${o.timeIn}</td><td><span class="badge ${o.machOk === 'OK' ? 'badge-pass' : 'badge-fail'}">${o.machOk}</span></td><td>${o.closedBy || '-'}</td><td>${o.timeOut || '-'}</td><td><span class="badge badge-warn">${o.mode}</span></td><td>${o.notes || '-'}</td><td><button onclick="deleteEntry('openclose', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Batch Stacking Table (No QC Box)
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
-        <tr>
-          <td><strong>${b.id}</strong></td>
-          <td>${b.rawItem} (${b.consumedKg} kg)</td>
-          <td><strong>${b.yieldKg} kg Raw Char</strong></td>
-          <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
-          <td><strong>${b.cookHours || 7.5} hrs</strong></td>
-          <td>${b.preMcPct || 18.5}%</td>
-          <td>${b.opStart}</td>
-          <td>${b.opEnd}</td>
-          <td><strong>${b.maxTemp} °C</strong></td>
-          <td>${b.qcNotes || 'Stockpile ready'}</td>
-          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
+        <tr><td><strong>${b.id}</strong></td><td>${b.rawItem} (${b.consumedKg} kg)</td><td><strong>${b.yieldKg} kg Raw Char</strong></td><td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td><td><strong>${b.cookHours || 7.5} hrs</strong></td><td>${b.preMcPct || 18.5}%</td><td>${b.opStart}</td><td>${b.opEnd}</td><td><strong>${b.maxTemp} °C</strong></td><td>${b.qcNotes || 'Stockpile ready'}</td><td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Furnace Inspection Table (1.5-Hour Safety Watch)
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
-        <tr>
-          <td><strong>${fw.datetime}</strong></td>
-          <td>${fw.unit}</td>
-          <td><strong>${fw.temp} °C</strong></td>
-          <td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td>
-          <td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td>
-          <td>${fw.notes || '1.5-hr check normal'}</td>
-          <td>${fw.attendant}</td>
-          <td>
-            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBlankFurnaceWatchForm()">🖨️ Form</button>
-            <button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button>
-          </td>
-        </tr>
+        <tr><td><strong>${fw.datetime}</strong></td><td>${fw.unit}</td><td><strong>${fw.temp} °C</strong></td><td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td><td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td><td>${fw.notes || '1.5-hr check normal'}</td><td>${fw.attendant}</td><td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Briquette QC Lab Table
       document.getElementById('tbl-briquette-qc').innerHTML = (state.briquetteQcLogs || []).map((q, idx) => `
-        <tr>
-          <td><strong>${q.id}</strong></td>
-          <td>${q.date}</td>
-          <td>${q.charUsed} kg</td>
-          <td><strong>${q.outputQty} kg</strong></td>
-          <td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td>
-          <td>${q.moisture}%</td>
-          <td>${q.ignitionTime || '2.5'}m</td>
-          <td>${q.burnTime || '85'}m</td>
-          <td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td>
-          <td>${q.inspector}</td>
-          <td>
-            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBriquetteQCReport(${idx})">🖨️ Cert PDF</button>
-            <button onclick="deleteEntry('briquetteQcLogs', ${idx})" class="btn-danger">Delete</button>
-          </td>
-        </tr>
+        <tr><td><strong>${q.id}</strong></td><td>${q.date}</td><td>${q.charUsed} kg</td><td><strong>${q.outputQty} kg</strong></td><td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td><td>${q.moisture}%</td><td>${q.ignitionTime || '2.5'}m</td><td>${q.burnTime || '85'}m</td><td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td><td>${q.inspector}</td><td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBriquetteQCReport(${idx})">🖨️ Cert PDF</button><button onclick="deleteEntry('briquetteQcLogs', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Maintenance Logs Table
       document.getElementById('tbl-maint-history').innerHTML = (state.maintenanceLogs || []).map((m, idx) => `
-        <tr>
-          <td><strong>${m.id}</strong></td>
-          <td>${m.date}</td>
-          <td>${m.unit}</td>
-          <td><span class="badge badge-blue">${m.cat}</span></td>
-          <td>${m.tech}</td>
-          <td>₱${m.cost.toLocaleString()}</td>
-          <td>${m.notes}</td>
-          <td><button onclick="deleteEntry('maintenanceLogs', ${idx})" class="btn-danger">Delete</button></td>
-        </tr>
+        <tr><td><strong>${m.id}</strong></td><td>${m.date}</td><td>${m.unit}</td><td><span class="badge badge-blue">${m.cat}</span></td><td>${m.tech}</td><td>₱${m.cost.toLocaleString()}</td><td>${m.notes}</td><td><button onclick="deleteEntry('maintenanceLogs', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Weighbridge Logs Table
       document.getElementById('tbl-weighbridge-history').innerHTML = (state.weighbridgeLogs || []).map((w, idx) => {
         const net = Math.max(0, w.grossKg - w.tareKg);
         const isPaid = w.status === 'PAID';
-
         return `
-          <tr>
-            <td><strong>${w.id}</strong></td>
-            <td>${w.date}</td>
-            <td>${w.item}</td>
-            <td>${w.supplier}</td>
-            <td><strong>${net.toLocaleString()} kg</strong></td>
-            <td>${w.mcPct}%</td>
-            <td><strong>₱${(w.amount || 0).toLocaleString()}</strong></td>
-            <td><span class="badge badge-blue">${w.terms || 'COD'}</span></td>
-            <td>
-              <span class="badge ${isPaid ? 'badge-pass' : 'badge-fail'}">${isPaid ? 'PAID' : 'OUTSTANDING'}</span>
-              <button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleWeighbridgePaymentStatus(${idx})">💳 Toggle</button>
-            </td>
-            <td>
-              <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'weighbridge')">📥 Slip</button>
-              <button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button>
-            </td>
-          </tr>
+          <tr><td><strong>${w.id}</strong></td><td>${w.date}</td><td>${w.item}</td><td>${w.supplier}</td><td><strong>${net.toLocaleString()} kg</strong></td><td>${w.mcPct}%</td><td><strong>₱${(w.amount || 0).toLocaleString()}</strong></td><td><span class="badge badge-blue">${w.terms || 'COD'}</span></td><td><span class="badge ${isPaid ? 'badge-pass' : 'badge-fail'}">${isPaid ? 'PAID' : 'OUTSTANDING'}</span><button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleWeighbridgePaymentStatus(${idx})">💳 Toggle</button></td><td><button onclick="deleteEntry('weighbridgeLogs', ${idx})" class="btn-danger">Delete</button></td></tr>
         `;
       }).join('');
 
-      // Vale Multi-Voucher Table
       document.getElementById('tbl-vale-vouchers').innerHTML = (state.valeVouchers || []).map((v, idx) => {
-        const planDisplay = v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`;
         const isPaid = (v.remainingBalance || 0) <= 0 || v.status === 'PAID';
-        
         return `
-          <tr>
-            <td><strong>${v.id}</strong></td>
-            <td>${v.date}</td>
-            <td>${v.empName}</td>
-            <td>₱${v.amount.toLocaleString()}</td>
-            <td><strong style="color: ${isPaid ? 'var(--brand-green)' : 'var(--brand-danger)'};">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td>
-            <td><span class="badge badge-blue">${planDisplay}</span></td>
-            <td><span class="badge ${isPaid ? 'badge-pass' : 'badge-warn'}">${isPaid ? 'PAID' : 'ACTIVE QUEUE'}</span></td>
-            <td>${v.notes}</td>
-            <td>
-              <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printValeVoucher(${idx})">🖨️ Voucher</button>
-              <button onclick="deleteEntry('valeVouchers', ${idx})" class="btn-danger">Delete</button>
-            </td>
-          </tr>
+          <tr><td><strong>${v.id}</strong></td><td>${v.date}</td><td>${v.empName}</td><td>₱${v.amount.toLocaleString()}</td><td><strong style="color: ${isPaid ? 'var(--brand-green)' : 'var(--brand-danger)'};">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td><td><span class="badge badge-blue">${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% / Wk`}</span></td><td><span class="badge ${isPaid ? 'badge-pass' : 'badge-warn'}">${isPaid ? 'PAID' : 'ACTIVE'}</span></td><td>${v.notes}</td><td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printValeVoucher(${idx})">🖨️ Voucher</button><button onclick="deleteEntry('valeVouchers', ${idx})" class="btn-danger">Delete</button></td></tr>
         `;
       }).join('');
 
-      // Weekly Payroll Ledger Summary
       document.getElementById('tbl-payroll').innerHTML = state.employees.map((e, idx) => {
         const weeklyDays = calculateEmployeeWeeklyPresent(e, month, year, weekNum);
         const weeklyGross = weeklyDays * e.rate;
-
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const estMonthlyGross = monthlyDays * e.rate;
 
         let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
         if (e.type === 'Regular') {
-          let fullSss = computeSSS(estMonthlyGross);
-          let fullPh = computePhilHealth(estMonthlyGross);
-          let fullPagibig = computePagIBIG(estMonthlyGross);
-
-          sss.ee = fullSss.ee / 4;
-          ph.ee = fullPh.ee / 4;
-          pagibig.ee = fullPagibig.ee / 4;
+          sss.ee = computeSSS(estMonthlyGross).ee / 4;
+          ph.ee = computePhilHealth(estMonthlyGross).ee / 4;
+          pagibig.ee = computePagIBIG(estMonthlyGross).ee / 4;
         }
 
         const totalStatutory = sss.ee + ph.ee + pagibig.ee;
         const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
 
-        const activeVouchers = state.valeVouchers
-          .filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0))
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
-
+        const activeVouchers = state.valeVouchers.filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0)).sort((a, b) => new Date(a.date) - new Date(b.date));
         let valeDeduct = 0;
         let targetCaId = "None";
 
         if (activeVouchers.length > 0) {
           const primaryCa = activeVouchers[0];
           targetCaId = primaryCa.id;
-
-          let requiredDeduct = 0;
-          if (primaryCa.planType === 'CUSTOM' && primaryCa.customAmt) {
-            requiredDeduct = primaryCa.customAmt;
-          } else {
-            const pct = (primaryCa.minPct || 30) / 100;
-            requiredDeduct = netTakeHomeBeforeVale * pct;
-          }
-
-          const minPctAmt = netTakeHomeBeforeVale * 0.30;
-          if (requiredDeduct < minPctAmt) requiredDeduct = minPctAmt;
-
+          let requiredDeduct = primaryCa.planType === 'CUSTOM' && primaryCa.customAmt ? primaryCa.customAmt : netTakeHomeBeforeVale * ((primaryCa.minPct || 30) / 100);
           valeDeduct = Math.min(primaryCa.remainingBalance, requiredDeduct, netTakeHomeBeforeVale);
         }
 
@@ -2779,126 +2304,50 @@
             <td><strong style="color: var(--brand-green);">₱${net.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong></td>
             <td>
               <button class="btn" style="padding: 4px 8px; font-size: 0.72rem;" onclick="printPaystub(${idx})">🖨️ Paystub</button>
-              <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="printEmployeeCaSOAByName('${e.name}', '2026-08-01', '2026-08-15')">📄 Aug 1-15 SOA</button>
+              <button class="btn-secondary" style="padding: 4px 8px; font-size: 0.72rem;" onclick="printEmployeeCaSOAByName('${e.name}')">📄 CA SOA</button>
             </td>
           </tr>
         `;
       }).join('');
 
-      // Government Statutory Remittances Summary Table & Expense Contribution Calculation
       let totalMonthlyEmployerContributions = 0;
-
       document.getElementById('tbl-gov-remittances').innerHTML = state.employees.map(e => {
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const gross = monthlyDays * e.rate;
-
         let sss = { ee: 0, er: 0, ec: 0 }, ph = { ee: 0, er: 0 }, pagibig = { ee: 0, er: 0 };
         if (e.type === 'Regular') {
           sss = computeSSS(gross);
           ph = computePhilHealth(gross);
           pagibig = computePagIBIG(gross);
         }
-
         const sssErTotal = sss.er + sss.ec;
-        const totalEE = sss.ee + ph.ee + pagibig.ee;
         const totalER = sssErTotal + ph.er + pagibig.er;
-        const totalRemit = totalEE + totalER;
-
         totalMonthlyEmployerContributions += totalER;
-
         return `
-          <tr>
-            <td><strong>${e.name}</strong><br><small style="color: var(--text-muted);">${e.pos}</small></td>
-            <td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type || 'Regular'}</span></td>
-            <td>₱${gross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td>₱${sss.ee.toFixed(2)}</td>
-            <td>₱${sssErTotal.toFixed(2)}</td>
-            <td>₱${ph.ee.toFixed(2)}</td>
-            <td>₱${ph.er.toFixed(2)}</td>
-            <td>₱${pagibig.ee.toFixed(2)}</td>
-            <td>₱${pagibig.er.toFixed(2)}</td>
-            <td><strong style="color: var(--brand-blue);">₱${totalEE.toFixed(2)}</strong></td>
-            <td><strong style="color: var(--brand-gold);">₱${totalER.toFixed(2)}</strong></td>
-            <td><strong style="color: var(--brand-green);">₱${totalRemit.toFixed(2)}</strong></td>
-          </tr>
+          <tr><td><strong>${e.name}</strong></td><td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type}</span></td><td>₱${gross.toLocaleString()}</td><td>₱${sss.ee.toFixed(2)}</td><td>₱${sssErTotal.toFixed(2)}</td><td>₱${ph.ee.toFixed(2)}</td><td>₱${ph.er.toFixed(2)}</td><td>₱${pagibig.ee.toFixed(2)}</td><td>₱${pagibig.er.toFixed(2)}</td><td><strong>₱${(sss.ee+ph.ee+pagibig.ee).toFixed(2)}</strong></td><td><strong style="color: var(--brand-gold);">₱${totalER.toFixed(2)}</strong></td><td><strong>₱${(sss.ee+ph.ee+pagibig.ee+totalER).toFixed(2)}</strong></td></tr>
         `;
       }).join('');
 
       document.getElementById('disp-stat-total').innerText = `₱${totalMonthlyEmployerContributions.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
 
-      // Inventory Table
       document.getElementById('tbl-inventory').innerHTML = state.inventory.map((i, idx) => `
-        <tr>
-          <td><strong>${i.id}</strong></td>
-          <td>${i.category}</td>
-          <td>${i.name}</td>
-          <td><strong style="color: var(--brand-orange);">₱${i.pricePerKg.toFixed(2)} / kg</strong></td>
-          <td><strong>${i.stock.toLocaleString()} kg</strong></td>
-          <td>${i.min.toLocaleString()} kg</td>
-          <td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'HEALTHY' : 'REORDER ALERT'}</span></td>
-          <td>
-            <button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="editItemBySku('${i.id}')">✏️ Edit SKU / Price</button>
-            <button onclick="deleteEntry('inventory', ${idx})" class="btn-danger">Delete</button>
-          </td>
-        </tr>
+        <tr><td><strong>${i.id}</strong></td><td>${i.category}</td><td>${i.name}</td><td><strong style="color: var(--brand-orange);">₱${i.pricePerKg.toFixed(2)} / kg</strong></td><td><strong>${i.stock.toLocaleString()} kg</strong></td><td>${i.min.toLocaleString()} kg</td><td><span class="badge ${i.stock >= i.min ? 'badge-pass' : 'badge-fail'}">${i.stock >= i.min ? 'HEALTHY' : 'REORDER ALERT'}</span></td><td><button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="editItemBySku('${i.id}')">✏️ Edit</button><button onclick="deleteEntry('inventory', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
-      // Logistics Tickets Ledger
-      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => {
-        const isPaid = l.status === 'PAID';
+      document.getElementById('tbl-logistics').innerHTML = state.logistics.map((l, idx) => `
+        <tr><td><strong>${l.id}</strong></td><td>${l.date || 'N/A'}</td><td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound' : 'Outbound'}</span></td><td>${l.party}</td><td><span class="badge badge-blue">${l.terms || 'COD'}</span></td><td>${l.item}</td><td>${l.qty.toLocaleString()} kg</td><td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td><td><span class="badge ${l.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${l.status}</span><button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleLogisticsPaymentStatus(${idx})">💳 Toggle</button></td><td><button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button></td></tr>
+      `).join('');
 
-        return `
-          <tr>
-            <td><strong>${l.id}</strong></td>
-            <td>${l.date || 'N/A'}</td>
-            <td><span class="badge ${l.type === 'INBOUND_SUPPLIER' ? 'badge-warn' : 'badge-pass'}">${l.type === 'INBOUND_SUPPLIER' ? 'Inbound Stock' : 'Outbound Sale'}</span></td>
-            <td>${l.party}</td>
-            <td><span class="badge badge-blue">${l.terms || 'COD'}</span></td>
-            <td>${l.item}</td>
-            <td>${l.qty.toLocaleString()} kg</td>
-            <td>₱${l.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
-            <td>
-              <span class="badge ${isPaid ? 'badge-pass' : 'badge-fail'}">${isPaid ? 'PAID' : 'OUTSTANDING'}</span>
-              <button class="btn-secondary" style="padding: 2px 6px; font-size: 0.68rem; margin-left: 4px;" onclick="toggleLogisticsPaymentStatus(${idx})">💳 Toggle</button>
-            </td>
-            <td>
-              ${l.type === 'OUTBOUND_CUSTOMER' 
-                ? `<button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printSalesInvoice(${idx})">🧾 BIR Invoice</button>` 
-                : `<button class="btn-secondary" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printInboundReceipt(${idx}, 'logistics')">📥 Print Receiving Receipt</button>`}
-              <button onclick="deleteEntry('logistics', ${idx})" class="btn-danger">Delete</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      // Directory Contacts
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `
-        <tr>
-          <td><strong>${c.company}</strong></td>
-          <td>${c.person}</td>
-          <td>${c.position || '-'}</td>
-          <td><span class="badge ${c.type === 'Supplier' ? 'badge-warn' : c.type === 'Customer' ? 'badge-pass' : 'badge-blue'}">${c.type}</span></td>
-          <td><span class="badge badge-blue">${c.terms || 'COD'}</span></td>
-          <td>${c.phone}</td>
-          <td>${c.email}</td>
-          <td>${c.address}</td>
-        </tr>
+        <tr><td><strong>${c.company}</strong></td><td>${c.person}</td><td>${c.position || '-'}</td><td><span class="badge ${c.type === 'Supplier' ? 'badge-warn' : c.type === 'Customer' ? 'badge-pass' : 'badge-blue'}">${c.type}</span></td><td><span class="badge badge-blue">${c.terms || 'COD'}</span></td><td>${c.phone}</td><td>${c.email}</td><td>${c.address}</td></tr>
       `).join('');
 
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td><button class="btn-danger">Delete</button></td></tr>`).join('');
 
-      // TOTAL EXPENSES & EXEC NUMBERS
       const loggedOpsExpenses = (state.expenses || []).reduce((s, x) => s + x.amount, 0);
       const totalExp = loggedOpsExpenses + birPercentageTax + birIncomeTax + totalMonthlyEmployerContributions;
       const netProfit = totalRev - totalExp;
-
-      const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
-      const totalChar = state.batches.reduce((s, b) => s + b.yieldKg, 0);
-      const avgYield = totalRaw > 0 ? ((totalChar / totalRaw) * 100).toFixed(1) : 0;
-      
-      const totalVale = (state.valeVouchers || [])
-        .filter(v => v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0)
-        .reduce((s, v) => s + (v.remainingBalance || 0), 0);
+      const totalVale = (state.valeVouchers || []).filter(v => v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0).reduce((s, v) => s + (v.remainingBalance || 0), 0);
       const totalDowntimeHrs = (state.downtime.reduce((s, d) => s + d.duration, 0) / 60).toFixed(1);
 
       document.getElementById('biz-revenue').innerText = `₱${totalRev.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
@@ -2909,7 +2358,6 @@
       const netCard = document.getElementById('kpi-net-card');
       const netValElem = document.getElementById('biz-net');
       const netSubElem = document.getElementById('biz-net-sub');
-
       if (netProfit >= 0) {
         netCard.className = "kpi-card";
         netValElem.style.color = "var(--text-main)";
@@ -2921,39 +2369,12 @@
         netValElem.innerText = `-₱${Math.abs(netProfit).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
         netSubElem.innerText = "OPERATING IN THE RED (DEFICIT)";
       }
-
       document.getElementById('biz-downtime').innerText = `${totalDowntimeHrs} hrs`;
-
-      // Smart Recommendation Alerts
-      if (totalAR > 0) {
-        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-blue);">💳 ACCOUNTS RECEIVABLE ALERT:</strong> You have <strong>₱${totalAR.toLocaleString(undefined, {minimumFractionDigits: 2})}</strong> in uncollected customer sales credit. Follow up with buyers on 15/30-day terms to clear pending balances.`;
-      } else if (netProfit < 0) {
-        document.getElementById('rec-finance-text').innerHTML = `<strong style="color: var(--brand-danger);">🚨 CASHFLOW DEFICIT ALERT:</strong> Total expenses exceed revenue by <strong>₱${Math.abs(netProfit).toLocaleString(undefined, {minimumFractionDigits: 2})}</strong>.`;
-      } else {
-        document.getElementById('rec-finance-text').innerHTML = `✅ <strong>Cashflow and collections are on track.</strong> All dispatches and receivables are well balanced.`;
-      }
-
-      const lowItems = state.inventory.filter(i => i.stock < i.min);
-      if (lowItems.length > 0) {
-        document.getElementById('rec-stock-text').innerHTML = `<strong style="color: var(--brand-danger);">⚠️ REORDER NEEDED:</strong> Stock level for <strong>${lowItems.map(i => i.name).join(', ')}</strong> is below safety threshold.`;
-      } else {
-        document.getElementById('rec-stock-text').innerHTML = `✅ <strong>Feedstock buffers are healthy.</strong> Stock is sufficient for continuous furnace runs.`;
-      }
-
-      const rawCharStockpile = state.inventory.find(i => i.category === 'Raw Char');
-      const stockKg = rawCharStockpile ? rawCharStockpile.stock : 0;
-      if (stockKg >= 1200) {
-        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-green);">⚡ 400KG/HR PRESS READY:</strong> Raw char stockpile is at <strong>${stockKg} kg</strong>. You have enough accumulated char to schedule your weekly high-speed briquetting run!`;
-      } else {
-        document.getElementById('rec-yield-text').innerHTML = `🔥 <strong>Accumulating Pyrolysis Char:</strong> Current raw char stockpile is at ${stockKg} kg (Target: 1,200kg+ for weekly 400kg/hr run).`;
-      }
 
       renderCharts(totalRev, totalExp, netProfit, totalVale);
     }
 
-    window.onload = function() {
-      renderAll();
-    };
+    window.onload = function() { renderAll(); };
   </script>
 </body>
 </html>
