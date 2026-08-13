@@ -157,6 +157,20 @@
     .att-toggle.h { background-color: #fef3c7; color: #b45309; }
     .att-toggle.off { background-color: #f1f5f9; color: #94a3b8; }
 
+    @keyframes pulseGlow {
+      0% { opacity: 0.3; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .urgent-banner {
+      background-color: #ffffff;
+      border: 2px solid var(--brand-danger);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    }
+
     /* BRANDED PRINTABLE SINGLE-PAGE LANDSCAPE DOCUMENT */
     .printable-document {
       background: #ffffff;
@@ -181,7 +195,6 @@
     .print-logo-group { display: flex; align-items: center; gap: 10px; }
     .print-shapes { display: flex; align-items: center; gap: 5px; }
     .print-shape-orange { width: 16px; height: 16px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
-    /* White background document circle -> black */
     .print-shape-circle { width: 18px; height: 18px; background-color: #000000; border: 2px solid #000000; border-radius: 50%; }
     .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
@@ -190,7 +203,6 @@
 
     .print-meta-right { text-align: right; font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
 
-    /* STRICT LANDSCAPE SINGLE PAGE PRINT RULES */
     @media print {
       @page { size: landscape; margin: 5mm; }
       body * { visibility: hidden !important; }
@@ -260,6 +272,22 @@
 
       <!-- TAB 1: OWNER SUITE -->
       <div id="owner-suite" class="tab-pane active">
+        <!-- FLASHING RED URGENT DEADLINE BANNER -->
+        <div class="urgent-banner">
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+            <span style="font-size: 1.5rem; animation: pulseGlow 1s infinite alternate;">🚨</span>
+            <h3 style="color: #b91c1c; font-size: 1.1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">
+              URGENT BIR TAX DEADLINE ALERT
+            </h3>
+          </div>
+          <p style="font-size: 0.88rem; color: #0f172a; line-height: 1.6; margin-bottom: 12px;">
+            <strong>CRITICAL ACTION REQUIRED:</strong> Your <strong>Q2 Quarterly Income Tax Return (BIR Form 1701Q)</strong> is due on <strong>August 17, 2026</strong>. 
+          </p>
+          <div style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 10px 14px; border-radius: 4px; font-size: 0.82rem; color: #7f1d1d;">
+            <strong>Time Remaining:</strong> 5 days left. Finalize your sales dispatches, allowable deductions, and quarterly net income calculations to avoid penalties and surcharges.
+          </div>
+        </div>
+
         <div class="kpi-grid">
           <div class="kpi-card orange-accent">
             <div class="kpi-title">TOTAL SALES REVENUE</div>
@@ -759,17 +787,72 @@
         </div>
       </div>
 
-      <!-- TAB 11: EDITABLE GOVERNMENT RATES & BIR TAX CALCULATOR -->
+      <!-- TAB 11: GOVERNMENT TAX DEADLINES & REMITTANCES -->
       <div id="gov-remittances" class="tab-pane">
         
+        <!-- DEADLINES REMINDER MODULE -->
+        <div class="panel" style="background: #f8fafc; border: 1.5px solid var(--brand-orange);">
+          <div class="panel-title">📅 Official Government Filing Deadlines & Reminders</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
+            Active tax and statutory deadlines for Combinido Biocarbon Charcoal Manufacturing. Make sure to file on or before the due dates to avoid BIR surcharges and penalties.
+          </p>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Filing Form / Requirement</th>
+                  <th>Description & Coverage</th>
+                  <th>Statutory Deadline</th>
+                  <th>Status / Reminder</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="background: #fef2f2;">
+                  <td><strong>BIR Form 1701Q</strong></td>
+                  <td>Q2 Quarterly Income Tax Return</td>
+                  <td><strong style="color: var(--brand-danger);">August 17, 2026</strong></td>
+                  <td><span class="badge badge-fail">URGENT (5 Days Left)</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BIR Form 2551Q</strong></td>
+                  <td>Q2 Quarterly Percentage Tax Return</td>
+                  <td><strong>August 25, 2026</strong></td>
+                  <td><span class="badge badge-warn">Upcoming</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BIR Form 0619-E</strong></td>
+                  <td>Monthly Expanded Withholding Tax (Month 2)</td>
+                  <td><strong>September 10, 2026</strong></td>
+                  <td><span class="badge badge-blue">If Applicable</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BIR Form 1701Q</strong></td>
+                  <td>Q3 Quarterly Income Tax Return</td>
+                  <td><strong>November 15, 2026</strong></td>
+                  <td><span class="badge badge-blue">Scheduled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BIR Form 2551Q</strong></td>
+                  <td>Q3 Quarterly Percentage Tax Return</td>
+                  <td><strong>November 25, 2026</strong></td>
+                  <td><span class="badge badge-blue">Scheduled</span></td>
+                </tr>
+                <tr>
+                  <td><strong>BIR Form 0605</strong></td>
+                  <td>Annual Registration Fee</td>
+                  <td><strong>January 31 (Annually)</strong></td>
+                  <td><span class="badge badge-pass">Exempt under EOPT</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-title">
             <span>⚙️ Editable Philippine Tax Rates & Statutory Percentage Settings</span>
             <button class="btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="saveGovRates()">💾 Save Rate Changes</button>
           </div>
-          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">
-            Adjust BIR taxes and statutory rates as Philippine laws or circulars update. Saved rates automatically re-compute tax liability and operating expense deductions across the system.
-          </p>
           <div class="form-grid">
             <div class="form-group">
               <label>Tax System Elected (per BIR Form 2303)</label>
@@ -847,14 +930,13 @@
                   <th>Employee Name</th>
                   <th>Type</th>
                   <th>Est. Monthly Base</th>
+                  <th>Withholding Tax (1601-C)</th>
                   <th>SSS EE</th>
                   <th>SSS ER (+EC)</th>
                   <th>PH EE</th>
                   <th>PH ER</th>
                   <th>Pag-IBIG EE</th>
                   <th>Pag-IBIG ER</th>
-                  <th>Total EE Share</th>
-                  <th>Total ER Share</th>
                   <th>Total Remittance</th>
                 </tr>
               </thead>
@@ -1260,7 +1342,6 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('DAILY FACTORY OPEN & CLOSE SHIFT LOGSHEET')}
-            
             <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
               <div>
                 <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1270,7 +1351,6 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
@@ -1296,7 +1376,6 @@
               </tbody>
             </table>
           </div>
-
           <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Plant Supervisor Signature</div>
             <div>________________________________________<br>Plant Manager Review</div>
@@ -1311,7 +1390,6 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('PYROLYSIS BATCH COOK & RAW CHAR STACKING LOGSHEET')}
-            
             <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1321,7 +1399,6 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
@@ -1345,7 +1422,6 @@
               </tbody>
             </table>
           </div>
-
           <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Plant Operator Signature</div>
             <div>________________________________________<br>Plant Owner / Supervisor Review</div>
@@ -1360,7 +1436,6 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
-            
             <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1370,7 +1445,6 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
@@ -1396,7 +1470,6 @@
               </tbody>
             </table>
           </div>
-
           <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
             <div>________________________________________<br>Shift Safety Inspector Signature</div>
             <div>________________________________________<br>Plant Supervisor Review</div>
@@ -1406,7 +1479,6 @@
       executePrint(blankHtml);
     }
 
-    // SEPARATE BLANK PRODUCTION FORM
     function printBlankProductionForm() {
       const blankProdHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1421,7 +1493,6 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
@@ -1451,7 +1522,6 @@
       executePrint(blankProdHtml);
     }
 
-    // SEPARATE BLANK QC FORM
     function printBlankQCForm() {
       const blankQcHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1466,7 +1536,6 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-
             <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
@@ -1528,18 +1597,20 @@
       const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
       const estMonthlyGross = monthlyDays * e.rate;
 
-      let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
+      let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 }, wtax = 0;
       if (e.type === 'Regular') {
         let fullSss = computeSSS(estMonthlyGross);
         let fullPh = computePhilHealth(estMonthlyGross);
         let fullPagibig = computePagIBIG(estMonthlyGross);
+        let fullWtax = computeWithholdingTax(estMonthlyGross);
         sss.ee = fullSss.ee / 4;
         ph.ee = fullPh.ee / 4;
         pagibig.ee = fullPagibig.ee / 4;
+        wtax = fullWtax / 4;
       }
 
-      const totalStatutory = sss.ee + ph.ee + pagibig.ee;
-      const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
+      const totalDeductions = sss.ee + ph.ee + pagibig.ee + wtax;
+      const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalDeductions);
 
       const activeVouchers = state.valeVouchers
         .filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0))
@@ -1571,6 +1642,7 @@
           <hr style="border: 1px dashed #000; margin-bottom: 10px;">
           <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 12px;">
             <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;"><strong>Gross Weekly Earnings (${weeklyDays} days @ ₱${e.rate}):</strong></td><td style="text-align: right; padding: 6px;">₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: Withholding Tax (BIR Form 1601-C):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${wtax.toFixed(2)}</td></tr>
             <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: SSS Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${sss.ee.toFixed(2)}</td></tr>
             <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: PhilHealth Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${ph.ee.toFixed(2)}</td></tr>
             <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 6px;">Less: Pag-IBIG Contribution (EE Share):</td><td style="text-align: right; color: var(--brand-danger); padding: 6px;">-₱${pagibig.ee.toFixed(2)}</td></tr>
@@ -1798,6 +1870,15 @@
       let ee = Math.min(r.pagibigEeCap, monthlySalary * 0.02);
       let er = Math.min(r.pagibigErCap, monthlySalary * 0.02);
       return { ee, er };
+    }
+
+    function computeWithholdingTax(monthlySalary) {
+      if (monthlySalary <= 20833) return 0;
+      if (monthlySalary <= 33332) return (monthlySalary - 20833) * 0.20;
+      if (monthlySalary <= 66666) return 2500 + (monthlySalary - 33333) * 0.25;
+      if (monthlySalary <= 166666) return 10833.33 + (monthlySalary - 66667) * 0.30;
+      if (monthlySalary <= 666666) return 40833.33 + (monthlySalary - 166667) * 0.32;
+      return 200833.33 + (monthlySalary - 666667) * 0.35;
     }
 
     function computeGraduatedIncomeTax(taxableIncome) {
@@ -2414,15 +2495,16 @@
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const estMonthlyGross = monthlyDays * e.rate;
 
-        let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 };
+        let sss = { ee: 0 }, ph = { ee: 0 }, pagibig = { ee: 0 }, wtax = 0;
         if (e.type === 'Regular') {
           sss.ee = computeSSS(estMonthlyGross).ee / 4;
           ph.ee = computePhilHealth(estMonthlyGross).ee / 4;
           pagibig.ee = computePagIBIG(estMonthlyGross).ee / 4;
+          wtax = computeWithholdingTax(estMonthlyGross) / 4;
         }
 
-        const totalStatutory = sss.ee + ph.ee + pagibig.ee;
-        const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalStatutory);
+        const totalDeductions = sss.ee + ph.ee + pagibig.ee + wtax;
+        const netTakeHomeBeforeVale = Math.max(0, weeklyGross - totalDeductions);
 
         const activeVouchers = state.valeVouchers.filter(v => v.empName === e.name && (v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0)).sort((a, b) => new Date(a.date) - new Date(b.date));
         let valeDeduct = 0;
@@ -2462,17 +2544,30 @@
       document.getElementById('tbl-gov-remittances').innerHTML = state.employees.map(e => {
         const monthlyDays = calculateEmployeeMonthlyPresent(e, month, year);
         const gross = monthlyDays * e.rate;
-        let sss = { ee: 0, er: 0, ec: 0 }, ph = { ee: 0, er: 0 }, pagibig = { ee: 0, er: 0 };
+        let sss = { ee: 0, er: 0, ec: 0 }, ph = { ee: 0, er: 0 }, pagibig = { ee: 0, er: 0 }, wtax = 0;
         if (e.type === 'Regular') {
           sss = computeSSS(gross);
           ph = computePhilHealth(gross);
           pagibig = computePagIBIG(gross);
+          wtax = computeWithholdingTax(gross);
         }
         const sssErTotal = sss.er + sss.ec;
         const totalER = sssErTotal + ph.er + pagibig.er;
         totalMonthlyEmployerContributions += totalER;
         return `
-          <tr><td><strong>${e.name}</strong></td><td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type}</span></td><td>₱${gross.toLocaleString()}</td><td>₱${sss.ee.toFixed(2)}</td><td>₱${sssErTotal.toFixed(2)}</td><td>₱${ph.ee.toFixed(2)}</td><td>₱${ph.er.toFixed(2)}</td><td>₱${pagibig.ee.toFixed(2)}</td><td>₱${pagibig.er.toFixed(2)}</td><td><strong>₱${(sss.ee+ph.ee+pagibig.ee).toFixed(2)}</strong></td><td><strong style="color: var(--brand-gold);">₱${totalER.toFixed(2)}</strong></td><td><strong>₱${(sss.ee+ph.ee+pagibig.ee+totalER).toFixed(2)}</strong></td></tr>
+          <tr>
+            <td><strong>${e.name}</strong></td>
+            <td><span class="badge ${e.type === 'Regular' ? 'badge-pass' : 'badge-warn'}">${e.type}</span></td>
+            <td>₱${gross.toLocaleString()}</td>
+            <td><strong style="color: var(--brand-danger);">₱${wtax.toFixed(2)}</strong></td>
+            <td>₱${sss.ee.toFixed(2)}</td>
+            <td>₱${sssErTotal.toFixed(2)}</td>
+            <td>₱${ph.ee.toFixed(2)}</td>
+            <td>₱${ph.er.toFixed(2)}</td>
+            <td>₱${pagibig.ee.toFixed(2)}</td>
+            <td>₱${pagibig.er.toFixed(2)}</td>
+            <td><strong>₱${(wtax + sss.ee + sssErTotal + ph.ee + ph.er + pagibig.ee + pagibig.er).toFixed(2)}</strong></td>
+          </tr>
         `;
       }).join('');
 
