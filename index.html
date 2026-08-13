@@ -431,6 +431,7 @@
           </div>
           <form onsubmit="handleProcessBatch(event)">
             <div class="form-grid">
+              <div class="form-group"><label>Batch / Run ID (Editable)</label><input type="text" id="proc-batch-id" class="form-control" required></div>
               <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
               <div class="form-group"><label>Raw Feed Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="350" required></div>
               <div class="form-group"><label>Raw Char Output Produced (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="150" required></div>
@@ -507,11 +508,16 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Weekly 400kg/hr Briquetting Run & Finished Goods QC Test Results</span>
-            <button class="btn-secondary" onclick="printBlankBriquetteQCForm()">🖨️ Print 2-Page QC Booklet (Run Lines & Detailed Instructions)</button>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-secondary" onclick="printBlankProductionForm()">🖨️ Print Blank Production Form</button>
+              <button class="btn-secondary" onclick="printBlankQCForm()">🖨️ Print Blank QC Form</button>
+            </div>
           </div>
           <form onsubmit="handleBriquetteQCLog(event)">
             <div class="form-grid">
+              <div class="form-group"><label>Run ID (Editable)</label><input type="text" id="bq-id" class="form-control" required></div>
               <div class="form-group"><label>Production Date</label><input type="date" id="bq-date" class="form-control" required></div>
+              <div class="form-group"><label>Source Batch / Cook Number(s)</label><input type="text" id="bq-source-batch" class="form-control" placeholder="BATCH-101, BATCH-102" required></div>
               <div class="form-group"><label>Raw Char Consumed (kg)</label><input type="number" id="bq-char-used" class="form-control" placeholder="1200" required></div>
               <div class="form-group"><label>Finished Briquettes Produced (kg)</label><input type="number" id="bq-output-qty" class="form-control" placeholder="1150" required></div>
               <div class="form-group"><label>Machine Press Rate (kg/hr)</label><input type="number" id="bq-press-rate" class="form-control" value="400" required></div>
@@ -549,7 +555,7 @@
             <table>
               <thead>
                 <tr>
-                  <th>Run ID</th><th>Date</th><th>Char Used</th><th>Output (kg)</th><th>Drop %</th><th>Moisture %</th><th>Ignition</th><th>Burn Time</th><th>Grade</th><th>Inspector</th><th>Action</th>
+                  <th>Run ID</th><th>Date</th><th>Source Batch #</th><th>Char Used</th><th>Output (kg)</th><th>Drop %</th><th>Moisture %</th><th>Ignition</th><th>Burn Time</th><th>Grade</th><th>Inspector</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-briquette-qc"></tbody>
@@ -1148,7 +1154,7 @@
         { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Safety check passed; peak carbonization.", attendant: "Beryl" }
       ],
       briquetteQcLogs: [
-        { id: "BQ-201", date: "2026-08-07", charUsed: 1200, outputQty: 1150, pressRate: 400, dropPct: 97.5, moisture: 3.2, fc: 85.0, ash: 2.1, gcv: 7500, burnTest: "Pass - Clean Burn / No Smoke", grade: "Export Grade A", inspector: "Beryl", notes: "Weekly high-speed run at 400kg/hr. Passed 3-drop test." }
+        { id: "BQ-201", date: "2026-08-07", sourceBatch: "BATCH-101", charUsed: 1200, outputQty: 1150, pressRate: 400, dropPct: 97.5, moisture: 3.2, fc: 85.0, ash: 2.1, gcv: 7500, burnTest: "Pass - Clean Burn / No Smoke", grade: "Export Grade A", inspector: "Beryl", notes: "Weekly high-speed run at 400kg/hr. Passed 3-drop test." }
       ],
       maintenanceLogs: [
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
@@ -1195,6 +1201,11 @@
     let state = loadState();
     let financialChartInstance = null;
     let inventoryChartInstance = null;
+
+    function generateNextRunId(prefix, list) {
+      const num = list.length + 101;
+      return `${prefix}-${num}`;
+    }
 
     function downloadExcelCsvArchive() {
       let csvContent = "data:text/csv;charset=utf-8,";
@@ -1244,7 +1255,6 @@
       `;
     }
 
-    // 1. BLANK SHIFT OPEN/CLOSE FORM (MAXIMIZED TO FILL ENTIRE PAGE)
     function printBlankShiftForm() {
       const blankHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1296,7 +1306,6 @@
       executePrint(blankHtml);
     }
 
-    // 2. BLANK PYROLYSIS BATCH STACKING SHEET (MAXIMIZED TO FILL ENTIRE PAGE)
     function printBlankBatchLogsheet() {
       const blankHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1346,7 +1355,6 @@
       executePrint(blankHtml);
     }
 
-    // 3. BLANK FURNACE SAFETY WATCH SHEET (CLEARED TIME PRE-FILL & MAXIMIZED TO FILL PAGE)
     function printBlankFurnaceWatchForm() {
       const blankHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
@@ -1398,16 +1406,61 @@
       executePrint(blankHtml);
     }
 
-    // 4. BLANK 2-PAGE QC BOOKLET (MAXIMIZED TO FILL PAGE)
-    function printBlankBriquetteQCForm() {
-      const bookletHtml = `
-        <div class="printable-document" style="page-break-after: always; height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+    // SEPARATE BLANK PRODUCTION FORM
+    function printBlankProductionForm() {
+      const blankProdHtml = `
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET (PAGE 1)')}
+            ${getBrandedHeader('WEEKLY 400KG/HR BRIQUETTE PRODUCTION FORM')}
             <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
               <div>
                 <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                <span><strong>Press Speed:</strong> 400 kg/hr</span>
+                <span><strong>Press Rate:</strong> 400 kg/hr</span>
+              </div>
+              <div>
+                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+              </div>
+            </div>
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+              <thead>
+                <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Source Batch / Cook #</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Char Used (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Output Qty (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Press Speed</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Operator / Crew</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${Array(13).fill(0).map(() => `
+                  <tr style="height: 34px;">
+                    <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+            <div>________________________________________<br>Production Lead Signature</div>
+            <div>________________________________________<br>Plant Manager Approval</div>
+          </div>
+        </div>
+      `;
+      executePrint(blankProdHtml);
+    }
+
+    // SEPARATE BLANK QC FORM
+    function printBlankQCForm() {
+      const blankQcHtml = `
+        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            ${getBrandedHeader('FINISHED GOODS QC & LABORATORY INSPECTION FORM')}
+            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+              <div>
+                <span><strong>Testing Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+                <span><strong>Standards:</strong> Drop &gt;95%, MC &lt;5%, Burn &gt;70m</span>
               </div>
               <div>
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
@@ -1418,18 +1471,18 @@
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
                   <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Char Used (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Source Batch #</th>
                   <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Drop Retain %</th>
                   <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Moisture %</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Ignition Time</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Burn Time</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Grade</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Ignition (min)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Burn Time (min)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Assigned Grade</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">QC Inspector</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(13).fill(0).map(() => `
-                  <tr style="height: 31px;">
+                  <tr style="height: 34px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
@@ -1437,45 +1490,12 @@
             </table>
           </div>
           <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
-            <div>________________________________________<br>Factory QC Inspector Signature</div>
-            <div>________________________________________<br>Plant Owner / Manager Approval</div>
-          </div>
-        </div>
-
-        <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            ${getBrandedHeader('BRIQUETTE QC TESTING PROTOCOLS (PAGE 2)')}
-            <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 14px 18px; border-radius: 6px; font-size: 0.75rem; margin-bottom: 12px; line-height: 1.6;">
-              <h3 style="color: #0f172a; margin-bottom: 6px; font-size: 0.88rem;">🏭 PRIMARY FACTORY QC TESTING</h3>
-              <ul style="margin-left: 18px; margin-bottom: 12px;">
-                <li><strong>Drop Test:</strong> Drop 3 times from 1.5-2m onto concrete. <strong>Pass Criterion: &gt;95% weight retention.</strong></li>
-                <li><strong>Moisture Content:</strong> Test with pin-type meter. <strong>Pass Criterion: &lt;5% moisture.</strong></li>
-                <li><strong>Ignition Time:</strong> <strong>Pass Criterion: &lt;3 minutes.</strong></li>
-                <li><strong>Total Burn Time:</strong> <strong>Pass Criterion: &gt;70 minutes.</strong></li>
-              </ul>
-            </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-top: 10px;">
-              <thead>
-                <tr style="background-color: #f1f5f9;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Additional Lab Parameter</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Observed Test Result</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px;">Lab Technician Sign-off</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${Array(6).fill(0).map(() => `
-                  <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
-            <div>________________________________________<br>Plant Safety & QC Inspector</div>
-            <div>________________________________________<br>Plant Operations Manager</div>
+            <div>________________________________________<br>QC Laboratory Inspector Signature</div>
+            <div>________________________________________<br>Plant Manager Sign-off</div>
           </div>
         </div>
       `;
-      executePrint(bookletHtml);
+      executePrint(blankQcHtml);
     }
 
     function printBriquetteQCReport(qcIndex) {
@@ -1484,6 +1504,7 @@
         <div class="printable-document">
           ${getBrandedHeader('OFFICIAL CHARCOAL BRIQUETTE QC & LABORATORY CERTIFICATE')}
           <p><strong>Run ID:</strong> ${q.id} | <strong>Date:</strong> ${q.date}</p>
+          <p><strong>Source Batch Number(s):</strong> ${q.sourceBatch || 'N/A'}</p>
           <p><strong>Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
           <p><strong>Drop Test Retain:</strong> ${q.dropPct}% | <strong>Moisture:</strong> ${q.moisture}%</p>
           <p><strong>Burn Time:</strong> ${q.burnTime} mins | <strong>Inspector Remarks:</strong> ${q.notes}</p>
@@ -1700,7 +1721,7 @@
 
           if (category.includes("Pyrolysis") || category.includes("Batch")) {
             state.batches.unshift({
-              id: `BATCH-QR-${Date.now().toString().slice(-3)}-${i}`,
+              id: cols[0] || `BATCH-QR-${Date.now().toString().slice(-3)}-${i}`,
               rawItem: cols[2] || "Bamboo",
               consumedKg: parseFloat(cols[3]) || 350,
               yieldKg: parseFloat(cols[5]) || 150,
@@ -1793,6 +1814,12 @@
       document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
       document.getElementById(tabId).classList.add('active');
       el.classList.add('active');
+
+      if (tabId === 'furnace-batches') {
+        document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
+      } else if (tabId === 'briquette-qc') {
+        document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
+      }
     }
 
     function toggleCustomDeductInput() {
@@ -1927,6 +1954,7 @@
 
     function handleProcessBatch(e) {
       e.preventDefault();
+      const batchId = document.getElementById('proc-batch-id').value.trim();
       const rawItemName = document.getElementById('proc-raw-item').value;
       const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
       const rawCharQty = parseFloat(document.getElementById('proc-fin-qty').value);
@@ -1941,7 +1969,7 @@
       if (charStock) charStock.stock += rawCharQty;
 
       state.batches.unshift({
-        id: `BATCH-${Date.now().toString().slice(-3)}`,
+        id: batchId,
         rawItem: rawItemName, consumedKg: rawQty, yieldKg: rawCharQty,
         cookHours: parseFloat(document.getElementById('proc-cook-hours').value) || 7.5,
         opStart: document.getElementById('proc-op-start').value,
@@ -1951,6 +1979,7 @@
         qcNotes: document.getElementById('proc-qc-notes').value || 'Accumulated to raw char stockpile'
       });
       saveState(); renderAll(); e.target.reset();
+      document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
     }
 
     function handleFurnaceWatchLog(e) {
@@ -1969,6 +1998,8 @@
 
     function handleBriquetteQCLog(e) {
       e.preventDefault();
+      const bqId = document.getElementById('bq-id').value.trim();
+      const sourceBatch = document.getElementById('bq-source-batch').value.trim();
       const charUsed = parseFloat(document.getElementById('bq-char-used').value);
       const outputQty = parseFloat(document.getElementById('bq-output-qty').value);
       const grade = document.getElementById('bq-grade').value;
@@ -1985,8 +2016,9 @@
       if (finStock) finStock.stock += outputQty;
 
       state.briquetteQcLogs.unshift({
-        id: `BQ-${Date.now().toString().slice(-3)}`,
+        id: bqId,
         date: document.getElementById('bq-date').value,
+        sourceBatch,
         charUsed, outputQty,
         pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
         dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
@@ -2002,6 +2034,7 @@
         notes: document.getElementById('bq-notes').value
       });
       saveState(); renderAll(); e.target.reset();
+      document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
       printBriquetteQCReport(0);
     }
 
@@ -2292,7 +2325,7 @@
       loadGovRatesToForm();
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
-      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
+      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select'].value : 3);
 
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
       ['oc-opened-by', 'oc-closed-by', 'proc-op-start', 'proc-op-end', 'fw-attendant', 'maint-tech', 'wb-inspector', 'bq-inspector', 'vale-emp', 'soa-emp-select'].forEach(id => {
@@ -2317,6 +2350,13 @@
       
       toggleLogisticsItemOptions();
       renderAttendanceCalendar();
+
+      if(document.getElementById('proc-batch-id') && !document.getElementById('proc-batch-id').value) {
+        document.getElementById('proc-batch-id').value = generateNextRunId('BATCH', state.batches);
+      }
+      if(document.getElementById('bq-id') && !document.getElementById('bq-id').value) {
+        document.getElementById('bq-id').value = generateNextRunId('BQ', state.briquetteQcLogs);
+      }
 
       const totalRev = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER').reduce((s, l) => s + l.amount, 0);
       const totalAR = state.logistics.filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
@@ -2346,7 +2386,7 @@
       `).join('');
 
       document.getElementById('tbl-briquette-qc').innerHTML = (state.briquetteQcLogs || []).map((q, idx) => `
-        <tr><td><strong>${q.id}</strong></td><td>${q.date}</td><td>${q.charUsed} kg</td><td><strong>${q.outputQty} kg</strong></td><td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td><td>${q.moisture}%</td><td>${q.ignitionTime || '2.5'}m</td><td>${q.burnTime || '85'}m</td><td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td><td>${q.inspector}</td><td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBriquetteQCReport(${idx})">🖨️ Cert PDF</button><button onclick="deleteEntry('briquetteQcLogs', ${idx})" class="btn-danger">Delete</button></td></tr>
+        <tr><td><strong>${q.id}</strong></td><td>${q.date}</td><td><span class="badge badge-blue">${q.sourceBatch || 'N/A'}</span></td><td>${q.charUsed} kg</td><td><strong>${q.outputQty} kg</strong></td><td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td><td>${q.moisture}%</td><td>${q.ignitionTime || '2.5'}m</td><td>${q.burnTime || '85'}m</td><td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td><td>${q.inspector}</td><td><button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBriquetteQCReport(${idx})">🖨️ Cert PDF</button><button onclick="deleteEntry('briquetteQcLogs', ${idx})" class="btn-danger">Delete</button></td></tr>
       `).join('');
 
       document.getElementById('tbl-maint-history').innerHTML = (state.maintenanceLogs || []).map((m, idx) => `
