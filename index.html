@@ -47,7 +47,7 @@
     .shape-circle-white { width: 24px; height: 24px; background-color: #ffffff; border-radius: 50%; }
     .shape-diamond-green { width: 22px; height: 22px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 3px; }
 
-    .brand-text h1 { font-size: 1.6rem; font-weight: 800; line-height: 1; letter-spacing: -0.5px; }
+    .brand-text h1 { font-size: 1.4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; }
     .brand-text span { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #cbd5e1; margin-top: 3px; display: block; }
 
     .header-meta { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
@@ -184,7 +184,7 @@
     .print-shape-white { width: 16px; height: 16px; background-color: #0f172a; border-radius: 50%; }
     .print-shape-green { width: 14px; height: 14px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
-    .print-brand-title h2 { font-size: 1.1rem; font-weight: 800; line-height: 1; color: #0f172a; }
+    .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
     .print-brand-title span { font-size: 0.5rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
 
     .print-meta-right { text-align: right; font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
@@ -212,7 +212,7 @@
 </head>
 <body>
 
-  <!-- TOP HEADER -->
+  <!-- TOP HEADER WITH LOGO & COMPLETE NAME -->
   <header>
     <div class="brand-container">
       <div class="brand-shapes">
@@ -239,8 +239,9 @@
       <a class="nav-link active" onclick="switchTab('owner-suite', this)"><span>📈</span> Business Health & Decisions</a>
       <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
-      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle & QC</a>
-      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 1.5-Hour Furnace Monitor</a>
+      <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> Pyrolysis Batch Stacking Log</a>
+      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 1.5-Hr Furnace Safety Watch</a>
+      <a class="nav-link" onclick="switchTab('briquette-qc', this)"><span>🧪</span> Briquette Production & QC Lab</a>
       <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
       <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
       <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
@@ -320,8 +321,8 @@
               <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-stock-text">Analyzing stock levels...</p>
             </div>
             <div>
-              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-blue);">3. Pyrolysis Cycle & Yield Handover</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing batch timelines...</p>
+              <h4 style="font-size: 0.9rem; margin-bottom: 8px; color: var(--brand-blue);">3. Pyrolysis & 400kg/hr Briquetting Queue</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;" id="rec-yield-text">Analyzing batch accumulation...</p>
             </div>
           </div>
         </div>
@@ -420,52 +421,42 @@
         </div>
       </div>
 
-      <!-- TAB 4: BATCH CARBONIZATION CYCLES & QC -->
+      <!-- TAB 4: PYROLYSIS BATCH STACKING LOG (NO QC BOX) -->
       <div id="furnace-batches" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
-            <span>Log 6-8 Hour Batch Pyrolysis Lifecycle & QC Inspection</span>
-            <button class="btn-secondary" onclick="printBlankBatchLogsheet()">🖨️ Print Blank Factory Batch Logsheet (1-Page)</button>
+            <span>Log Pyrolysis Batch Cook & Raw Char Stacking (300kg+ per Batch)</span>
+            <button class="btn-secondary" onclick="printBlankBatchLogsheet()">🖨️ Print Blank Pyrolysis Stacking Sheet (1-Page)</button>
           </div>
           <form onsubmit="handleProcessBatch(event)">
             <div class="form-grid">
               <div class="form-group"><label>Raw Feed Used</label><select id="proc-raw-item" class="form-control"></select></div>
-              <div class="form-group"><label>Raw Feed Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="1000" required></div>
-              <div class="form-group"><label>Finished Item Produced</label><select id="proc-fin-item" class="form-control"></select></div>
-              <div class="form-group"><label>Finished Yield Output (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="550" required></div>
+              <div class="form-group"><label>Raw Feed Consumed (kg)</label><input type="number" id="proc-raw-qty" class="form-control" placeholder="350" required></div>
+              <div class="form-group"><label>Raw Char Output Produced (kg)</label><input type="number" id="proc-fin-qty" class="form-control" placeholder="150" required></div>
               
               <div class="form-group"><label>Cook / Ignition Start Time</label><input type="datetime-local" id="proc-t-cook-start" class="form-control" required></div>
               <div class="form-group"><label>Cook Start Duty (Loader & Igniter)</label><select id="proc-op-start" class="form-control"></select></div>
 
-              <div class="form-group"><label>Cook End / Unload Time (6-8 hrs later)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
+              <div class="form-group"><label>Cook End / Discharge Time (6-8 hrs)</label><input type="datetime-local" id="proc-t-cook-end" class="form-control" required></div>
               <div class="form-group"><label>Cook End Duty (Cooler & Unloader)</label><select id="proc-op-end" class="form-control"></select></div>
 
               <div class="form-group"><label>Total Cook Duration (Hours)</label><input type="number" step="0.1" id="proc-cook-hours" class="form-control" placeholder="7.5" required></div>
               <div class="form-group"><label>Peak Operating Temp (°C)</label><input type="number" id="proc-temp" class="form-control" placeholder="580" required></div>
 
-              <!-- QUALITY CONTROL & TESTING FIELDS -->
               <div class="form-group"><label>Pre-Burn Feedstock MC %</label><input type="number" step="0.1" id="proc-pre-mc" class="form-control" placeholder="18.5" required></div>
-              <div class="form-group">
-                <label>Biochar Yield Quality Grade</label>
-                <select id="proc-qc-grade" class="form-control">
-                  <option value="Grade A">Grade A (High Fixed Carbon / Metallic Sound)</option>
-                  <option value="Grade B">Grade B (Acceptable / Minor Underburn)</option>
-                  <option value="Grade C">Grade C (Defective / Overburnt Ash)</option>
-                </select>
-              </div>
-              <div class="form-group" style="grid-column: 1 / -1;"><label>QC Test Remarks / Bench Notes</label><input type="text" id="proc-qc-notes" class="form-control" placeholder="Metallic clink sound; clean burn, low ash content"></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Raw Char Stacking Yard Notes (Accumulating for Weekly Briquetting)</label><input type="text" id="proc-qc-notes" class="form-control" placeholder="Transferred to dry char stockpile for weekly 400kg/hr press run"></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Batch Lifecycle & Auto-Update Stock</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🔥 Save Batch to Raw Char Stockpile</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Batch Lifecycle Ledger & QC History</div>
+          <div class="panel-title">Pyrolysis Batch Stacking & Raw Char Ledger</div>
           <div class="table-container">
             <table>
               <thead>
                 <tr>
-                  <th>Batch ID</th><th>Raw Feed Input</th><th>Yield Output</th><th>Yield %</th><th>Total Cook Time</th><th>Pre-MC %</th><th>Quality Grade</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>QC Remarks</th><th>Action</th>
+                  <th>Batch ID</th><th>Raw Feed Input</th><th>Raw Char Yield</th><th>Yield %</th><th>Total Cook Time</th><th>Pre-MC %</th><th>Start Duty</th><th>End Duty</th><th>Peak Temp</th><th>Stacking Notes</th><th>Action</th>
                 </tr>
               </thead>
               <tbody id="tbl-batches"></tbody>
@@ -474,7 +465,7 @@
         </div>
       </div>
 
-      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR -->
+      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR (SAFETY WATCH) -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -510,15 +501,67 @@
         </div>
       </div>
 
-      <!-- TAB 6: FURNACE & KILN MAINTENANCE LOGS -->
+      <!-- TAB 6: BRIQUETTE PRODUCTION & QC LAB -->
+      <div id="briquette-qc" class="tab-pane">
+        <div class="panel">
+          <div class="panel-title">
+            <span>Log Weekly 400kg/hr Briquetting Run & Finished Goods QC Test Results</span>
+            <button class="btn-secondary" onclick="printBlankBriquetteQCForm()">🖨️ Print Blank Briquette QC Lab Sheet</button>
+          </div>
+          <form onsubmit="handleBriquetteQCLog(event)">
+            <div class="form-grid">
+              <div class="form-group"><label>Production Date</label><input type="date" id="bq-date" class="form-control" required></div>
+              <div class="form-group"><label>Raw Char Consumed (kg)</label><input type="number" id="bq-char-used" class="form-control" placeholder="1200" required></div>
+              <div class="form-group"><label>Finished Briquettes Produced (kg)</label><input type="number" id="bq-output-qty" class="form-control" placeholder="1150" required></div>
+              <div class="form-group"><label>Machine Press Rate (kg/hr)</label><input type="number" id="bq-press-rate" class="form-control" value="400" required></div>
+              
+              <!-- QC STANDARDS TESTING FIELDS -->
+              <div class="form-group"><label>Drop Test Durability Retain % [Factory Test] (Target &gt;95%)</label><input type="number" step="0.1" id="bq-drop-pct" class="form-control" placeholder="97.5" required></div>
+              <div class="form-group"><label>Moisture Content % [Factory/Field Test] (Target &lt;5%)</label><input type="number" step="0.1" id="bq-moisture" class="form-control" placeholder="3.2" required></div>
+              <div class="form-group"><label>Estimated Fixed Carbon % [Lab Test]</label><input type="number" step="0.1" id="bq-fc" class="form-control" placeholder="85.0" required></div>
+              <div class="form-group"><label>Ash Content % [Lab Test] (Target 1-4%)</label><input type="number" step="0.1" id="bq-ash" class="form-control" placeholder="2.1" required></div>
+              <div class="form-group"><label>Calorific Value (kcal/kg) [Lab Test]</label><input type="number" id="bq-gcv" class="form-control" placeholder="7500" required></div>
+              <div class="form-group"><label>Ignition & Smoke Test [Factory Test]</label><select id="bq-burn-test" class="form-control"><option value="Pass - Clean Burn / No Smoke">Pass - Clean Burn / No Smoke</option><option value="Fail - Excessive Smoke / Odor">Fail - Excessive Smoke / Odor</option></select></div>
+              
+              <div class="form-group">
+                <label>Overall QC Grade Assignment</label>
+                <select id="bq-grade" class="form-control">
+                  <option value="Export Grade A">Export Grade A (High Density & GCV)</option>
+                  <option value="Standard Grade B">Standard Grade B (Local BBQ Grill Use)</option>
+                  <option value="Rejected / Re-run">Rejected / Sub-standard</option>
+                </select>
+              </div>
+              <div class="form-group"><label>QC Inspector</label><select id="bq-inspector" class="form-control"></select></div>
+              <div class="form-group" style="grid-column: 1 / -1;"><label>Laboratory & Physical Test Remarks</label><input type="text" id="bq-notes" class="form-control" placeholder="Passed 3-drop durability test; odorless white ash after 6-hr burn test." required></div>
+            </div>
+            <button type="submit" class="btn" style="margin-top: 14px;">🧪 Save Briquette Production & Add to Inventory</button>
+          </form>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">Finished Briquette Production & QC Test Ledger</div>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Run ID</th><th>Date</th><th>Char Used</th><th>Output (kg)</th><th>Drop Test %</th><th>Moisture %</th><th>Fixed Carbon %</th><th>Ash %</th><th>GCV (kcal)</th><th>Grade</th><th>Inspector</th><th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="tbl-briquette-qc"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 7: FURNACE & KILN MAINTENANCE LOGS -->
       <div id="furnace-maint" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Furnace & Kiln Maintenance Service</div>
           <form onsubmit="handleMaintenanceLog(event)">
             <div class="form-grid">
               <div class="form-group"><label>Service Date</label><input type="date" id="maint-date" class="form-control" required></div>
-              <div class="form-group"><label>Equipment Unit</label><select id="maint-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option><option value="Blower & VFD Drive">Blower & VFD Drive</option><option value="Exhaust Stack">Exhaust Stack</option></select></div>
-              <div class="form-group"><label>Maintenance Category</label><select id="maint-cat" class="form-control"><option value="Preventive">Preventive Maintenance</option><option value="Refractory Brick Repair">Refractory Brick Repair</option><option value="Damper / Vent Seal">Damper / Vent Seal Service</option><option value="Blower Motor Service">Blower Motor / Electrical</option></select></div>
+              <div class="form-group"><label>Equipment Unit</label><select id="maint-unit" class="form-control"><option value="Furnace #1">Furnace #1</option><option value="Furnace #2">Furnace #2</option><option value="400kg/hr Briquette Press">400kg/hr Briquette Press</option><option value="Blower & VFD Drive">Blower & VFD Drive</option></select></div>
+              <div class="form-group"><label>Maintenance Category</label><select id="maint-cat" class="form-control"><option value="Preventive">Preventive Maintenance</option><option value="Refractory Brick Repair">Refractory Brick Repair</option><option value="Press Screw / Die Maintenance">Press Screw / Die Maintenance</option><option value="Blower Motor Service">Blower Motor / Electrical</option></select></div>
               <div class="form-group"><label>Lead Technician / Staff</label><select id="maint-tech" class="form-control"></select></div>
               <div class="form-group"><label>Parts / Service Cost (₱)</label><input type="number" id="maint-cost" class="form-control" placeholder="2500" required></div>
               <div class="form-group" style="grid-column: 1 / -1;"><label>Work Performed & Condition Notes</label><input type="text" id="maint-notes" class="form-control" placeholder="Replaced ceramic refractory seal on damper gate" required></div>
@@ -542,7 +585,7 @@
         </div>
       </div>
 
-      <!-- TAB 7: FEEDSTOCK WEIGHBRIDGE & MOISTURE LOG -->
+      <!-- TAB 8: FEEDSTOCK WEIGHBRIDGE & MOISTURE LOG -->
       <div id="weighbridge" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Feedstock Intake Weighbridge & Moisture Content (MC%)</div>
@@ -591,7 +634,7 @@
         </div>
       </div>
 
-      <!-- TAB 8: CREW ATTENDANCE CALENDAR -->
+      <!-- TAB 9: CREW ATTENDANCE CALENDAR -->
       <div id="attendance-cal" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -619,7 +662,7 @@
         </div>
       </div>
 
-      <!-- TAB 9: WEEKLY PAYROLL, CASH ADVANCE (VALE) & PAYSTUBS -->
+      <!-- TAB 10: WEEKLY PAYROLL, CASH ADVANCE (VALE) & PAYSTUBS -->
       <div id="payroll-vale" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Issue Cash Advance (VALE / CA Voucher)</div>
@@ -705,7 +748,7 @@
         </div>
       </div>
 
-      <!-- TAB 10: EDITABLE GOVERNMENT RATES & BIR TAX CALCULATOR -->
+      <!-- TAB 11: EDITABLE GOVERNMENT RATES & BIR TAX CALCULATOR -->
       <div id="gov-remittances" class="tab-pane">
         
         <div class="panel">
@@ -810,7 +853,7 @@
         </div>
       </div>
 
-      <!-- TAB 11: CONTACT DIRECTORY -->
+      <!-- TAB 12: CONTACT DIRECTORY -->
       <div id="contacts" class="tab-pane">
         <div class="panel">
           <div class="panel-title">
@@ -830,7 +873,7 @@
         </div>
       </div>
 
-      <!-- TAB 12: INVENTORY BALANCES WITH PER-KILO PRICES -->
+      <!-- TAB 13: INVENTORY BALANCES WITH PER-KILO PRICES -->
       <div id="inventory" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Real-Time Inventory Balances & Selling Prices (Per Kilo)</div>
@@ -847,7 +890,7 @@
         </div>
       </div>
 
-      <!-- TAB 13: LOGISTICS & OFFICIAL RECEIPTS -->
+      <!-- TAB 14: LOGISTICS & OFFICIAL RECEIPTS -->
       <div id="logistics" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Record Delivery Ticket, Payment Status & Sales / Inbound Invoice</div>
@@ -910,7 +953,7 @@
         </div>
       </div>
 
-      <!-- TAB 14: DOWNTIME -->
+      <!-- TAB 15: DOWNTIME -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
@@ -938,13 +981,13 @@
         </div>
       </div>
 
-      <!-- TAB 15: MASTER DATA MANAGER & CSV QR IMPORTER -->
+      <!-- TAB 16: MASTER DATA MANAGER & CSV QR IMPORTER -->
       <div id="settings" class="tab-pane">
         
         <div class="panel">
           <div class="panel-title">📥 Bulk Sync Google Form Crew QR Submissions (.CSV)</div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
-            Upload your downloaded Google Form response spreadsheet (`.csv`) to automatically populate batch carbonization runs, weighbridge tickets, 1.5-hour furnace checks, and downtime logs across all application tabs without double entries.
+            Upload your downloaded Google Form response spreadsheet (`.csv`) to automatically populate batch pyrolysis runs, weighbridge tickets, 1.5-hour furnace checks, and downtime logs across all application tabs without double entries.
           </p>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
             <input type="file" id="qr-csv-file" accept=".csv" class="form-control" style="max-width: 380px;">
@@ -953,7 +996,7 @@
         </div>
 
         <div class="panel">
-          <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed & Finished Goods)</div>
+          <div class="panel-title">Add / Edit Stock SKU & Per-Kilo Pricing (Raw Feed, Raw Char & Finished Goods)</div>
           <form onsubmit="handleSaveItem(event)">
             <div class="form-grid">
               <div class="form-group">
@@ -966,8 +1009,9 @@
               <div class="form-group">
                 <label>Material Category</label>
                 <select id="sku-cat" class="form-control">
-                  <option value="Raw Feed">Raw Feedstock (e.g. Bamboo, Coconut Shell, Rice Husk)</option>
-                  <option value="Finished Goods">Finished Product (e.g. Briquettes, Biochar)</option>
+                  <option value="Raw Feed">Raw Feedstock (Bamboo, Rice Husk)</option>
+                  <option value="Raw Char">Raw Pyrolyzed Char (Stockpile before Press)</option>
+                  <option value="Finished Goods">Finished Product (Charcoal Briquettes)</option>
                 </select>
               </div>
               <div class="form-group"><label>Item / Material Name</label><input type="text" id="sku-name" class="form-control" placeholder="Rice Husk" required></div>
@@ -1041,7 +1085,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_payterms';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_briquette_qc';
 
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
@@ -1073,21 +1117,24 @@
       },
       inventory: [
         { id: "RAW-01", category: "Raw Feed", name: "Bamboo", stock: 4800, min: 1000, pricePerKg: 4.00 },
-        { id: "RAW-02", category: "Raw Feed", name: "Coconut Shell", stock: 6200, min: 1500, pricePerKg: 5.50 },
-        { id: "RAW-03", category: "Raw Feed", name: "Rice Husk", stock: 3000, min: 1000, pricePerKg: 3.50 },
-        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes", stock: 1800, min: 500, pricePerKg: 30.00 },
-        { id: "FIN-02", category: "Finished Goods", name: "Fine Biochar Powder", stock: 1200, min: 300, pricePerKg: 25.00 }
+        { id: "RAW-02", category: "Raw Feed", name: "Rice Husk", stock: 3000, min: 1000, pricePerKg: 3.50 },
+        { id: "CHAR-01", category: "Raw Char", name: "Pyrolyzed Bamboo/Husk Char (Stockpile)", stock: 1500, min: 500, pricePerKg: 12.00 },
+        { id: "FIN-01", category: "Finished Goods", name: "Charcoal Briquettes (Export Grade A)", stock: 1800, min: 500, pricePerKg: 30.00 },
+        { id: "FIN-02", category: "Finished Goods", name: "Charcoal Briquettes (Standard Grade B)", stock: 1200, min: 300, pricePerKg: 25.00 }
       ],
       expenses: [
         { id: "EXP-101", date: "2026-08-03", category: "Utilities", asset: "Site Electrical", vendor: "LEYECO II", inv: "INV-8829", method: "Bank Transfer", amount: 14500, notes: "Grid Power for Plant Operations" },
         { id: "EXP-102", date: "2026-08-06", category: "Machinery & Refractory Parts", asset: "Furnace #1", vendor: "Tacloban Industrial Hardware", inv: "OR-4410", method: "Petty Cash", amount: 3500, notes: "High-temp refractory seal & gaskets" }
       ],
       batches: [
-        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 1000, finItem: "Charcoal Briquettes", yieldKg: 550, cookHours: 7.5, preMcPct: 18.5, qcGrade: "Grade A", opStart: "Amber", opEnd: "Beryl", maxTemp: 580, qcNotes: "Metallic clink sound; low ash content" }
+        { id: "BATCH-101", rawItem: "Bamboo", consumedKg: 350, yieldKg: 150, cookHours: 7.5, preMcPct: 18.5, opStart: "Amber", opEnd: "Beryl", maxTemp: 580, qcNotes: "Transferred to raw char stockpile for weekly 400kg/hr press run" }
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" },
-        { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Peak carbonization temperature achieved.", attendant: "Beryl" }
+        { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "1.5-hr safety check passed; peak carbonization.", attendant: "Beryl" }
+      ],
+      briquetteQcLogs: [
+        { id: "BQ-201", date: "2026-08-07", charUsed: 1200, outputQty: 1150, pressRate: 400, dropPct: 97.5, moisture: 3.2, fc: 85.0, ash: 2.1, gcv: 7500, burnTest: "Pass - Clean Burn / No Smoke", grade: "Export Grade A", inspector: "Beryl", notes: "Weekly high-speed run at 400kg/hr. Passed 3-drop test." }
       ],
       maintenanceLogs: [
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
@@ -1096,15 +1143,13 @@
         { id: "WB-301", date: "2026-08-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 2800, tareKg: 800, mcPct: 18.5, amount: 8000, terms: "15 Days Credit", status: "OUTSTANDING", inspector: "Amber" }
       ],
       valeVouchers: [
-        { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" },
-        { id: "VALE-902", date: "2026-08-12", empName: "Amber", amount: 1500, remainingBalance: 1500, planType: "50", minPct: 50, customAmt: null, status: "ACTIVE", notes: "School fees advance" }
+        { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, customAmt: null, status: "ACTIVE", notes: "Emergency medical expense" }
       ],
       logistics: [
         { id: "TICKET-501", date: "2026-08-04", type: "INBOUND_SUPPLIER", party: "Carigara Bamboo Farmers Co-Op", terms: "15 Days Credit", status: "PAID", item: "Bamboo", qty: 2000, amount: 8000 },
-        { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "30 Days Credit", status: "OUTSTANDING", item: "Charcoal Briquettes", qty: 500, amount: 15000 },
-        { id: "TICKET-503", date: "2026-08-12", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "COD", status: "PAID", item: "Fine Biochar Powder", qty: 400, amount: 10000 }
+        { id: "TICKET-502", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "30 Days Credit", status: "OUTSTANDING", item: "Charcoal Briquettes (Export Grade A)", qty: 500, amount: 15000 }
       ],
-      openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "Standard Day Shift", notes: "Perimeter clear; dampers locked." }],
+      openclose: [{ date: "2026-08-08", openedBy: "Beryl", timeIn: "07:00", machOk: "OK", closedBy: "Beryl", timeOut: "17:00", mode: "24-hr Continuous", notes: "Furnace cook active; char accumulating for weekly press run." }],
       downtime: [{ id: "DT-01", reason: "Scheduled Refractory Inspection", duration: 30 }],
       employees: [
         { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", emName: "Maria Santos", emPhone: "0918-333-4444", lifetimePresentDays: 320, ytdNetSalary: 92300, attendance: {} },
@@ -1125,6 +1170,7 @@
       if (!saved) return defaultState;
       const parsed = JSON.parse(saved);
       if (!parsed.govRates) parsed.govRates = defaultState.govRates;
+      if (!parsed.briquetteQcLogs) parsed.briquetteQcLogs = defaultState.briquetteQcLogs;
       return parsed;
     }
 
@@ -1136,7 +1182,7 @@
     let financialChartInstance = null;
     let inventoryChartInstance = null;
 
-    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES FOR ALL PRINT/PDF OUTPUTS
+    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES & FULL COMPANY NAME
     function getBrandedHeader(documentTitle) {
       return `
         <div class="print-letterhead">
@@ -1148,7 +1194,7 @@
             </div>
             <div class="print-brand-title">
               <h2>Combinido Biocarbon Charcoal Manufacturing</h2>
-              <span>CARIGARA, LEYTE · PLANT OPERATIONS</span>
+              <span>CARIGARA, LEYTE · PLANT OPERATIONS SUITE</span>
             </div>
           </div>
           <div class="print-meta-right">
@@ -1160,11 +1206,11 @@
       `;
     }
 
-    // PRINT BLANK FACTORY BATCH LOGSHEET - STRICT 1-PAGE LANDSCAPE WITH GRIDLINES MIRRORING APP
+    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET
     function printBlankBatchLogsheet() {
       const blankHtml = `
         <div class="printable-document">
-          ${getBrandedHeader('FACTORY BATCH & PYROLYSIS CONTROL SHEET')}
+          ${getBrandedHeader('PYROLYSIS BATCH STACKING & RAW CHAR LOGSHEET')}
           
           <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
             <div>
@@ -1182,40 +1228,23 @@
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Batch ID</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Feed Used</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Consumed (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Finished Item Produced</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Yield Output (kg)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Char Output (kg)</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Start Time & Duty</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">End Time & Duty</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Total Cook (hrs)</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Peak Temp (°C)</th>
                 <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Pre-MC %</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">QC Grade</th>
               </tr>
             </thead>
             <tbody>
-              <tr style="height: 38px;">
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-              </tr>
-              <tr style="height: 38px;">
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-              </tr>
-              <tr style="height: 38px;">
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-                <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
-              </tr>
+              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
             </tbody>
           </table>
 
           <div style="font-size: 0.75rem; margin-bottom: 6px;">
-            <strong>QC Test Remarks / Bench Notes & Stoppage Incidents:</strong>
+            <strong>Stockpile & Stoppage Notes (Accumulating for Weekly 400kg/hr Briquetting Run):</strong>
             <div style="border: 1px solid #cbd5e1; height: 38px; margin-top: 3px; border-radius: 3px;"></div>
           </div>
 
@@ -1228,7 +1257,7 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK 1.5-HOUR FURNACE WATCH LOGSHEET - STRICT 1-PAGE LANDSCAPE WITH GRIDLINES
+    // PRINT BLANK 1.5-HOUR FURNACE WATCH SHEET
     function printBlankFurnaceWatchForm() {
       const blankHtml = `
         <div class="printable-document">
@@ -1275,6 +1304,68 @@
       executePrint(blankHtml);
     }
 
+    // PRINT BLANK BRIQUETTE QC LAB SHEET WITH TESTING INSTRUCTIONS & LAB NOTES
+    function printBlankBriquetteQCForm() {
+      const blankHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET')}
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+            <div>
+              <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+              <span><strong>Press Speed:</strong> 400 kg/hr</span>
+            </div>
+            <div>
+              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+            </div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+            <thead>
+              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Run ID</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Char Used (kg)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Output (kg)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Drop Test %<br><span style="font-size:0.55rem; color:#64748b;">(Factory: >95%)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Moisture %<br><span style="font-size:0.55rem; color:#64748b;">(Factory/Field: <5%)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Fixed Carbon %<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ash %<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test: 1-4%)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">GCV (kcal/kg)<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ignition/Smoke<br><span style="font-size:0.55rem; color:#64748b;">(Factory Test)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Grade</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+            </tbody>
+          </table>
+
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 4px; font-size: 0.7rem; margin-bottom: 8px;">
+            <strong>🧪 QC Testing Protocols & Instructions for Plant Inspectors:</strong>
+            <ul style="margin-left: 16px; margin-top: 4px; line-height: 1.4;">
+              <li><strong>Mechanical Durability & Drop Test (Factory Test):</strong> Drop a weighed sample repeatedly from a fixed height of 1.5 to 2 meters onto concrete. Re-weigh surviving pieces to calculate weight retention percentage (Target: >95%).</li>
+              <li><strong>Moisture Content (Factory / Field Test):</strong> Use a handheld wood/charcoal moisture meter pressed into the briquette core (Target: <5%). Alternatively, weigh a sample, oven-dry at 105°C for 2 hours, and calculate weight loss.</li>
+              <li><strong>Fixed Carbon & Ash Content (Laboratory Test):</strong> Requires proximate analysis in a controlled lab using a muffle furnace (Target ash: 1-4%).</li>
+              <li><strong>Gross Calorific Value / GCV (Laboratory Test):</strong> Requires bomb calorimeter testing in an authorized laboratory to measure energy output in kcal/kg (Target: ~7,500 kcal/kg).</li>
+              <li><strong>Ignition, Smoke & Odor Performance (Factory Test):</strong> Ignite using a chimney starter. Observe ignition speed, smoke/odor, and residual ash color (Target: Clean burn, odorless, white/light gray ash).</li>
+            </ul>
+          </div>
+
+          <div style="font-size: 0.75rem; margin-bottom: 6px;">
+            <strong>Laboratory Ignition, Smoke & Physical Test Remarks:</strong>
+            <div style="border: 1px solid #cbd5e1; height: 28px; margin-top: 2px; border-radius: 3px;"></div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 8px;">
+            <div>________________________________________<br>QC Lab Inspector Signature</div>
+            <div>________________________________________<br>Plant Owner / Manager Approval</div>
+          </div>
+        </div>
+      `;
+      executePrint(blankHtml);
+    }
+
     // PRINT BLANK SHIFT SHEET
     function printBlankShiftForm() {
       const blankHtml = `
@@ -1312,50 +1403,62 @@
       executePrint(blankHtml);
     }
 
-    // PRINTABLE BATCH QC CERTIFICATE REPORT
-    function printBatchQCReport(batchIndex) {
-      const b = state.batches[batchIndex];
-      const yieldPct = b.consumedKg > 0 ? ((b.yieldKg / b.consumedKg) * 100).toFixed(1) : 0;
+    // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT WITH TESTING NOTES & INSTRUCTIONS
+    function printBriquetteQCReport(qcIndex) {
+      const q = state.briquetteQcLogs[qcIndex];
 
       const reportHtml = `
         <div class="printable-document">
-          ${getBrandedHeader('BATCH PYROLYSIS & QUALITY CONTROL REPORT')}
+          ${getBrandedHeader('OFFICIAL CHARCOAL BRIQUETTE QC & LABORATORY CERTIFICATE')}
           
           <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 12px;">
             <div>
-              <p><strong>Batch Control ID:</strong> ${b.id}</p>
-              <p><strong>Raw Feedstock Used:</strong> ${b.rawItem} (${b.consumedKg.toLocaleString()} kg)</p>
-              <p><strong>Finished Yield Produced:</strong> ${b.finItem} (${b.yieldKg.toLocaleString()} kg)</p>
+              <p><strong>Run ID:</strong> ${q.id}</p>
+              <p><strong>Production Date:</strong> ${q.date}</p>
+              <p><strong>Raw Char Consumed:</strong> ${q.charUsed.toLocaleString()} kg</p>
+              <p><strong>Finished Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
             </div>
             <div style="text-align: right;">
-              <p><strong>Conversion Efficiency:</strong> <span style="font-size: 1.1rem; color: #10b981; font-weight: bold;">${yieldPct}%</span></p>
-              <p><strong>Total Cook Duration:</strong> <span style="font-size: 1.1rem; font-weight: bold;">${b.cookHours || 7.5} hours</span></p>
-              <p><strong>Peak Operating Temp:</strong> ${b.maxTemp} °C</p>
+              <p><strong>Press Feed Rate:</strong> <span style="font-size: 1.1rem; color: #0284c7; font-weight: bold;">${q.pressRate || 400} kg/hr</span></p>
+              <p><strong>Drop Test Retain (Factory):</strong> <span style="font-size: 1.1rem; color: #10b981; font-weight: bold;">${q.dropPct}%</span></p>
+              <p><strong>Calorific Value / GCV (Lab):</strong> ${q.gcv} kcal/kg</p>
             </div>
           </div>
 
           <hr style="border: 1px dashed #000; margin-bottom: 10px;">
 
-          <div style="font-size: 0.8rem; line-height: 1.5; margin-bottom: 12px;">
-            <p><strong>Pre-Burn Feedstock Moisture Content (MC %):</strong> ${b.preMcPct || 18.5}%</p>
-            <p><strong>Assigned Biochar Yield Quality Grade:</strong> <span style="border: 1px solid #000; padding: 2px 6px; font-weight: bold;">${b.qcGrade || 'Grade A'}</span></p>
-            <p><strong>Duty Handover (Start / End):</strong> ${b.opStart} / ${b.opEnd}</p>
-            <p><strong>QC Laboratory / Bench Test Remarks:</strong> ${b.qcNotes || 'Clean carbonization cycle with high fixed carbon structure.'}</p>
+          <div style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 12px;">
+            <p><strong>Moisture Content (Factory/Field Test):</strong> ${q.moisture}% (Standard &lt;5%)</p>
+            <p><strong>Fixed Carbon Content (Lab Test):</strong> ${q.fc}%</p>
+            <p><strong>Ash Content (Lab Test):</strong> ${q.ash}% (Standard 1-4%)</p>
+            <p><strong>Ignition & Smoke Performance (Factory Test):</strong> ${q.burnTest}</p>
+            <p><strong>Laboratory & Field Inspector Remarks:</strong> ${q.notes}</p>
           </div>
 
-          <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.7rem; font-style: italic;">Certified inspected at Combinido Biocarbon Charcoal Manufacturing Plant, Manloy, Carigara, Leyte.</p>
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 4px; font-size: 0.72rem; margin-bottom: 10px;">
+            <strong>🧪 Testing Standards Reference:</strong>
+            <ul style="margin-left: 16px; margin-top: 3px; line-height: 1.3;">
+              <li><em>Drop Test (Factory):</em> Repeated 1.5m-2m drop onto concrete; weighed for weight retention (>95% target).</li>
+              <li><em>Moisture (Factory/Field):</em> Handheld moisture meter or 105°C oven-drying for 2 hours (<5% target).</li>
+              <li><em>Fixed Carbon & Ash (Lab Test):</em> Proximate analysis via muffle furnace (1-4% ash target).</li>
+              <li><em>GCV (Lab Test):</em> Bomb calorimeter energy output in kcal/kg (~7,500 target).</li>
+              <li><em>Ignition & Smoke (Factory Test):</em> Chimney starter burn observation for clean, odorless flame and light ash.</li>
+            </ul>
+          </div>
+
+          <hr style="border: 1px dashed #000; margin: 10px 0;">
+          <p style="font-size: 0.7rem; font-style: italic;">Certified tested and approved at Combinido Biocarbon Charcoal Manufacturing Plant, Manloy, Carigara, Leyte.</p>
           
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>Loader & Igniter Operator</div>
-            <div>___________________<br>Plant Quality Control Lead</div>
+            <div>___________________<br>QC Laboratory Inspector</div>
+            <div>___________________<br>Plant Owner / Manager Review</div>
           </div>
         </div>
       `;
       executePrint(reportHtml);
     }
 
-    // CSV IMPORT UTILITY: Bulk Syncs Google Form Submissions
+    // CSV IMPORT UTILITY
     function importQRFormCSV() {
       const fileInput = document.getElementById('qr-csv-file');
       const file = fileInput.files[0];
@@ -1373,53 +1476,36 @@
           const cols = lines[i].split(',').map(c => c.replace(/^"|"$/g, '').trim());
           const category = cols[1] || "";
 
-          if (category.includes("Furnace Batch")) {
+          if (category.includes("Pyrolysis") || category.includes("Batch")) {
             state.batches.unshift({
               id: `BATCH-QR-${Date.now().toString().slice(-3)}-${i}`,
               rawItem: cols[2] || "Bamboo",
-              consumedKg: parseFloat(cols[3]) || 0,
-              finItem: cols[4] || "Charcoal Briquettes",
-              yieldKg: parseFloat(cols[5]) || 0,
+              consumedKg: parseFloat(cols[3]) || 350,
+              yieldKg: parseFloat(cols[5]) || 150,
               cookHours: parseFloat(cols[6]) || 7.5,
               opStart: cols[8] || "Loader Crew",
               opEnd: cols[10] || "Unloader Crew",
               maxTemp: parseInt(cols[11]) || 580,
               preMcPct: parseFloat(cols[7]) || 18.0,
-              qcGrade: cols[9] || "Grade A",
-              qcNotes: cols[12] || "QR Submitted Batch Log"
+              qcNotes: cols[12] || "QR Stacking Stockpile Log"
             });
             importedCount++;
-          } else if (category.includes("Weighbridge")) {
-            state.weighbridgeLogs.unshift({
-              id: `WB-QR-${Date.now().toString().slice(-3)}-${i}`,
+          } else if (category.includes("Briquette") || category.includes("QC")) {
+            state.briquetteQcLogs.unshift({
+              id: `BQ-QR-${Date.now().toString().slice(-3)}-${i}`,
               date: cols[11] || new Date().toISOString().split('T')[0],
-              item: cols[13] || "Bamboo",
-              supplier: cols[14] || "QR Supplier",
-              grossKg: parseFloat(cols[15]) || 0,
-              tareKg: parseFloat(cols[16]) || 0,
-              mcPct: parseFloat(cols[17]) || 15.0,
-              amount: parseFloat(cols[20]) || 0,
-              terms: cols[18] || "COD",
-              status: cols[19] || "PAID",
-              inspector: cols[12] || "Intake Inspector"
-            });
-            importedCount++;
-          } else if (category.includes("1.5-Hour Inspection") || category.includes("Furnace Inspection")) {
-            state.furnaceWatch.unshift({
-              datetime: cols[21] || new Date().toLocaleString(),
-              unit: cols[23] || "Furnace #1",
-              temp: parseInt(cols[24]) || 450,
-              vent: cols[25] || "NORMAL",
-              safety: cols[26] || "SAFE",
-              attendant: cols[22] || "Inspector",
-              notes: cols[27] || "QR Inspection Note"
-            });
-            importedCount++;
-          } else if (category.includes("Downtime")) {
-            state.downtime.unshift({
-              id: `DT-QR-${Date.now().toString().slice(-3)}-${i}`,
-              reason: cols[30] || "Stoppage Incident",
-              duration: parseInt(cols[31]) || 30
+              charUsed: parseFloat(cols[12]) || 1200,
+              outputQty: parseFloat(cols[13]) || 1150,
+              pressRate: parseFloat(cols[14]) || 400,
+              dropPct: parseFloat(cols[15]) || 97.0,
+              moisture: parseFloat(cols[16]) || 3.5,
+              fc: parseFloat(cols[17]) || 84.0,
+              ash: parseFloat(cols[18]) || 2.2,
+              gcv: parseInt(cols[19]) || 7400,
+              burnTest: cols[20] || "Pass - Clean Burn / No Smoke",
+              grade: cols[21] || "Export Grade A",
+              inspector: cols[22] || "QC Inspector",
+              notes: cols[23] || "QR Bulk Sync Lab Result"
             });
             importedCount++;
           }
@@ -1564,7 +1650,7 @@
     }
 
     function editItemBySku(skuId) {
-      switchTab('settings', document.querySelectorAll('.nav-link')[14]);
+      switchTab('settings', document.querySelectorAll('.nav-link')[15]);
       document.getElementById('sku-select').value = skuId;
       populateItemFormForEdit();
     }
@@ -1659,8 +1745,7 @@
       e.preventDefault();
       const rawItemName = document.getElementById('proc-raw-item').value;
       const rawQty = parseFloat(document.getElementById('proc-raw-qty').value);
-      const finItemName = document.getElementById('proc-fin-item').value;
-      const finQty = parseFloat(document.getElementById('proc-fin-qty').value);
+      const rawCharQty = parseFloat(document.getElementById('proc-fin-qty').value);
 
       const rawStock = state.inventory.find(i => i.name === rawItemName);
       if (!rawStock || rawStock.stock < rawQty) {
@@ -1669,19 +1754,18 @@
       }
 
       rawStock.stock -= rawQty;
-      const finStock = state.inventory.find(i => i.name === finItemName);
-      if (finStock) finStock.stock += finQty;
+      const charStock = state.inventory.find(i => i.category === 'Raw Char');
+      if (charStock) charStock.stock += rawCharQty;
 
       state.batches.unshift({
         id: `BATCH-${Date.now().toString().slice(-3)}`,
-        rawItem: rawItemName, consumedKg: rawQty, finItem: finItemName, yieldKg: finQty,
+        rawItem: rawItemName, consumedKg: rawQty, yieldKg: rawCharQty,
         cookHours: parseFloat(document.getElementById('proc-cook-hours').value) || 7.5,
         opStart: document.getElementById('proc-op-start').value,
         opEnd: document.getElementById('proc-op-end').value,
         maxTemp: parseInt(document.getElementById('proc-temp').value) || 580,
         preMcPct: parseFloat(document.getElementById('proc-pre-mc').value) || 18.5,
-        qcGrade: document.getElementById('proc-qc-grade').value,
-        qcNotes: document.getElementById('proc-qc-notes').value || 'Clean carbonization cycle'
+        qcNotes: document.getElementById('proc-qc-notes').value || 'Accumulated to raw char stockpile'
       });
 
       saveState(); renderAll(); e.target.reset();
@@ -1700,6 +1784,44 @@
       });
 
       saveState(); renderAll(); e.target.reset();
+    }
+
+    function handleBriquetteQCLog(e) {
+      e.preventDefault();
+      const charUsed = parseFloat(document.getElementById('bq-char-used').value);
+      const outputQty = parseFloat(document.getElementById('bq-output-qty').value);
+      const grade = document.getElementById('bq-grade').value;
+
+      const charStock = state.inventory.find(i => i.category === 'Raw Char');
+      if (!charStock || charStock.stock < charUsed) {
+        alert(`Insufficient raw char in stockpile! Available: ${charStock ? charStock.stock : 0} kg`);
+        return;
+      }
+
+      charStock.stock -= charUsed;
+
+      const targetFinName = grade.includes('Export') ? 'Charcoal Briquettes (Export Grade A)' : 'Charcoal Briquettes (Standard Grade B)';
+      const finStock = state.inventory.find(i => i.name === targetFinName);
+      if (finStock) finStock.stock += outputQty;
+
+      state.briquetteQcLogs.unshift({
+        id: `BQ-${Date.now().toString().slice(-3)}`,
+        date: document.getElementById('bq-date').value,
+        charUsed, outputQty,
+        pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
+        dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
+        moisture: parseFloat(document.getElementById('bq-moisture').value),
+        fc: parseFloat(document.getElementById('bq-fc').value),
+        ash: parseFloat(document.getElementById('bq-ash').value),
+        gcv: parseInt(document.getElementById('bq-gcv').value),
+        burnTest: document.getElementById('bq-burn-test').value,
+        grade,
+        inspector: document.getElementById('bq-inspector').value,
+        notes: document.getElementById('bq-notes').value
+      });
+
+      saveState(); renderAll(); e.target.reset();
+      printBriquetteQCReport(0);
     }
 
     function handleMaintenanceLog(e) {
@@ -2347,6 +2469,7 @@
       if(document.getElementById('fw-attendant')) document.getElementById('fw-attendant').innerHTML = empOpts;
       if(document.getElementById('maint-tech')) document.getElementById('maint-tech').innerHTML = empOpts;
       if(document.getElementById('wb-inspector')) document.getElementById('wb-inspector').innerHTML = empOpts;
+      if(document.getElementById('bq-inspector')) document.getElementById('bq-inspector').innerHTML = empOpts;
       if(document.getElementById('vale-emp')) document.getElementById('vale-emp').innerHTML = empOpts;
       if(document.getElementById('soa-emp-select')) document.getElementById('soa-emp-select').innerHTML = empOpts;
 
@@ -2359,8 +2482,6 @@
       const rawOpts = state.inventory.filter(i => i.category === 'Raw Feed').map(i => `<option value="${i.name}">${i.name} (${i.stock} kg avail - ₱${i.pricePerKg}/kg)</option>`).join('');
       if(document.getElementById('proc-raw-item')) document.getElementById('proc-raw-item').innerHTML = rawOpts;
       if(document.getElementById('wb-item')) document.getElementById('wb-item').innerHTML = rawOpts;
-
-      if(document.getElementById('proc-fin-item')) document.getElementById('proc-fin-item').innerHTML = state.inventory.filter(i => i.category === 'Finished Goods').map(i => `<option value="${i.name}">${i.name}</option>`).join('');
       
       const supplierOpts = state.contacts.map(c => `<option value="${c.company}">${c.company} (${c.person})</option>`).join('');
       if(document.getElementById('log-party')) document.getElementById('log-party').innerHTML = supplierOpts;
@@ -2432,28 +2553,24 @@
         </tr>
       `).join('');
 
-      // Batch Table (Includes Total Cook Time & Printable QC Report Button)
+      // Batch Stacking Table (No QC Box)
       document.getElementById('tbl-batches').innerHTML = state.batches.map((b, idx) => `
         <tr>
           <td><strong>${b.id}</strong></td>
           <td>${b.rawItem} (${b.consumedKg} kg)</td>
-          <td><strong>${b.yieldKg} kg (${b.finItem})</strong></td>
+          <td><strong>${b.yieldKg} kg Raw Char</strong></td>
           <td><strong style="color: var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td>
           <td><strong>${b.cookHours || 7.5} hrs</strong></td>
           <td>${b.preMcPct || 18.5}%</td>
-          <td><span class="badge ${b.qcGrade === 'Grade A' ? 'badge-pass' : b.qcGrade === 'Grade B' ? 'badge-warn' : 'badge-fail'}">${b.qcGrade || 'Grade A'}</span></td>
           <td>${b.opStart}</td>
           <td>${b.opEnd}</td>
           <td><strong>${b.maxTemp} °C</strong></td>
-          <td>${b.qcNotes || 'Clean burn'}</td>
-          <td>
-            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBatchQCReport(${idx})">🖨️ Print QC PDF</button>
-            <button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button>
-          </td>
+          <td>${b.qcNotes || 'Stockpile ready'}</td>
+          <td><button onclick="deleteEntry('batches', ${idx})" class="btn-danger">Delete</button></td>
         </tr>
       `).join('');
 
-      // Furnace Inspection Table (1.5-Hour Watch)
+      // Furnace Inspection Table (1.5-Hour Safety Watch)
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
         <tr>
           <td><strong>${fw.datetime}</strong></td>
@@ -2461,11 +2578,32 @@
           <td><strong>${fw.temp} °C</strong></td>
           <td><span class="badge ${fw.vent === 'NORMAL' ? 'badge-pass' : 'badge-fail'}">${fw.vent}</span></td>
           <td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td>
-          <td>${fw.notes || 'No unusual conditions'}</td>
+          <td>${fw.notes || '1.5-hr check normal'}</td>
           <td>${fw.attendant}</td>
           <td>
             <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBlankFurnaceWatchForm()">🖨️ Form</button>
             <button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Briquette QC Lab Table
+      document.getElementById('tbl-briquette-qc').innerHTML = (state.briquetteQcLogs || []).map((q, idx) => `
+        <tr>
+          <td><strong>${q.id}</strong></td>
+          <td>${q.date}</td>
+          <td>${q.charUsed} kg</td>
+          <td><strong>${q.outputQty} kg</strong></td>
+          <td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td>
+          <td>${q.moisture}%</td>
+          <td>${q.fc}%</td>
+          <td>${q.ash}%</td>
+          <td><strong>${q.gcv} kcal</strong></td>
+          <td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td>
+          <td>${q.inspector}</td>
+          <td>
+            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBriquetteQCReport(${idx})">🖨️ Cert PDF</button>
+            <button onclick="deleteEntry('briquetteQcLogs', ${idx})" class="btn-danger">Delete</button>
           </td>
         </tr>
       `).join('');
@@ -2712,8 +2850,8 @@
       const netProfit = totalRev - totalExp;
 
       const totalRaw = state.batches.reduce((s, b) => s + b.consumedKg, 0);
-      const totalFin = state.batches.reduce((s, b) => s + b.yieldKg, 0);
-      const avgYield = totalRaw > 0 ? ((totalFin / totalRaw) * 100).toFixed(1) : 0;
+      const totalChar = state.batches.reduce((s, b) => s + b.yieldKg, 0);
+      const avgYield = totalRaw > 0 ? ((totalChar / totalRaw) * 100).toFixed(1) : 0;
       
       const totalVale = (state.valeVouchers || [])
         .filter(v => v.status === 'ACTIVE' || (v.remainingBalance || 0) > 0)
@@ -2759,10 +2897,12 @@
         document.getElementById('rec-stock-text').innerHTML = `✅ <strong>Feedstock buffers are healthy.</strong> Stock is sufficient for continuous furnace runs.`;
       }
 
-      if (parseFloat(avgYield) < 52.0 && totalRaw > 0) {
-        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-gold);">⚡ EFFICIENCY ALERT:</strong> Average conversion rate is <strong>${avgYield}%</strong> (Target: &ge;55%). Inspect furnace dampers or check moisture content in bamboo/coconut/rice husk feed.`;
+      const rawCharStockpile = state.inventory.find(i => i.category === 'Raw Char');
+      const stockKg = rawCharStockpile ? rawCharStockpile.stock : 0;
+      if (stockKg >= 1200) {
+        document.getElementById('rec-yield-text').innerHTML = `<strong style="color: var(--brand-green);">⚡ 400KG/HR PRESS READY:</strong> Raw char stockpile is at <strong>${stockKg} kg</strong>. You have enough accumulated char to schedule your weekly high-speed briquetting run!`;
       } else {
-        document.getElementById('rec-yield-text').innerHTML = `✅ <strong>Carbonization conversion efficiency is optimal (${avgYield}%).</strong> Pyrolysis burn cycles are yielding high biochar output.`;
+        document.getElementById('rec-yield-text').innerHTML = `🔥 <strong>Accumulating Pyrolysis Char:</strong> Current raw char stockpile is at ${stockKg} kg (Target: 1,200kg+ for weekly 400kg/hr run).`;
       }
 
       renderCharts(totalRev, totalExp, netProfit, totalVale);
