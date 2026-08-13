@@ -174,7 +174,7 @@
     .printable-document {
       background: #ffffff;
       border: 1px solid #1a1816;
-      padding: 12px 16px;
+      padding: 10px 14px;
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
@@ -197,13 +197,13 @@
     .print-shape-circle { width: 18px; height: 18px; background-color: #000000; border: 2px solid #000000; border-radius: 50%; }
     .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
-    .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
-    .print-brand-title span { font-size: 0.5rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
+    .print-brand-title h2 { font-size: 1.0rem; font-weight: 800; line-height: 1; color: #0f172a; }
+    .print-brand-title span { font-size: 0.48rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
 
-    .print-meta-right { text-align: right; font-size: 0.7rem; color: var(--text-muted); line-height: 1.3; }
+    .print-meta-right { text-align: right; font-size: 0.68rem; color: var(--text-muted); line-height: 1.2; }
 
     @media print {
-      @page { size: landscape; margin: 5mm; }
+      @page { size: landscape; margin: 4mm; }
       body * { visibility: hidden !important; }
       #printable-area, #printable-area * { visibility: visible !important; }
       #printable-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
@@ -417,7 +417,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Daily Factory Shift Open & Close Log (Pagbukas ug Pagsara)</span>
-            <button class="btn-secondary" id="btnPrintShift">🖨️ Print Blank Shift Sheet</button>
+            <button class="btn-secondary" id="btnPrintShift">🖨️ Print Full-Page Blank Shift Sheet</button>
           </div>
           <form id="form-openclose">
             <div class="form-grid">
@@ -454,7 +454,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Pyrolysis Batch Cook & Raw Char Stacking (300kg+ per Batch)</span>
-            <button class="btn-secondary" id="btnPrintBatch">🖨️ Print Blank Pyrolysis Stacking Sheet (1-Page)</button>
+            <button class="btn-secondary" id="btnPrintBatch">🖨️ Print Full-Page Pyrolysis Stacking Sheet</button>
           </div>
           <form id="form-batches">
             <div class="form-grid">
@@ -499,7 +499,7 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Furnace Inspection (Safety & Temperature Check)</span>
-            <button class="btn-secondary" id="btnPrintFurnace">🖨️ Print Blank Furnace Watch Sheet</button>
+            <button class="btn-secondary" id="btnPrintFurnace">🖨️ Print Full-Page Furnace Watch Sheet</button>
           </div>
           <form id="form-furnace-watch">
             <div class="form-grid">
@@ -532,12 +532,55 @@
 
       <!-- TAB 6: BRIQUETTE PRODUCTION & QC LAB -->
       <div id="briquette-qc" class="tab-pane">
+        
+        <!-- QC GRADING CRITERIA REFERENCE CARD -->
+        <div class="panel" style="background: #f8fafc; border: 1.5px solid var(--brand-blue);">
+          <div class="panel-title">🔬 Factory QC Testing Protocols & Grading Criteria Reference</div>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
+            Use these strict physical and laboratory standards to classify your finished 400kg/hr briquette runs into <strong>Grade A (Export)</strong>, <strong>Grade B (Local BBQ)</strong>, or <strong>Rejected</strong>.
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; font-size: 0.8rem;">
+            <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+              <strong style="color: var(--brand-green);">⭐ Export Grade A</strong>
+              <ul style="margin-left: 16px; margin-top: 6px; color: var(--text-muted); line-height: 1.4;">
+                <li><strong>Drop Test Retain:</strong> &gt; 95% (1.8m drop)</li>
+                <li><strong>Moisture Content:</strong> &lt; 5.0%</li>
+                <li><strong>Ignition Time:</strong> &lt; 3.0 mins</li>
+                <li><strong>Burn Time:</strong> &gt; 75–85 mins</li>
+                <li><strong>Fixed Carbon:</strong> &ge; 75%</li>
+                <li><strong>Smoke / Odor:</strong> Smokeless, odorless white ash</li>
+              </ul>
+            </div>
+            <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+              <strong style="color: var(--brand-gold);">⚡ Standard Grade B</strong>
+              <ul style="margin-left: 16px; margin-top: 6px; color: var(--text-muted); line-height: 1.4;">
+                <li><strong>Drop Test Retain:</strong> 90% – 95%</li>
+                <li><strong>Moisture Content:</strong> 5.0% – 8.0%</li>
+                <li><strong>Ignition Time:</strong> 3.0 – 4.0 mins</li>
+                <li><strong>Burn Time:</strong> 50 – 70 mins</li>
+                <li><strong>Fixed Carbon:</strong> 65% – 75%</li>
+                <li><strong>Application:</strong> Local commercial grill / BBQ use</li>
+              </ul>
+            </div>
+            <div style="background: #ffffff; padding: 12px; border-radius: 8px; border: 1px solid var(--border-light);">
+              <strong style="color: var(--brand-danger);">❌ Rejected / Re-run</strong>
+              <ul style="margin-left: 16px; margin-top: 6px; color: var(--text-muted); line-height: 1.4;">
+                <li><strong>Drop Retain:</strong> &lt; 90% (Crumbles easily)</li>
+                <li><strong>Moisture Content:</strong> &gt; 8.0% (Sizzles on ignition)</li>
+                <li><strong>Burn Time:</strong> &lt; 50 mins</li>
+                <li><strong>Defect:</strong> Excessive smoke, tar odor, or uncarbonized core pockets</li>
+                <li><strong>Action:</strong> Crush back to raw char stock</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
         <div class="panel">
           <div class="panel-title">
             <span>Log Weekly 400kg/hr Briquetting Run & Finished Goods QC Test Results</span>
             <div style="display: flex; gap: 8px;">
-              <button class="btn-secondary" id="btnPrintProd">🖨️ Print Blank Production Form</button>
-              <button class="btn-secondary" id="btnPrintQc">🖨️ Print Blank QC Form</button>
+              <button class="btn-secondary" id="btnPrintProd">🖨️ Print Full-Page Production Form</button>
+              <button class="btn-secondary" id="btnPrintQc">🖨️ Print Full-Page QC Form</button>
             </div>
           </div>
           <form id="form-briquette-qc">
@@ -1345,7 +1388,7 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('DAILY FACTORY OPEN & CLOSE SHIFT LOGSHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 <span><strong>Run Mode:</strong> [  ] Standard Day &nbsp;&nbsp; [  ] 24-hr Continuous</span>
@@ -1354,20 +1397,20 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Time In</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Opened By (Attendant)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Machinery & Safety Check</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Time Out</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Closed By (Attendant)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Handover / Perimeter Security Notes</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Time In</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Opened By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Machinery & Safety Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Time Out</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Closed By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Handover / Perimeter Security Notes</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(14).fill(0).map(() => `
-                  <tr style="height: 34px;">
+                ${Array(28).fill(0).map(() => `
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
@@ -1379,7 +1422,7 @@
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-top: 4px; border-top: 1px solid #cbd5e1; padding-top: 4px;">
             <div>________________________________________<br>Plant Supervisor Signature</div>
             <div>________________________________________<br>Plant Manager Review</div>
           </div>
@@ -1393,7 +1436,7 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('PYROLYSIS BATCH COOK & RAW CHAR STACKING LOGSHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 <span><strong>Shift Supervisor:</strong> ________________________</span>
@@ -1402,30 +1445,30 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.6rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Batch ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Feed Used</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Consumed (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Char Output (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Start Time & Duty</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">End Time & Duty</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Cook (hrs)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Peak Temp (°C)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Pre-MC %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Batch ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Feed Used</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Consumed (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Char Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Start Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">End Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Cook (hrs)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Peak Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Pre-MC %</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(12).fill(0).map(() => `
-                  <tr style="height: 31px;">
+                ${Array(26).fill(0).map(() => `
+                  <tr style="height: 23px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-top: 4px; border-top: 1px solid #cbd5e1; padding-top: 4px;">
             <div>________________________________________<br>Plant Operator Signature</div>
             <div>________________________________________<br>Plant Owner / Supervisor Review</div>
           </div>
@@ -1439,7 +1482,7 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 <span><strong>Furnace Unit:</strong> [  ] Furnace #1 &nbsp;&nbsp; [  ] Furnace #2 &nbsp;&nbsp; [  ] 24-hr Continuous Run</span>
@@ -1448,20 +1491,20 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 14%;">Time Check</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 12%;">Temp (°C)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 20%;">Ventilation / Flue Gas</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 18%;">Fire & CO Safety</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 22%;">Observations / Notes</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 3px; width: 14%;">Inspector Signature</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 14%;">Time Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 12%;">Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 20%;">Ventilation / Flue Gas</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 18%;">Fire & CO Safety</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 22%;">Observations / Notes</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 3px; width: 14%;">Inspector Signature</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(12).fill(0).map(() => `
-                  <tr style="height: 31px;">
+                ${Array(26).fill(0).map(() => `
+                  <tr style="height: 23px;">
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
@@ -1473,7 +1516,7 @@
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-top: 4px; border-top: 1px solid #cbd5e1; padding-top: 4px;">
             <div>________________________________________<br>Shift Safety Inspector Signature</div>
             <div>________________________________________<br>Plant Supervisor Review</div>
           </div>
@@ -1487,7 +1530,7 @@
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
             ${getBrandedHeader('WEEKLY 400KG/HR BRIQUETTE PRODUCTION FORM')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
                 <span><strong>Press Rate:</strong> 400 kg/hr</span>
@@ -1496,27 +1539,27 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Source Batch / Cook #</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Char Used (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Output Qty (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Press Speed</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Operator / Crew</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Source Batch / Cook #</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Char Used (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Output Qty (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Press Speed</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Operator / Crew</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(13).fill(0).map(() => `
-                  <tr style="height: 34px;">
+                ${Array(26).fill(0).map(() => `
+                  <tr style="height: 23px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; border-top: 1px solid #cbd5e1; padding-top: 4px;">
             <div>________________________________________<br>Production Lead Signature</div>
             <div>________________________________________<br>Plant Manager Approval</div>
           </div>
@@ -1529,39 +1572,39 @@
       const blankQcHtml = `
         <div class="printable-document" style="height: 98vh; display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            ${getBrandedHeader('FINISHED GOODS QC & LABORATORY INSPECTION FORM')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
-              <div>
-                <span><strong>Testing Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
-                <span><strong>Standards:</strong> Drop &gt;95%, MC &lt;5%, Burn &gt;70m</span>
-              </div>
-              <div>
-                <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
-              </div>
+            ${getBrandedHeader('FINISHED GOODS QC & LABORATORY INSPECTION FORM (WITH PASS/FAIL CRITERIA)')}
+            
+            <!-- QC STANDARDS LEGEND BOX FOR PRINTING -->
+            <div style="background: #f8fafc; border: 1px solid #0f172a; padding: 6px 10px; margin-bottom: 6px; font-size: 0.6rem; line-height: 1.3;">
+              <strong>🧪 CBCM QC TEST INSTRUCTIONS & PASS/FAIL GRADING LEGEND:</strong><br>
+              • <strong>Drop Test:</strong> Drop 3 briquettes from 1.8m height onto concrete. Retain % = (Weight after drop / Initial weight) * 100. <strong>Pass: &gt;95% (Grade A), 90–95% (Grade B), &lt;90% (Rejected).</strong><br>
+              • <strong>Moisture Meter:</strong> Pin meter test. <strong>Pass: &lt;5.0% (Grade A), 5.0–8.0% (Grade B), &gt;8.0% (Reject).</strong><br>
+              • <strong>Ignition & Burn Test:</strong> Using starter, time initial ignition &lt;3 mins. Continuous burn test duration: <strong>Grade A (&gt;75 mins, smokeless white ash), Grade B (50–70 mins), Rejected (&lt;50 mins or heavy smoke/odor).</strong>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.63rem; text-align: center; border: 1.5px solid #0f172a;">
+
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.58rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Source Batch #</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Drop Retain %</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Moisture %</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Ignition (min)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Burn Time (min)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">Assigned Grade</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 6px 2px;">QC Inspector</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Source Batch #</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Drop % (&gt;95)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">MC % (&lt;5)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ignition (&lt;3m)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Burn Time (&gt;75m)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Assigned Grade (A / B / Rej)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">QC Inspector</th>
                 </tr>
               </thead>
               <tbody>
-                ${Array(13).fill(0).map(() => `
-                  <tr style="height: 34px;">
+                ${Array(20).fill(0).map(() => `
+                  <tr style="height: 23px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; border-top: 1px solid #cbd5e1; padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; border-top: 1px solid #cbd5e1; padding-top: 4px;">
             <div>________________________________________<br>QC Laboratory Inspector Signature</div>
             <div>________________________________________<br>Plant Manager Sign-off</div>
           </div>
