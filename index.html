@@ -44,7 +44,8 @@
     .brand-container { display: flex; align-items: center; gap: 16px; }
     .brand-shapes { display: flex; align-items: center; gap: 8px; }
     .shape-diamond-orange { width: 22px; height: 22px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 3px; }
-    .shape-circle-white { width: 24px; height: 24px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
+    /* Dark background header circle -> white */
+    .shape-circle-dynamic { width: 24px; height: 24px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
     .shape-diamond-green { width: 22px; height: 22px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 3px; }
 
     .brand-text h1 { font-size: 1.4rem; font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; }
@@ -181,7 +182,8 @@
     .print-logo-group { display: flex; align-items: center; gap: 10px; }
     .print-shapes { display: flex; align-items: center; gap: 5px; }
     .print-shape-orange { width: 16px; height: 16px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
-    .print-shape-white { width: 18px; height: 18px; background-color: #ffffff; border: 2px solid #cbd5e1; border-radius: 50%; }
+    /* White background document circle -> black */
+    .print-shape-circle { width: 18px; height: 18px; background-color: #000000; border: 2px solid #000000; border-radius: 50%; }
     .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
     .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
@@ -217,7 +219,7 @@
     <div class="brand-container">
       <div class="brand-shapes">
         <div class="shape-diamond-orange"></div>
-        <div class="shape-circle-white"></div>
+        <div class="shape-circle-dynamic"></div>
         <div class="shape-diamond-green"></div>
       </div>
       <div class="brand-text">
@@ -957,7 +959,7 @@
         </div>
       </div>
 
-      <!-- TAB 15: DOWNTIME -->
+      <!-- TAB 15: Downtime -->
       <div id="downtime" class="tab-pane">
         <div class="panel">
           <div class="panel-title">Log Stoppage / Downtime Incident</div>
@@ -1234,14 +1236,14 @@
       document.body.removeChild(link);
     }
 
-    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES & FULL COMPANY NAME
+    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES & FULL COMPANY NAME (Circle is black on white document background)
     function getBrandedHeader(documentTitle) {
       return `
         <div class="print-letterhead">
           <div class="print-logo-group">
             <div class="print-shapes">
               <div class="print-shape-orange"></div>
-              <div class="print-shape-white"></div>
+              <div class="print-shape-circle"></div>
               <div class="print-shape-green"></div>
             </div>
             <div class="print-brand-title">
@@ -1256,6 +1258,56 @@
           </div>
         </div>
       `;
+    }
+
+    // PRINT BLANK SHIFT OPEN/CLOSE FORM (Fixed & Restored)
+    function printBlankShiftForm() {
+      const blankHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('DAILY FACTORY SHIFT OPEN & CLOSE LOGSHEET')}
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 10px;">
+            <div>
+              <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+              <span><strong>Run Mode:</strong> [  ] Standard Day &nbsp;&nbsp; [  ] 24-hr Continuous</span>
+            </div>
+            <div>
+              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+            </div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 10px;">
+            <thead>
+              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Opening Time (In)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Opened By (Attendant)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Machines & Safety Check</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Closing Time (Out)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Closed By (Attendant)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 6px;">Handover / Safety Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${Array(8).fill(0).map(() => `
+                <tr style="height: 38px;">
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                  <td style="border: 1px solid #cbd5e1;"></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 15px;">
+            <div>________________________________________<br>Plant Supervisor Signature</div>
+            <div>________________________________________<br>Plant Manager Review</div>
+          </div>
+        </div>
+      `;
+      executePrint(blankHtml);
     }
 
     // PRINT BLANK PYROLYSIS BATCH STACKING SHEET
@@ -1571,6 +1623,63 @@
       const fromDate = document.getElementById('soa-date-from').value;
       const toDate = document.getElementById('soa-date-to').value;
       if (empName) printEmployeeCaSOAByName(empName, fromDate, toDate);
+    }
+
+    // PRINT CUSTOMER SALES SOA FUNCTION
+    function printSalesSOAFromDropdown() {
+      const custName = document.getElementById('sales-soa-cust-select').value;
+      const fromDate = document.getElementById('sales-soa-date-from').value;
+      const toDate = document.getElementById('sales-soa-date-to').value;
+      
+      const tickets = (state.logistics || []).filter(l => l.type === 'OUTBOUND_CUSTOMER' && l.party === custName);
+      let totalAmount = 0;
+      let totalOutstanding = 0;
+
+      let rowsHtml = tickets.map(t => {
+        totalAmount += t.amount;
+        if (t.status === 'OUTSTANDING') totalOutstanding += t.amount;
+        return `
+          <tr style="border-bottom: 1px solid #e2e8f0;">
+            <td style="padding: 6px;">${t.date}</td>
+            <td style="padding: 6px;"><strong>${t.id}</strong></td>
+            <td style="padding: 6px;">${t.item}</td>
+            <td style="padding: 6px;">${t.qty.toLocaleString()} kg</td>
+            <td style="padding: 6px;">₱${t.amount.toLocaleString()}</td>
+            <td style="padding: 6px;"><span class="badge ${t.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${t.status}</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      if (tickets.length === 0) {
+        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 12px;">No sales dispatch tickets found for ${custName}.</td></tr>`;
+      }
+
+      const salesSoaHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('CUSTOMER STATEMENT OF ACCOUNT (SOA) - SALES & DISPATCHES')}
+          <p><strong>Customer / Partner:</strong> ${custName}</p>
+          <p><strong>Billing Period:</strong> ${fromDate} to ${toDate}</p>
+          <hr style="border: 1px dashed #000; margin-bottom: 10px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; margin-bottom: 12px;">
+            <thead>
+              <tr style="border-bottom: 2px solid #000;">
+                <th style="padding: 6px;">Date</th><th style="padding: 6px;">Ticket ID</th><th style="padding: 6px;">Product SKU</th><th style="padding: 6px;">Quantity</th><th style="padding: 6px;">Amount</th><th style="padding: 6px;">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+          <hr style="border: 1px dashed #000; margin: 10px 0;">
+          <p><strong>Total Dispatched Sales:</strong> ₱${totalAmount.toLocaleString()}</p>
+          <p style="font-size: 1.1rem; font-weight: bold; color: var(--brand-danger);">TOTAL OUTSTANDING RECEIVABLE: ₱${totalOutstanding.toLocaleString()}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
+            <div>___________________<br>Customer Representative</div>
+            <div>___________________<br>Combinido Biocarbon Sales Dept</div>
+          </div>
+        </div>
+      `;
+      executePrint(salesSoaHtml);
     }
 
     // CSV IMPORT UTILITY
