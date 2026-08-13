@@ -171,18 +171,18 @@
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
 
-    /* FORCED SINGLE-PAGE LANDSCAPE PRINT ENGINE */
+    /* PERFECT SINGLE-PAGE FILLING LANDSCAPE PRINT ENGINE */
     .printable-document {
       background: #ffffff;
       border: 1px solid #1a1816;
-      padding: 4px 8px;
+      padding: 10px 16px;
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #0f172a;
-      height: 98vh;
-      max-height: 98vh;
+      height: 100vh;
+      max-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -195,26 +195,26 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1.5px solid var(--brand-orange);
-      padding-bottom: 2px;
-      margin-bottom: 2px;
+      border-bottom: 2px solid var(--brand-orange);
+      padding-bottom: 6px;
+      margin-bottom: 8px;
     }
 
-    .print-logo-group { display: flex; align-items: center; gap: 6px; }
-    .print-shapes { display: flex; align-items: center; gap: 3px; }
-    .print-shape-orange { width: 12px; height: 12px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
-    .print-shape-circle { width: 14px; height: 14px; background-color: #000000; border: 2px solid #000000; border-radius: 50%; }
-    .print-shape-green { width: 12px; height: 12px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
+    .print-logo-group { display: flex; align-items: center; gap: 8px; }
+    .print-shapes { display: flex; align-items: center; gap: 4px; }
+    .print-shape-orange { width: 15px; height: 15px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
+    .print-shape-circle { width: 17px; height: 17px; background-color: #000000; border: 2px solid #000000; border-radius: 50%; }
+    .print-shape-green { width: 15px; height: 15px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
-    .print-brand-title h2 { font-size: 0.82rem; font-weight: 800; line-height: 1; color: #0f172a; }
-    .print-brand-title span { font-size: 0.4rem; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--brand-orange); margin-top: 1px; display: block; }
+    .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
+    .print-brand-title span { font-size: 0.48rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
 
-    .print-meta-right { text-align: right; font-size: 0.58rem; color: var(--text-muted); line-height: 1.05; }
+    .print-meta-right { text-align: right; font-size: 0.65rem; color: var(--text-muted); line-height: 1.15; }
 
     @media print {
       @page {
         size: landscape;
-        margin: 5mm;
+        margin: 4mm;
       }
       html, body {
         width: 100%;
@@ -245,12 +245,12 @@
         margin: 0 !important;
       }
       .printable-document {
-        width: 100% !important;
+        width: 100vw !important;
         height: 100vh !important;
         max-height: 100vh !important;
         border: none !important;
         box-shadow: none !important;
-        padding: 2px 4px !important;
+        padding: 8px 14px !important;
         page-break-after: avoid !important;
         page-break-before: avoid !important;
         page-break-inside: avoid !important;
@@ -1436,29 +1436,29 @@
         <div class="printable-document">
           <div>
             ${getBrandedHeader('DAILY FACTORY OPEN & CLOSE SHIFT LOGSHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.58rem; margin-bottom: 2px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Shift Date:</strong> ________________________</span> &nbsp;&nbsp;
-                <span><strong>Run Mode:</strong> [  ] Standard &nbsp;&nbsp; [  ] 24-hr</span>
+                <span><strong>Run Mode:</strong> [  ] Standard Day &nbsp;&nbsp; [  ] 24-hr Continuous</span>
               </div>
               <div>
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.52rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.6rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Time In</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Opened By (Attendant)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Machinery & Safety Check</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Time Out</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Closed By (Attendant)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Handover / Security Notes</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Time In</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Opened By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Machinery & Safety Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Time Out</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Closed By (Attendant)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Handover / Security Notes</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(14).fill(0).map(() => `
-                  <tr style="height: 15px;">
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
@@ -1470,7 +1470,7 @@
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.58rem; border-top: 1px solid #cbd5e1; padding-top: 2px; margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; border-top: 1px solid #cbd5e1; padding-top: 6px; margin-top: 4px;">
             <div>________________________________________<br>Plant Supervisor Signature</div>
             <div>________________________________________<br>Plant Manager Review</div>
           </div>
@@ -1484,7 +1484,7 @@
         <div class="printable-document">
           <div>
             ${getBrandedHeader('PYROLYSIS BATCH COOK & RAW CHAR STACKING LOGSHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.58rem; margin-bottom: 2px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;
                 <span><strong>Shift Supervisor:</strong> ________________________</span>
@@ -1493,30 +1493,30 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.5rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.58rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Batch ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Raw Feed</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Consumed (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Char Output (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Start Time & Duty</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">End Time & Duty</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Cook (hrs)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Peak Temp (°C)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Pre-MC %</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Batch ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Raw Feed</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Consumed (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Char Output (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Start Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">End Time & Duty</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Cook (hrs)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Peak Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Pre-MC %</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(13).fill(0).map(() => `
-                  <tr style="height: 15px;">
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.58rem; border-top: 1px solid #cbd5e1; padding-top: 2px; margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; border-top: 1px solid #cbd5e1; padding-top: 6px; margin-top: 4px;">
             <div>________________________________________<br>Plant Operator Signature</div>
             <div>________________________________________<br>Plant Owner / Supervisor Review</div>
           </div>
@@ -1530,7 +1530,7 @@
         <div class="printable-document">
           <div>
             ${getBrandedHeader('FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.58rem; margin-bottom: 2px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;
                 <span><strong>Furnace Unit:</strong> [  ] Furnace #1 &nbsp;&nbsp; [  ] Furnace #2</span>
@@ -1539,20 +1539,20 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.52rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.6rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 14%;">Time Check</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 12%;">Temp (°C)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 20%;">Ventilation / Flue Gas</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 18%;">Fire & CO Safety</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 22%;">Observations / Notes</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px; width: 14%;">Inspector Sign</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 14%;">Time Check</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 12%;">Temp (°C)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 20%;">Ventilation / Flue Gas</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 18%;">Fire & CO Safety</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 22%;">Observations / Notes</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px; width: 14%;">Inspector Sign</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(13).fill(0).map(() => `
-                  <tr style="height: 15px;">
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
                     <td style="border: 1px solid #cbd5e1;"></td>
@@ -1564,7 +1564,7 @@
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.58rem; border-top: 1px solid #cbd5e1; padding-top: 2px; margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; border-top: 1px solid #cbd5e1; padding-top: 6px; margin-top: 4px;">
             <div>________________________________________<br>Shift Safety Inspector Signature</div>
             <div>________________________________________<br>Plant Supervisor Review</div>
           </div>
@@ -1578,7 +1578,7 @@
         <div class="printable-document">
           <div>
             ${getBrandedHeader('WEEKLY 400KG/HR BRIQUETTE PRODUCTION FORM')}
-            <div style="display: flex; justify-content: space-between; font-size: 0.58rem; margin-bottom: 2px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.65rem; margin-bottom: 4px;">
               <div>
                 <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;
                 <span><strong>Press Rate:</strong> 400 kg/hr</span>
@@ -1587,27 +1587,27 @@
                 <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
               </div>
             </div>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.52rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.6rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Source Batch / Cook #</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Char Used (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Output Qty (kg)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Press Speed</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Operator / Crew</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Source Batch / Cook #</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Char Used (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Output Qty (kg)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Press Speed</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Operator / Crew</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(13).fill(0).map(() => `
-                  <tr style="height: 15px;">
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.58rem; border-top: 1px solid #cbd5e1; padding-top: 2px; margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; border-top: 1px solid #cbd5e1; padding-top: 6px; margin-top: 4px;">
             <div>________________________________________<br>Production Lead Signature</div>
             <div>________________________________________<br>Plant Manager Approval</div>
           </div>
@@ -1622,33 +1622,33 @@
           <div>
             ${getBrandedHeader('FINISHED GOODS QC & LABORATORY INSPECTION FORM')}
             
-            <div style="background: #f8fafc; border: 1px solid #0f172a; padding: 2px 6px; margin-bottom: 2px; font-size: 0.48rem; line-height: 1.15;">
+            <div style="background: #f8fafc; border: 1px solid #0f172a; padding: 4px 8px; margin-bottom: 4px; font-size: 0.52rem; line-height: 1.2;">
               <strong>🧪 CBCM QC TEST CRITERIA:</strong> Drop Test (&gt;95% Grade A, 90-95% Grade B, &lt;90% Rej) | Moisture Meter (&lt;5% Grade A, 5-8% Grade B, &gt;8% Rej) | Burn Time (&gt;75m Grade A, 50-70m Grade B)
             </div>
 
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.5rem; text-align: center; border: 1.5px solid #0f172a;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.58rem; text-align: center; border: 1.5px solid #0f172a;">
               <thead>
                 <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Run ID</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Source Batch #</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Drop % (&gt;95)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">MC % (&lt;5)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Ignition (&lt;3m)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Burn Time (&gt;75m)</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">Assigned Grade</th>
-                  <th style="border: 1px solid #cbd5e1; padding: 1px 2px;">QC Inspector</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Run ID</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Source Batch #</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Drop % (&gt;95)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">MC % (&lt;5)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Ignition (&lt;3m)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Burn Time (&gt;75m)</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">Assigned Grade</th>
+                  <th style="border: 1px solid #cbd5e1; padding: 4px;">QC Inspector</th>
                 </tr>
               </thead>
               <tbody>
                 ${Array(11).fill(0).map(() => `
-                  <tr style="height: 15px;">
+                  <tr style="height: 24px;">
                     <td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td>
                   </tr>
                 `).join('')}
               </tbody>
             </table>
           </div>
-          <div style="display: flex; justify-content: space-between; font-size: 0.58rem; border-top: 1px solid #cbd5e1; padding-top: 2px; margin-top: 2px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.65rem; border-top: 1px solid #cbd5e1; padding-top: 6px; margin-top: 4px;">
             <div>________________________________________<br>QC Laboratory Inspector Signature</div>
             <div>________________________________________<br>Plant Manager Sign-off</div>
           </div>
@@ -1660,14 +1660,14 @@
     function printBriquetteQCReport(qcIndex) {
       const q = state.briquetteQcLogs[qcIndex];
       const reportHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 8px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 12px;">
           ${getBrandedHeader('OFFICIAL CHARCOAL BRIQUETTE QC & LABORATORY CERTIFICATE')}
-          <p style="font-size: 0.75rem;"><strong>Run ID:</strong> ${q.id} | <strong>Date:</strong> ${q.date}</p>
-          <p style="font-size: 0.75rem;"><strong>Source Batch Number(s):</strong> ${q.sourceBatch || 'N/A'}</p>
-          <p style="font-size: 0.75rem;"><strong>Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
-          <p style="font-size: 0.75rem;"><strong>Drop Test Retain:</strong> ${q.dropPct}% | <strong>Moisture:</strong> ${q.moisture}%</p>
-          <p style="font-size: 0.75rem;"><strong>Burn Time:</strong> ${q.burnTime} mins | <strong>Inspector Remarks:</strong> ${q.notes}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.7rem;">
+          <p style="font-size: 0.82rem;"><strong>Run ID:</strong> ${q.id} | <strong>Date:</strong> ${q.date}</p>
+          <p style="font-size: 0.82rem;"><strong>Source Batch Number(s):</strong> ${q.sourceBatch || 'N/A'}</p>
+          <p style="font-size: 0.82rem;"><strong>Output Quantity:</strong> ${q.outputQty.toLocaleString()} kg (${q.grade})</p>
+          <p style="font-size: 0.82rem;"><strong>Drop Test Retain:</strong> ${q.dropPct}% | <strong>Moisture:</strong> ${q.moisture}%</p>
+          <p style="font-size: 0.82rem;"><strong>Burn Time:</strong> ${q.burnTime} mins | <strong>Inspector Remarks:</strong> ${q.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 30px; font-size: 0.75rem;">
             <div>___________________<br>QC Inspector</div>
             <div>___________________<br>Plant Owner Review</div>
           </div>
@@ -1716,9 +1716,9 @@
       const netTakeHome = Math.max(0, netTakeHomeBeforeVale - valeDeduct);
 
       const paystubHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 6px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 10px;">
           ${getBrandedHeader('OFFICIAL WEEKLY EMPLOYEE PAYSTUB')}
-          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 4px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px;">
             <div>
               <p><strong>Employee:</strong> ${e.name} (${e.pos})</p>
               <p><strong>Payout Cycle:</strong> Week ${weekNum} (Month: ${month + 1}, Year: ${year})</p>
@@ -1728,14 +1728,14 @@
               <p><strong>Days Present:</strong> ${weeklyDays} days</p>
             </div>
           </div>
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; margin-bottom: 4px;">
-            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 2px;">Gross Weekly Earnings (${weeklyDays} days @ ₱${e.rate}):</td><td style="text-align: right; padding: 2px;">₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>
-            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 2px;">Less Withholding Tax (1601-C):</td><td style="text-align: right; color: var(--brand-danger); padding: 2px;">-₱${wtax.toFixed(2)}</td></tr>
-            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 2px;">Less SSS / PhilHealth / Pag-IBIG:</td><td style="text-align: right; color: var(--brand-danger); padding: 2px;">-₱${(sss.ee + ph.ee + pagibig.ee).toFixed(2)}</td></tr>
-            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 2px;">Less Cash Advance (Vale) Repayment:</td><td style="text-align: right; color: var(--brand-gold); padding: 2px;">-₱${valeDeduct.toFixed(2)}</td></tr>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem; margin-bottom: 6px;">
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 4px;">Gross Weekly Earnings (${weeklyDays} days @ ₱${e.rate}):</td><td style="text-align: right; padding: 4px;">₱${weeklyGross.toLocaleString(undefined, {minimumFractionDigits: 2})}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 4px;">Less Withholding Tax (1601-C):</td><td style="text-align: right; color: var(--brand-danger); padding: 4px;">-₱${wtax.toFixed(2)}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 4px;">Less SSS / PhilHealth / Pag-IBIG:</td><td style="text-align: right; color: var(--brand-danger); padding: 4px;">-₱${(sss.ee + ph.ee + pagibig.ee).toFixed(2)}</td></tr>
+            <tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding: 4px;">Less Cash Advance (Vale) Repayment:</td><td style="text-align: right; color: var(--brand-gold); padding: 4px;">-₱${valeDeduct.toFixed(2)}</td></tr>
           </table>
-          <p style="font-size: 0.95rem; font-weight: bold; color: var(--brand-green); margin: 4px 0;">NET TAKE-HOME PAY: ₱${netTakeHome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.7rem;">
+          <p style="font-size: 1.05rem; font-weight: bold; color: var(--brand-green); margin: 6px 0;">NET TAKE-HOME PAY: ₱${netTakeHome.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
             <div>___________________<br>Employee Signature</div>
             <div>___________________<br>Plant Payroll Cashier</div>
           </div>
@@ -1754,36 +1754,36 @@
         totalBal += (v.remainingBalance || 0);
         return `
           <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 3px;">${v.date}</td>
-            <td style="padding: 3px;"><strong>${v.id}</strong></td>
-            <td style="padding: 3px;">₱${v.amount.toLocaleString()}</td>
-            <td style="padding: 3px;"><strong style="color: var(--brand-danger);">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td>
-            <td style="padding: 3px;">${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% per payroll`}</td>
-            <td style="padding: 3px;">${v.notes}</td>
+            <td style="padding: 5px;">${v.date}</td>
+            <td style="padding: 5px;"><strong>${v.id}</strong></td>
+            <td style="padding: 5px;">₱${v.amount.toLocaleString()}</td>
+            <td style="padding: 5px;"><strong style="color: var(--brand-danger);">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td>
+            <td style="padding: 5px;">${v.planType === 'CUSTOM' ? `Custom ₱${v.customAmt}` : `${v.planType}% per payroll`}</td>
+            <td style="padding: 5px;">${v.notes}</td>
           </tr>
         `;
       }).join('');
 
       if (vList.length === 0) {
-        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 6px;">No Cash Advance (Vale) vouchers on record for ${empName}.</td></tr>`;
+        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 10px;">No Cash Advance (Vale) vouchers on record for ${empName}.</td></tr>`;
       }
 
       const soaHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 8px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 12px;">
           ${getBrandedHeader('EMPLOYEE CASH ADVANCE (VALE) STATEMENT OF ACCOUNT')}
-          <p style="font-size: 0.75rem;"><strong>Employee Name:</strong> ${empName} | <strong>Plant:</strong> Manloy Plant, Carigara, Leyte</p>
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.68rem; text-align: left; margin-bottom: 4px;">
+          <p style="font-size: 0.82rem;"><strong>Employee Name:</strong> ${empName} | <strong>Plant:</strong> Manloy Plant, Carigara, Leyte</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; margin-bottom: 8px;">
             <thead>
               <tr style="border-bottom: 2px solid #000;">
-                <th style="padding: 3px;">Date Issued</th><th style="padding: 3px;">Voucher ID</th><th style="padding: 3px;">Issued Amount</th><th style="padding: 3px;">Remaining Balance</th><th style="padding: 3px;">Repayment Plan</th><th style="padding: 3px;">Particulars</th>
+                <th style="padding: 5px;">Date Issued</th><th style="padding: 5px;">Voucher ID</th><th style="padding: 5px;">Issued Amount</th><th style="padding: 5px;">Remaining Balance</th><th style="padding: 5px;">Repayment Plan</th><th style="padding: 5px;">Particulars</th>
               </tr>
             </thead>
             <tbody>
               ${rowsHtml}
             </tbody>
           </table>
-          <p style="font-size: 0.75rem;"><strong>Total Lifetime Cash Advances:</strong> ₱${totalIssued.toLocaleString()} | <strong style="color: var(--brand-danger);">Total Outstanding Balance: ₱${totalBal.toLocaleString()}</strong></p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.7rem;">
+          <p style="font-size: 0.82rem;"><strong>Total Lifetime Cash Advances:</strong> ₱${totalIssued.toLocaleString()} | <strong style="color: var(--brand-danger);">Total Outstanding Balance: ₱${totalBal.toLocaleString()}</strong></p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
             <div>___________________<br>Employee Acknowledgment</div>
             <div>___________________<br>Plant Accounting Review</div>
           </div>
@@ -1813,36 +1813,36 @@
         if (t.status === 'OUTSTANDING') totalOutstanding += t.amount;
         return `
           <tr style="border-bottom: 1px solid #e2e8f0;">
-            <td style="padding: 3px;">${t.date}</td>
-            <td style="padding: 3px;"><strong>${t.id}</strong></td>
-            <td style="padding: 3px;">${t.item}</td>
-            <td style="padding: 3px;">${t.qty.toLocaleString()} kg</td>
-            <td style="padding: 3px;">₱${t.amount.toLocaleString()}</td>
-            <td style="padding: 3px;"><span class="badge ${t.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${t.status}</span></td>
+            <td style="padding: 5px;">${t.date}</td>
+            <td style="padding: 5px;"><strong>${t.id}</strong></td>
+            <td style="padding: 5px;">${t.item}</td>
+            <td style="padding: 5px;">${t.qty.toLocaleString()} kg</td>
+            <td style="padding: 5px;">₱${t.amount.toLocaleString()}</td>
+            <td style="padding: 5px;"><span class="badge ${t.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${t.status}</span></td>
           </tr>
         `;
       }).join('');
 
       if (tickets.length === 0) {
-        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 6px;">No sales dispatch tickets found for ${custName}.</td></tr>`;
+        rowsHtml = `<tr><td colspan="6" style="text-align: center; padding: 10px;">No sales dispatch tickets found for ${custName}.</td></tr>`;
       }
 
       const salesSoaHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 8px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 12px;">
           ${getBrandedHeader('CUSTOMER STATEMENT OF ACCOUNT (SOA) - SALES & DISPATCHES')}
-          <p style="font-size: 0.75rem;"><strong>Customer / Partner:</strong> ${custName} | <strong>Period:</strong> ${fromDate} to ${toDate}</p>
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.68rem; text-align: left; margin-bottom: 4px;">
+          <p style="font-size: 0.82rem;"><strong>Customer / Partner:</strong> ${custName} | <strong>Period:</strong> ${fromDate} to ${toDate}</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.75rem; text-align: left; margin-bottom: 8px;">
             <thead>
               <tr style="border-bottom: 2px solid #000;">
-                <th style="padding: 3px;">Date</th><th style="padding: 3px;">Ticket ID</th><th style="padding: 3px;">Product SKU</th><th style="padding: 3px;">Quantity</th><th style="padding: 3px;">Amount</th><th style="padding: 3px;">Status</th>
+                <th style="padding: 5px;">Date</th><th style="padding: 5px;">Ticket ID</th><th style="padding: 5px;">Product SKU</th><th style="padding: 5px;">Quantity</th><th style="padding: 5px;">Amount</th><th style="padding: 5px;">Status</th>
               </tr>
             </thead>
             <tbody>
               ${rowsHtml}
             </tbody>
           </table>
-          <p style="font-size: 0.75rem;"><strong>Total Dispatched Sales:</strong> ₱${totalAmount.toLocaleString()} | <strong style="color: var(--brand-danger);">Total Outstanding Receivable: ₱${totalOutstanding.toLocaleString()}</strong></p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.7rem;">
+          <p style="font-size: 0.82rem;"><strong>Total Dispatched Sales:</strong> ₱${totalAmount.toLocaleString()} | <strong style="color: var(--brand-danger);">Total Outstanding Receivable: ₱${totalOutstanding.toLocaleString()}</strong></p>
+          <div style="display: flex; justify-content: space-between; margin-top: 25px; font-size: 0.75rem;">
             <div>___________________<br>Customer Representative</div>
             <div>___________________<br>Combinido Biocarbon Sales Dept</div>
           </div>
@@ -2059,13 +2059,13 @@
     window.printExpenseVoucher = function(expIndex) {
       const exp = state.expenses[expIndex];
       const voucherHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 8px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 10px;">
           ${getBrandedHeader('DISBURSEMENT EXPENSE VOUCHER')}
-          <p style="font-size: 0.75rem;"><strong>Voucher ID:</strong> ${exp.id} | <strong>Date:</strong> ${exp.date}</p>
-          <p style="font-size: 0.75rem;"><strong>Category:</strong> ${exp.category} | <strong>Payee:</strong> ${exp.vendor}</p>
-          <p style="font-size: 0.95rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p style="font-size: 0.75rem;"><strong>Particulars:</strong> ${exp.notes}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.7rem;">
+          <p style="font-size: 0.82rem;"><strong>Voucher ID:</strong> ${exp.id} | <strong>Date:</strong> ${exp.date}</p>
+          <p style="font-size: 0.82rem;"><strong>Category:</strong> ${exp.category} | <strong>Payee:</strong> ${exp.vendor}</p>
+          <p style="font-size: 1.05rem; font-weight: bold;">AMOUNT DISBURSED: ₱${exp.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-size: 0.82rem;"><strong>Particulars:</strong> ${exp.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem;">
             <div>___________________<br>Prepared / Paid By</div>
             <div>___________________<br>Approved By (Plant Owner)</div>
           </div>
@@ -2077,13 +2077,13 @@
     window.printValeVoucher = function(valeIndex) {
       const v = state.valeVouchers[valeIndex];
       const voucherHtml = `
-        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 8px;">
+        <div class="printable-document" style="height: auto; justify-content: flex-start; gap: 10px;">
           ${getBrandedHeader('CASH ADVANCE (VALE) VOUCHER')}
-          <p style="font-size: 0.75rem;"><strong>Voucher ID:</strong> ${v.id} | <strong>Date:</strong> ${v.date}</p>
-          <p style="font-size: 0.75rem;"><strong>Employee Name:</strong> ${v.empName}</p>
-          <p style="font-size: 0.95rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
-          <p style="font-size: 0.75rem;"><strong>Reason / Note:</strong> ${v.notes}</p>
-          <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.7rem;">
+          <p style="font-size: 0.82rem;"><strong>Voucher ID:</strong> ${v.id} | <strong>Date:</strong> ${v.date}</p>
+          <p style="font-size: 0.82rem;"><strong>Employee Name:</strong> ${v.empName}</p>
+          <p style="font-size: 1.05rem; font-weight: bold;">ADVANCE AMOUNT: ₱${v.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-size: 0.82rem;"><strong>Reason / Note:</strong> ${v.notes}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 20px; font-size: 0.75rem;">
             <div>___________________<br>Employee Signature</div>
             <div>___________________<br>Authorized Cashier</div>
           </div>
@@ -2206,7 +2206,7 @@
       loadGovRatesToForm();
       const month = parseInt(document.getElementById('cal-month').value || 7);
       const year = parseInt(document.getElementById('cal-year').value || 2026);
-      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select').value : 3);
+      const weekNum = parseInt(document.getElementById('pay-week-select') ? document.getElementById('pay-week-select'].value : 3);
 
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos} - ${e.type || 'Regular'})</option>`).join('');
       ['oc-opened-by', 'oc-closed-by', 'proc-op-start', 'proc-op-end', 'fw-attendant', 'maint-tech', 'wb-inspector', 'bq-inspector', 'vale-emp', 'soa-emp-select'].forEach(id => {
