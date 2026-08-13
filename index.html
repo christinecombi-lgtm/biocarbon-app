@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Combinido Biocarbon Plant Manager & Decision Suite</title>
+  <title>Combinido Biocarbon Charcoal Manufacturing - Plant Manager & Decision Suite</title>
   
   <!-- Chart.js Engine CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -221,14 +221,14 @@
         <div class="shape-diamond-green"></div>
       </div>
       <div class="brand-text">
-        <h1>Combinido</h1>
-        <span>BIOCARBON</span>
+        <h1>Combinido Biocarbon Charcoal Manufacturing</h1>
+        <span>EXECUTIVE DECISION & OPERATIONS SUITE · CARIGARA, LEYTE</span>
       </div>
     </div>
 
     <div class="header-meta">
       <div class="tagline">One carbon. Two lives.</div>
-      <div class="ops-subtitle">EXECUTIVE DECISION & OPERATIONS SUITE · CARIGARA, LEYTE</div>
+      <div class="ops-subtitle">MANLOY PLANT SITE, LEYTE</div>
       <button class="btn-refresh" onclick="renderAll()">🔄 Sync Data Model</button>
     </div>
   </header>
@@ -240,7 +240,7 @@
       <a class="nav-link" onclick="switchTab('expenses', this)"><span>💸</span> Plant Expenses & Utilities</a>
       <a class="nav-link" onclick="switchTab('openclose', this)"><span>🏭</span> Factory Shift Open/Close</a>
       <a class="nav-link" onclick="switchTab('furnace-batches', this)"><span>🔥</span> 6-8hr Batch Lifecycle & QC</a>
-      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 2-Hour Furnace Monitor</a>
+      <a class="nav-link" onclick="switchTab('furnace-monitor', this)"><span>🌡️</span> 1.5-Hour Furnace Monitor</a>
       <a class="nav-link" onclick="switchTab('furnace-maint', this)"><span>🔧</span> Furnace & Kiln Maintenance</a>
       <a class="nav-link" onclick="switchTab('weighbridge', this)"><span>⚖️</span> Feedstock Moisture & Weight</a>
       <a class="nav-link" onclick="switchTab('attendance-cal', this)"><span>📅</span> Philippine Crew Calendar</a>
@@ -474,10 +474,13 @@
         </div>
       </div>
 
-      <!-- TAB 5: 2-HOUR FURNACE MONITOR -->
+      <!-- TAB 5: 1.5-HOUR FURNACE MONITOR -->
       <div id="furnace-monitor" class="tab-pane">
         <div class="panel">
-          <div class="panel-title">Log Scheduled 2-Hour Furnace Inspection</div>
+          <div class="panel-title">
+            <span>Log Scheduled 1.5-Hour Furnace Inspection (Enhanced Safety Check)</span>
+            <button class="btn-secondary" onclick="printBlankFurnaceWatchForm()">🖨️ Print Blank 1.5-Hour Watch Sheet</button>
+          </div>
           <form onsubmit="handleFurnaceWatchLog(event)">
             <div class="form-grid">
               <div class="form-group"><label>Inspection Time</label><input type="datetime-local" id="fw-datetime" class="form-control" required></div>
@@ -488,12 +491,12 @@
               <div class="form-group"><label>Inspector / Operator</label><select id="fw-attendant" class="form-control"></select></div>
               <div class="form-group" style="grid-column: 1 / -1;"><label>Unusual Observations / Maintenance Notes</label><input type="text" id="fw-notes" class="form-control" placeholder="No refractory leaks; blower motor operating normally"></div>
             </div>
-            <button type="submit" class="btn" style="margin-top: 14px;">🌡️ Save 2-Hour Furnace Inspection</button>
+            <button type="submit" class="btn" style="margin-top: 14px;">🌡️ Save 1.5-Hour Furnace Inspection</button>
           </form>
         </div>
 
         <div class="panel">
-          <div class="panel-title">Regular 2-Hour Furnace Check Ledger</div>
+          <div class="panel-title">Regular 1.5-Hour Furnace Check Ledger</div>
           <div class="table-container">
             <table>
               <thead>
@@ -941,7 +944,7 @@
         <div class="panel">
           <div class="panel-title">📥 Bulk Sync Google Form Crew QR Submissions (.CSV)</div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 12px;">
-            Upload your downloaded Google Form response spreadsheet (`.csv`) to automatically populate batch carbonization runs, weighbridge tickets, 2-hour furnace checks, and downtime logs across all application tabs without double entries.
+            Upload your downloaded Google Form response spreadsheet (`.csv`) to automatically populate batch carbonization runs, weighbridge tickets, 1.5-hour furnace checks, and downtime logs across all application tabs without double entries.
           </p>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
             <input type="file" id="qr-csv-file" accept=".csv" class="form-control" style="max-width: 380px;">
@@ -1084,7 +1087,7 @@
       ],
       furnaceWatch: [
         { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 520, vent: "NORMAL", safety: "SAFE", notes: "Stable draft; CO level 0 ppm.", attendant: "Amber" },
-        { datetime: "2026-08-08 12:00", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Peak carbonization temperature achieved.", attendant: "Beryl" }
+        { datetime: "2026-08-08 11:30", unit: "Furnace #1", temp: 580, vent: "NORMAL", safety: "SAFE", notes: "Peak carbonization temperature achieved.", attendant: "Beryl" }
       ],
       maintenanceLogs: [
         { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Brick Repair", tech: "Beryl", cost: 3500, notes: "Replaced damaged refractory lining near burner port" }
@@ -1133,7 +1136,7 @@
     let financialChartInstance = null;
     let inventoryChartInstance = null;
 
-    // BRANDED LETTERHEAD HTML WRAPPER FOR ALL PRINT/PDF OUTPUTS
+    // BRANDED LETTERHEAD HTML WRAPPER WITH LOGO SHAPES FOR ALL PRINT/PDF OUTPUTS
     function getBrandedHeader(documentTitle) {
       return `
         <div class="print-letterhead">
@@ -1144,8 +1147,8 @@
               <div class="print-shape-green"></div>
             </div>
             <div class="print-brand-title">
-              <h2>Combinido Biocarbon</h2>
-              <span>MANUFACTURING · CARIGARA, LEYTE</span>
+              <h2>Combinido Biocarbon Charcoal Manufacturing</h2>
+              <span>CARIGARA, LEYTE · PLANT OPERATIONS</span>
             </div>
           </div>
           <div class="print-meta-right">
@@ -1225,6 +1228,53 @@
       executePrint(blankHtml);
     }
 
+    // PRINT BLANK 1.5-HOUR FURNACE WATCH LOGSHEET - STRICT 1-PAGE LANDSCAPE WITH GRIDLINES
+    function printBlankFurnaceWatchForm() {
+      const blankHtml = `
+        <div class="printable-document">
+          ${getBrandedHeader('1.5-HOUR FURNACE SAFETY & TEMPERATURE INSPECTION SHEET')}
+          
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+            <div>
+              <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
+              <span><strong>Furnace Unit:</strong> [  ] Furnace #1 &nbsp;&nbsp; [  ] Furnace #2</span>
+            </div>
+            <div>
+              <span><strong>Plant Location:</strong> Manloy Plant, Carigara, Leyte</span>
+            </div>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+            <thead>
+              <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Time Slot</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Temp (°C)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Ventilation / Flue Gas</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Fire & CO Safety</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Observations / Notes</th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Inspector Signature</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">07:30 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">09:00 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">10:30 AM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">12:00 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">01:30 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">03:00 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 32px;"><td style="border: 1px solid #cbd5e1; font-weight: bold;">04:30 PM</td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+            </tbody>
+          </table>
+
+          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 10px;">
+            <div>________________________________________<br>Shift Safety Inspector Signature</div>
+            <div>________________________________________<br>Plant Supervisor Review</div>
+          </div>
+        </div>
+      `;
+      executePrint(blankHtml);
+    }
+
     // PRINT BLANK SHIFT SHEET
     function printBlankShiftForm() {
       const blankHtml = `
@@ -1294,7 +1344,7 @@
           </div>
 
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.7rem; font-style: italic;">Certified inspected at Combinido Biocarbon Manufacturing Plant, Manloy, Carigara, Leyte.</p>
+          <p style="font-size: 0.7rem; font-style: italic;">Certified inspected at Combinido Biocarbon Charcoal Manufacturing Plant, Manloy, Carigara, Leyte.</p>
           
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
             <div>___________________<br>Loader & Igniter Operator</div>
@@ -1354,7 +1404,7 @@
               inspector: cols[12] || "Intake Inspector"
             });
             importedCount++;
-          } else if (category.includes("2-Hour Inspection")) {
+          } else if (category.includes("1.5-Hour Inspection") || category.includes("Furnace Inspection")) {
             state.furnaceWatch.unshift({
               datetime: cols[21] || new Date().toLocaleString(),
               unit: cols[23] || "Furnace #1",
@@ -1844,7 +1894,7 @@
       });
 
       state.contacts.push({
-        company: "Combinido Biocarbon (Staff)", person: empName, position: empPos,
+        company: "Combinido Biocarbon Charcoal Manufacturing (Staff)", person: empName, position: empPos,
         type: "Plant Crew", terms: "COD", phone: empPhone, email: empEmail, address: "Manloy, Carigara Plant"
       });
 
@@ -2135,7 +2185,7 @@
           </div>
 
           <hr style="border: 1px dashed #000; margin: 12px 0;">
-          <p style="font-size: 0.7rem; font-style: italic;">Thank you for your business. Please make payments via bank transfer to Combinido Biocarbon Manufacturing.</p>
+          <p style="font-size: 0.7rem; font-style: italic;">Thank you for your business. Please make payments via bank transfer to Combinido Biocarbon Charcoal Manufacturing.</p>
           
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
             <div>___________________<br>Customer Representative</div>
@@ -2403,7 +2453,7 @@
         </tr>
       `).join('');
 
-      // Furnace Inspection Table
+      // Furnace Inspection Table (1.5-Hour Watch)
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map((fw, idx) => `
         <tr>
           <td><strong>${fw.datetime}</strong></td>
@@ -2413,7 +2463,10 @@
           <td><span class="badge ${fw.safety === 'SAFE' ? 'badge-pass' : 'badge-fail'}">${fw.safety}</span></td>
           <td>${fw.notes || 'No unusual conditions'}</td>
           <td>${fw.attendant}</td>
-          <td><button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button></td>
+          <td>
+            <button class="btn" style="padding: 3px 8px; font-size: 0.72rem;" onclick="printBlankFurnaceWatchForm()">🖨️ Form</button>
+            <button onclick="deleteEntry('furnaceWatch', ${idx})" class="btn-danger">Delete</button>
+          </td>
         </tr>
       `).join('');
 
