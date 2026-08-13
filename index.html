@@ -161,7 +161,7 @@
     .printable-document {
       background: #ffffff;
       border: 1px solid #1a1816;
-      padding: 16px 20px;
+      padding: 14px 18px;
       width: 100%;
       max-width: 1080px;
       margin: 0 auto;
@@ -174,15 +174,15 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 2px solid var(--brand-orange);
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+      padding-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .print-logo-group { display: flex; align-items: center; gap: 10px; }
     .print-shapes { display: flex; align-items: center; gap: 5px; }
-    .print-shape-orange { width: 14px; height: 14px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
-    .print-shape-white { width: 16px; height: 16px; background-color: #0f172a; border-radius: 50%; }
-    .print-shape-green { width: 14px; height: 14px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
+    .print-shape-orange { width: 16px; height: 16px; background-color: var(--brand-orange); transform: rotate(45deg); border-radius: 2px; }
+    .print-shape-white { width: 18px; height: 18px; background-color: #1a1816; border: 2px solid #cbd5e1; border-radius: 50%; }
+    .print-shape-green { width: 16px; height: 16px; background-color: var(--brand-green); transform: rotate(45deg); border-radius: 2px; }
 
     .print-brand-title h2 { font-size: 1.05rem; font-weight: 800; line-height: 1; color: #0f172a; }
     .print-brand-title span { font-size: 0.5rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--brand-orange); margin-top: 2px; display: block; }
@@ -191,7 +191,7 @@
 
     /* STRICT LANDSCAPE SINGLE PAGE PRINT RULES */
     @media print {
-      @page { size: landscape; margin: 8mm; }
+      @page { size: landscape; margin: 6mm; }
       body * { visibility: hidden !important; }
       #printable-area, #printable-area * { visibility: visible !important; }
       #printable-area { position: absolute; left: 0; top: 0; width: 100%; display: block !important; }
@@ -515,13 +515,15 @@
               <div class="form-group"><label>Finished Briquettes Produced (kg)</label><input type="number" id="bq-output-qty" class="form-control" placeholder="1150" required></div>
               <div class="form-group"><label>Machine Press Rate (kg/hr)</label><input type="number" id="bq-press-rate" class="form-control" value="400" required></div>
               
-              <!-- QC STANDARDS TESTING FIELDS -->
-              <div class="form-group"><label>Drop Test Durability Retain % [Factory Test] (Target &gt;95%)</label><input type="number" step="0.1" id="bq-drop-pct" class="form-control" placeholder="97.5" required></div>
-              <div class="form-group"><label>Moisture Content % [Factory/Field Test] (Target &lt;5%)</label><input type="number" step="0.1" id="bq-moisture" class="form-control" placeholder="3.2" required></div>
-              <div class="form-group"><label>Estimated Fixed Carbon % [Lab Test]</label><input type="number" step="0.1" id="bq-fc" class="form-control" placeholder="85.0" required></div>
-              <div class="form-group"><label>Ash Content % [Lab Test] (Target 1-4%)</label><input type="number" step="0.1" id="bq-ash" class="form-control" placeholder="2.1" required></div>
-              <div class="form-group"><label>Calorific Value (kcal/kg) [Lab Test]</label><input type="number" id="bq-gcv" class="form-control" placeholder="7500" required></div>
+              <!-- FACTORY QC TESTS -->
+              <div class="form-group"><label>Drop Test Durability Retain % [Factory Test: &gt;95%]</label><input type="number" step="0.1" id="bq-drop-pct" class="form-control" placeholder="97.5" required></div>
+              <div class="form-group"><label>Moisture Content % [Factory Test: &lt;5% via Meter]</label><input type="number" step="0.1" id="bq-moisture" class="form-control" placeholder="3.2" required></div>
               <div class="form-group"><label>Ignition & Smoke Test [Factory Test]</label><select id="bq-burn-test" class="form-control"><option value="Pass - Clean Burn / No Smoke">Pass - Clean Burn / No Smoke</option><option value="Fail - Excessive Smoke / Odor">Fail - Excessive Smoke / Odor</option></select></div>
+              
+              <!-- OPTIONAL LAB TESTS -->
+              <div class="form-group"><label>Estimated Fixed Carbon % [Optional Lab Test]</label><input type="number" step="0.1" id="bq-fc" class="form-control" placeholder="85.0"></div>
+              <div class="form-group"><label>Ash Content % [Optional Lab Test: 1-4%]</label><input type="number" step="0.1" id="bq-ash" class="form-control" placeholder="2.1"></div>
+              <div class="form-group"><label>Calorific Value (kcal/kg) [Optional Lab Test]</label><input type="number" id="bq-gcv" class="form-control" placeholder="7500"></div>
               
               <div class="form-group">
                 <label>Overall QC Grade Assignment</label>
@@ -1206,13 +1208,13 @@
       `;
     }
 
-    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET
+    // PRINT BLANK PYROLYSIS BATCH STACKING SHEET (EXPANDED TO 6+ LINES TO SAVE PAPER)
     function printBlankBatchLogsheet() {
       const blankHtml = `
         <div class="printable-document">
           ${getBrandedHeader('PYROLYSIS BATCH STACKING & RAW CHAR LOGSHEET')}
           
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
             <div>
               <span><strong>Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
               <span><strong>Shift Supervisor:</strong> ________________________</span>
@@ -1222,33 +1224,36 @@
             </div>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 6px;">
             <thead>
               <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Batch ID</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Feed Used</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Consumed (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Raw Char Output (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Start Time & Duty</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">End Time & Duty</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Total Cook (hrs)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Peak Temp (°C)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Pre-MC %</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Batch ID</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Feed Used</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Consumed (kg)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Raw Char Output (kg)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Start Time & Duty</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">End Time & Duty</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Total Cook (hrs)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Peak Temp (°C)</th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Pre-MC %</th>
               </tr>
             </thead>
             <tbody>
-              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 30px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
             </tbody>
           </table>
 
-          <div style="font-size: 0.75rem; margin-bottom: 6px;">
+          <div style="font-size: 0.7rem; margin-bottom: 4px;">
             <strong>Stockpile & Stoppage Notes (Accumulating for Weekly 400kg/hr Briquetting Run):</strong>
-            <div style="border: 1px solid #cbd5e1; height: 38px; margin-top: 3px; border-radius: 3px;"></div>
+            <div style="border: 1px solid #cbd5e1; height: 28px; margin-top: 2px; border-radius: 3px;"></div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 12px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 8px;">
             <div>________________________________________<br>Plant Operator Signature</div>
             <div>________________________________________<br>Plant Owner / Supervisor Review</div>
           </div>
@@ -1304,13 +1309,13 @@
       executePrint(blankHtml);
     }
 
-    // PRINT BLANK BRIQUETTE QC LAB SHEET WITH TESTING INSTRUCTIONS & LAB NOTES
+    // PRINT BLANK BRIQUETTE QC LAB SHEET WITH FACTORY TESTS ON TOP, LAB TESTS AT BOTTOM & GAUGES
     function printBlankBriquetteQCForm() {
       const blankHtml = `
         <div class="printable-document">
           ${getBrandedHeader('WEEKLY BRIQUETTE PRODUCTION & QC LABORATORY SHEET')}
           
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-bottom: 6px;">
             <div>
               <span><strong>Production Date:</strong> ________________________</span> &nbsp;&nbsp;&nbsp;&nbsp;
               <span><strong>Press Speed:</strong> 400 kg/hr</span>
@@ -1320,45 +1325,48 @@
             </div>
           </div>
 
-          <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 8px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: center; border: 1.5px solid #0f172a; margin-bottom: 6px;">
             <thead>
               <tr style="background-color: #f1f5f9; border-bottom: 1.5px solid #0f172a;">
                 <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Run ID</th>
                 <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Char Used (kg)</th>
                 <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Output (kg)</th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Drop Test %<br><span style="font-size:0.55rem; color:#64748b;">(Factory: >95%)</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Moisture %<br><span style="font-size:0.55rem; color:#64748b;">(Factory/Field: <5%)</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Fixed Carbon %<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test)</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ash %<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test: 1-4%)</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">GCV (kcal/kg)<br><span style="font-size:0.55rem; color:#64748b;">(Lab Test)</span></th>
-                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ignition/Smoke<br><span style="font-size:0.55rem; color:#64748b;">(Factory Test)</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Drop Test Retain %<br><span style="font-size:0.52rem; color:#047857;">[Factory: >95% via 3x 1.5m drops]</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Moisture %<br><span style="font-size:0.52rem; color:#047857;">[Factory: <5% via Pin Meter]</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 5px 2px;">Ignition & Smoke<br><span style="font-size:0.52rem; color:#047857;">[Factory: Chimney 15m test]</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Fixed Carbon %<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test]</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Ash %<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test: 1-4%]</span></th>
+                <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">GCV (kcal/kg)<br><span style="font-size:0.52rem; color:#64748b;">[Optional Lab Test]</span></th>
                 <th style="border: 1px solid #cbd5e1; padding: 4px 2px;">Grade</th>
               </tr>
             </thead>
             <tbody>
-              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
-              <tr style="height: 38px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
+              <tr style="height: 34px;"><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td><td style="border: 1px solid #cbd5e1;"></td></tr>
             </tbody>
           </table>
 
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 4px; font-size: 0.7rem; margin-bottom: 8px;">
-            <strong>🧪 QC Testing Protocols & Instructions for Plant Inspectors:</strong>
-            <ul style="margin-left: 16px; margin-top: 4px; line-height: 1.4;">
-              <li><strong>Mechanical Durability & Drop Test (Factory Test):</strong> Drop a weighed sample repeatedly from a fixed height of 1.5 to 2 meters onto concrete. Re-weigh surviving pieces to calculate weight retention percentage (Target: >95%).</li>
-              <li><strong>Moisture Content (Factory / Field Test):</strong> Use a handheld wood/charcoal moisture meter pressed into the briquette core (Target: <5%). Alternatively, weigh a sample, oven-dry at 105°C for 2 hours, and calculate weight loss.</li>
-              <li><strong>Fixed Carbon & Ash Content (Laboratory Test):</strong> Requires proximate analysis in a controlled lab using a muffle furnace (Target ash: 1-4%).</li>
-              <li><strong>Gross Calorific Value / GCV (Laboratory Test):</strong> Requires bomb calorimeter testing in an authorized laboratory to measure energy output in kcal/kg (Target: ~7,500 kcal/kg).</li>
-              <li><strong>Ignition, Smoke & Odor Performance (Factory Test):</strong> Ignite using a chimney starter. Observe ignition speed, smoke/odor, and residual ash color (Target: Clean burn, odorless, white/light gray ash).</li>
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 6px 10px; border-radius: 4px; font-size: 0.68rem; margin-bottom: 6px;">
+            <strong>🏭 FACTORY QC TESTING (PRIMARY - PERFORM ON-SITE):</strong>
+            <ul style="margin-left: 14px; margin-top: 2px; line-height: 1.3;">
+              <li><strong>Mechanical Durability & Drop Test:</strong> Weigh sample briquette ($W_1$), drop 3 times from 1.5m-2m height onto concrete, re-weigh surviving whole pieces ($W_2$). Retention $\ge 95\%$ ($W_2 / W_1 \times 100$).</li>
+              <li><strong>Moisture Content Check:</strong> Insert digital pin-type moisture meter into core of 3 briquettes. Target $<5\%$. (Alternatively, weigh sample, dry in 105°C oven for 2 hours, calculate weight loss).</li>
+              <li><strong>Ignition & Smoke Performance:</strong> Ignite using a chimney starter. Measure time-to-ignition (Target: 10-15 minutes). Observe for odorless, smokeless burn and light grey/white ash residue.</li>
+            </ul>
+            <strong style="margin-top: 4px; display: block;">🧪 LABORATORY QC TESTING (SECONDARY / OPTIONAL - SEND OUT IF NEEDED):</strong>
+            <ul style="margin-left: 14px; margin-top: 2px; line-height: 1.3;">
+              <li><strong>Fixed Carbon & Ash Content:</strong> Proximate analysis via muffle furnace in certified lab (Target ash: 1-4%, Fixed Carbon &gt;80%).</li>
+              <li><strong>Gross Calorific Value (GCV):</strong> Bomb calorimeter energy output testing in authorized laboratory (Target: ~7,500 kcal/kg).</li>
             </ul>
           </div>
 
-          <div style="font-size: 0.75rem; margin-bottom: 6px;">
-            <strong>Laboratory Ignition, Smoke & Physical Test Remarks:</strong>
-            <div style="border: 1px solid #cbd5e1; height: 28px; margin-top: 2px; border-radius: 3px;"></div>
+          <div style="font-size: 0.72rem; margin-bottom: 4px;">
+            <strong>Laboratory & Factory Test Remarks:</strong>
+            <div style="border: 1px solid #cbd5e1; height: 24px; margin-top: 2px; border-radius: 3px;"></div>
           </div>
 
-          <div style="display: flex; justify-content: space-between; font-size: 0.75rem; margin-top: 8px;">
-            <div>________________________________________<br>QC Lab Inspector Signature</div>
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; margin-top: 6px;">
+            <div>________________________________________<br>Factory QC Inspector Signature</div>
             <div>________________________________________<br>Plant Owner / Manager Approval</div>
           </div>
         </div>
@@ -1403,7 +1411,7 @@
       executePrint(blankHtml);
     }
 
-    // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT WITH TESTING NOTES & INSTRUCTIONS
+    // PRINTABLE BRIQUETTE QC CERTIFICATE REPORT
     function printBriquetteQCReport(qcIndex) {
       const q = state.briquetteQcLogs[qcIndex];
 
@@ -1421,36 +1429,25 @@
             <div style="text-align: right;">
               <p><strong>Press Feed Rate:</strong> <span style="font-size: 1.1rem; color: #0284c7; font-weight: bold;">${q.pressRate || 400} kg/hr</span></p>
               <p><strong>Drop Test Retain (Factory):</strong> <span style="font-size: 1.1rem; color: #10b981; font-weight: bold;">${q.dropPct}%</span></p>
-              <p><strong>Calorific Value / GCV (Lab):</strong> ${q.gcv} kcal/kg</p>
+              <p><strong>Calorific Value / GCV (Lab):</strong> ${q.gcv || 'N/A'} kcal/kg</p>
             </div>
           </div>
 
           <hr style="border: 1px dashed #000; margin-bottom: 10px;">
 
           <div style="font-size: 0.8rem; line-height: 1.6; margin-bottom: 12px;">
-            <p><strong>Moisture Content (Factory/Field Test):</strong> ${q.moisture}% (Standard &lt;5%)</p>
-            <p><strong>Fixed Carbon Content (Lab Test):</strong> ${q.fc}%</p>
-            <p><strong>Ash Content (Lab Test):</strong> ${q.ash}% (Standard 1-4%)</p>
+            <p><strong>Moisture Content (Factory Test):</strong> ${q.moisture}% (Standard &lt;5%)</p>
             <p><strong>Ignition & Smoke Performance (Factory Test):</strong> ${q.burnTest}</p>
-            <p><strong>Laboratory & Field Inspector Remarks:</strong> ${q.notes}</p>
-          </div>
-
-          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 4px; font-size: 0.72rem; margin-bottom: 10px;">
-            <strong>🧪 Testing Standards Reference:</strong>
-            <ul style="margin-left: 16px; margin-top: 3px; line-height: 1.3;">
-              <li><em>Drop Test (Factory):</em> Repeated 1.5m-2m drop onto concrete; weighed for weight retention (>95% target).</li>
-              <li><em>Moisture (Factory/Field):</em> Handheld moisture meter or 105°C oven-drying for 2 hours (<5% target).</li>
-              <li><em>Fixed Carbon & Ash (Lab Test):</em> Proximate analysis via muffle furnace (1-4% ash target).</li>
-              <li><em>GCV (Lab Test):</em> Bomb calorimeter energy output in kcal/kg (~7,500 target).</li>
-              <li><em>Ignition & Smoke (Factory Test):</em> Chimney starter burn observation for clean, odorless flame and light ash.</li>
-            </ul>
+            <p><strong>Fixed Carbon Content (Optional Lab Test):</strong> ${q.fc || 'N/A'}%</p>
+            <p><strong>Ash Content (Optional Lab Test):</strong> ${q.ash || 'N/A'}% (Standard 1-4%)</p>
+            <p><strong>Inspector Remarks:</strong> ${q.notes}</p>
           </div>
 
           <hr style="border: 1px dashed #000; margin: 10px 0;">
           <p style="font-size: 0.7rem; font-style: italic;">Certified tested and approved at Combinido Biocarbon Charcoal Manufacturing Plant, Manloy, Carigara, Leyte.</p>
           
           <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.75rem;">
-            <div>___________________<br>QC Laboratory Inspector</div>
+            <div>___________________<br>QC Inspector</div>
             <div>___________________<br>Plant Owner / Manager Review</div>
           </div>
         </div>
@@ -1811,9 +1808,9 @@
         pressRate: parseFloat(document.getElementById('bq-press-rate').value) || 400,
         dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
         moisture: parseFloat(document.getElementById('bq-moisture').value),
-        fc: parseFloat(document.getElementById('bq-fc').value),
-        ash: parseFloat(document.getElementById('bq-ash').value),
-        gcv: parseInt(document.getElementById('bq-gcv').value),
+        fc: parseFloat(document.getElementById('bq-fc').value) || 0,
+        ash: parseFloat(document.getElementById('bq-ash').value) || 0,
+        gcv: parseInt(document.getElementById('bq-gcv').value) || 0,
         burnTest: document.getElementById('bq-burn-test').value,
         grade,
         inspector: document.getElementById('bq-inspector').value,
@@ -2596,9 +2593,9 @@
           <td><strong>${q.outputQty} kg</strong></td>
           <td><strong style="color: var(--brand-green);">${q.dropPct}%</strong></td>
           <td>${q.moisture}%</td>
-          <td>${q.fc}%</td>
-          <td>${q.ash}%</td>
-          <td><strong>${q.gcv} kcal</strong></td>
+          <td>${q.fc || '-'}%</td>
+          <td>${q.ash || '-'}%</td>
+          <td><strong>${q.gcv || '-'} kcal</strong></td>
           <td><span class="badge ${q.grade.includes('Export') ? 'badge-pass' : 'badge-warn'}">${q.grade}</span></td>
           <td>${q.inspector}</td>
           <td>
