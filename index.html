@@ -125,7 +125,7 @@
     .form-control { padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-size: 0.88rem; outline: none; }
 
     .btn { background-color: var(--brand-orange); color: #ffffff; font-weight: 700; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 0.88rem; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-secondary { background-color: var(--brand-blue); color: #ffffff; font-weight: 700; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-secondary { background-color: var(--brand-blue); color: #ffffff; font-weight: 700; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; display: inline-flex; align-items: center; gap: 6px; z-index: 10; position: relative; }
     .btn-danger { background-color: #fee2e2; color: var(--brand-danger); border: 1px solid var(--brand-danger); padding: 4px 8px; font-size: 0.75rem; border-radius: 4px; cursor: pointer; }
 
     .search-input { padding: 10px 16px; width: 100%; max-width: 360px; border: 1px solid var(--border-light); border-radius: 20px; font-size: 0.88rem; outline: none; }
@@ -605,9 +605,9 @@
         <div class="panel">
           <div class="panel-title">
             <span>Log Weekly Briquetting Run & Finished Goods QC Test Results</span>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-secondary" id="btnPrintProd">🖨️ Print Production Form</button>
-              <button class="btn-secondary" id="btnPrintQc">🖨️ Print QC Form</button>
+            <div style="display: flex; gap: 8px; position: relative; z-index: 20;">
+              <button type="button" class="btn-secondary" id="btnPrintProd">🖨️ Print Production Form</button>
+              <button type="button" class="btn-secondary" id="btnPrintQc">🖨️ Print QC Form</button>
             </div>
           </div>
           <form id="form-briquette-qc">
@@ -998,7 +998,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_clickable_print';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_clickable_print_fix2';
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const defaultState = {
@@ -1436,7 +1436,7 @@
 
     function renderAll() {
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
-      ['oc-opened-by', 'oc-closed-by', 'fw-attendant', 'maint-tech', 'vale-emp', 'soa-emp-select', 'rm-inspector'].forEach(id => {
+      ['oc-opened-by', 'oc-closed-by', 'fw-attendant', 'maint-tech', 'vale-emp', 'soa-emp-select', 'rm-inspector', 'bq-inspector'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = empOpts;
       });
@@ -1470,11 +1470,11 @@
       renderAttendanceCalendar();
 
       document.getElementById('tbl-raw-recv').innerHTML = state.rawRecv.map((r, idx) => `
-        <tr><td><strong>${r.id}</strong></td><td>${r.date}</td><td>${r.item}</td><td>${r.supplier}</td><td><strong>${(r.grossKg - r.tareKg).toLocaleString()} kg</strong></td><td>₱${r.price.toFixed(2)}</td><td><strong>₱${r.amount.toLocaleString()}</strong></td><td>${r.mcPct}%</td><td><span class="badge badge-blue">${r.terms}</span></td><td><span class="badge ${r.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${r.status}</span></td><td><button class="btn-secondary" style="padding:2px 6px; font-size:0.68rem;" onclick="printRawMaterialReceipt(${idx})">🖨️ Receipt</button></td></tr>
+        <tr><td><strong>${r.id}</strong></td><td>${r.date}</td><td>${r.item}</td><td>${r.supplier}</td><td><strong>${(r.grossKg - r.tareKg).toLocaleString()} kg</strong></td><td>₱${r.price.toFixed(2)}</td><td><strong>₱${r.amount.toLocaleString()}</strong></td><td>${r.mcPct}%</td><td><span class="badge badge-blue">${r.terms}</span></td><td><span class="badge ${r.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${r.status}</span></td><td><button type="button" class="btn-secondary" style="padding:2px 6px; font-size:0.68rem;" onclick="printRawMaterialReceipt(${idx})">🖨️ Receipt</button></td></tr>
       `).join('');
 
       document.getElementById('tbl-batches').innerHTML = state.batches.map(b => `
-        <tr><td><strong>${b.id}</strong></td><td>${b.rawItem}</td><td>${b.consumedKg} kg</td><td><strong>${b.yieldKg} kg</strong></td><td><strong style="color:var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td><td><strong style="color:var(--brand-blue);">${b.vinegarLiters} L</strong></td><td>${b.cookHours}</td><td>${b.maxTemp} °C</td><td><span class="badge badge-warn">${b.tempGroup}</span></td><td>${b.startTime}</td><td>${b.endTime}</td><td><button class="btn-danger" onclick="deleteEntry('batches', '${b.id}')">Delete</button></td></tr>
+        <tr><td><strong>${b.id}</strong></td><td>${b.rawItem}</td><td>${b.consumedKg} kg</td><td><strong>${b.yieldKg} kg</strong></td><td><strong style="color:var(--brand-green);">${((b.yieldKg/b.consumedKg)*100).toFixed(1)}%</strong></td><td><strong style="color:var(--brand-blue);">${b.vinegarLiters} L</strong></td><td>${b.cookHours}</td><td>${b.maxTemp} °C</td><td><span class="badge badge-warn">${b.tempGroup}</span></td><td>${b.startTime}</td><td>${b.endTime}</td><td><button type="button" class="btn-danger" onclick="deleteEntry('batches', '${b.id}')">Delete</button></td></tr>
       `).join('');
 
       document.getElementById('tbl-furnace-watch').innerHTML = state.furnaceWatch.map(f => `
@@ -1490,7 +1490,7 @@
       `).join('');
 
       document.getElementById('tbl-vale-vouchers').innerHTML = state.valeVouchers.map(v => `
-        <tr><td><strong>${v.id}</strong></td><td>${v.date}</td><td>${v.empName}</td><td>₱${v.amount.toLocaleString()}</td><td><strong style="color:var(--brand-danger);">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td><td>${v.planType}% / Wk</td><td><span class="badge badge-warn">ACTIVE</span></td><td>${v.notes}</td><td><button class="btn-secondary" style="padding:2px 6px; font-size:0.68rem;" onclick="printEmployeeCaSOA('${v.empName}')">📄 SOA</button></td></tr>
+        <tr><td><strong>${v.id}</strong></td><td>${v.date}</td><td>${v.empName}</td><td>₱${v.amount.toLocaleString()}</td><td><strong style="color:var(--brand-danger);">₱${(v.remainingBalance || 0).toLocaleString()}</strong></td><td>${v.planType}% / Wk</td><td><span class="badge badge-warn">ACTIVE</span></td><td>${v.notes}</td><td><button type="button" class="btn-secondary" style="padding:2px 6px; font-size:0.68rem;" onclick="printEmployeeCaSOA('${v.empName}')">📄 SOA</button></td></tr>
       `).join('');
 
       document.getElementById('tbl-payroll').innerHTML = state.employees.map(e => `
@@ -1504,7 +1504,7 @@
           <td><strong style="color:var(--brand-green);">₱${(e.ytdNetSalary || 15600).toLocaleString()}</strong></td>
           <td><strong style="color:var(--brand-gold);">₱${(e.ytdVale || 1000).toLocaleString()}</strong></td>
           <td><strong style="color:var(--brand-blue);">₱${((6 * e.rate) - 500).toLocaleString()}</strong></td>
-          <td><button class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="printEmployeeCaSOA('${e.name}')">📄 SOA</button></td>
+          <td><button type="button" class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="printEmployeeCaSOA('${e.name}')">📄 SOA</button></td>
         </tr>
       `).join('');
 
@@ -1555,10 +1555,16 @@
       if (calMonth) calMonth.addEventListener('change', renderAttendanceCalendar);
       if (calYear) calYear.addEventListener('change', renderAttendanceCalendar);
 
-      // Global print button bindings with fallback handlers
+      // Global print button bindings with explicit handlers
       const bindPrintBtn = (id, handler) => {
         const btn = document.getElementById(id);
-        if (btn) btn.addEventListener('click', handler);
+        if (btn) {
+          btn.type = 'button'; // Prevent any form submission
+          btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            handler();
+          });
+        }
       };
 
       bindPrintBtn('btnPrintRawRecv', () => printRawMaterialReceipt(0));
@@ -1632,7 +1638,33 @@
           </div>
         `);
       });
-      bindPrintBtn('btnPrintQc', () => printBtn('btnPrintProd'));
+      bindPrintBtn('btnPrintQc', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('FACTORY QC TESTING & BIOCHAR EVALUATION PROTOCOLS')}
+            <p><strong>Charcoal Briquette Standards (Export Grade A / Local B):</strong></p>
+            <ul style="margin-left: 20px; font-size: 0.85rem; line-height: 1.5;">
+              <li>Drop Test Retain: &gt; 95% (Export) / 90% (Local)</li>
+              <li>Moisture Content: &lt; 5.0% (Export) / &lt; 8.0% (Local)</li>
+              <li>Ignition & Burn Time: &lt; 3 mins ignition, &gt; 75 mins burn time</li>
+              <li>Fixed Carbon: &ge; 75% (Export) / 65-75% (Local BBQ)</li>
+            </ul>
+            <p style="margin-top: 10px;"><strong>Rice Husk Biochar Standards (Raw vs Charged):</strong></p>
+            <ul style="margin-left: 20px; font-size: 0.85rem; line-height: 1.5;">
+              <li>Surface Area (BET): &gt; 250 m²/g</li>
+              <li>pH Range: 7.0 – 9.0</li>
+              <li>Raw Biochar: High carbon stability (&gt;80%)</li>
+              <li>Charged Biochar: Pre-inoculated with amino acids/compost tea</li>
+            </ul>
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:15px;">
+              <thead><tr style="border-bottom:2px solid #000;"><th style="padding:6px;">QC ID</th><th>Date</th><th>Grade</th><th>Drop %</th><th>Moisture %</th><th>Burn Time</th><th>Inspector</th></tr></thead>
+              <tbody>
+                ${state.briquetteQcLogs.map(q => `<tr><td style="padding:6px;">${q.id}</td><td>${q.date}</td><td>${q.grade}</td><td>${q.dropPct}%</td><td>${q.moisture}%</td><td>${q.burnTime}m</td><td>${q.inspector}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `);
+      });
 
       const calcBatchDuration = () => {
         const start = document.getElementById('proc-t-cook-start').value;
@@ -1654,6 +1686,41 @@
         if (batch) {
           document.getElementById('bq-char-used').value = batch.yieldKg;
         }
+      });
+
+      document.getElementById('form-briquette-qc').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.briquetteQcLogs.unshift({
+          id: document.getElementById('bq-id').value,
+          date: document.getElementById('bq-date').value,
+          type: "Briquette",
+          grade: document.getElementById('bq-grade').value,
+          sourceBatch: document.getElementById('bq-source-batch').value,
+          outputQty: parseFloat(document.getElementById('bq-output-qty').value),
+          dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
+          moisture: parseFloat(document.getElementById('bq-moisture').value),
+          burnTime: parseFloat(document.getElementById('bq-burn-time').value),
+          inspector: document.getElementById('bq-inspector').value,
+          notes: document.getElementById('bq-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      document.getElementById('form-biochar-qc').addEventListener('submit', (e) => {
+        e.preventDefault();
+        state.briquetteQcLogs.unshift({
+          id: document.getElementById('bc-id').value,
+          date: new Date().toISOString().split('T')[0],
+          type: document.getElementById('bc-type').value,
+          grade: "Biochar Lab Pass",
+          sourceBatch: "Farm Plot",
+          outputQty: parseFloat(document.getElementById('bc-qty').value),
+          ph: parseFloat(document.getElementById('bc-ph').value),
+          carbon: parseFloat(document.getElementById('bc-carbon').value),
+          inspector: "Lab Team",
+          notes: document.getElementById('bc-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
       });
 
       document.getElementById('form-raw-recv').addEventListener('submit', (e) => {
