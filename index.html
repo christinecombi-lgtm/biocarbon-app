@@ -178,12 +178,9 @@
       margin: 0 auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #0f172a;
-      height: 100vh;
-      max-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      overflow: hidden;
       page-break-inside: avoid;
     }
 
@@ -209,14 +206,13 @@
 
     @media print {
       @page { size: landscape; margin: 4mm; }
-      html, body { width: 100%; height: 100%; margin: 0 !important; padding: 0 !important; background: #ffffff !important; overflow: hidden !important; }
+      html, body { width: 100%; height: 100%; margin: 0 !important; padding: 0 !important; background: #ffffff !important; overflow: auto !important; }
       body * { visibility: hidden !important; }
       #printable-area, #printable-area * { visibility: visible !important; }
       #printable-area {
-        position: fixed !important; left: 0 !important; top: 0 !important; width: 100vw !important; height: 100vh !important;
-        display: flex !important; align-items: center !important; justify-content: center !important; background: #ffffff !important; z-index: 999999 !important;
+        position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; background: #ffffff !important; z-index: 999999 !important;
       }
-      .printable-document { width: 100vw !important; height: 100vh !important; max-height: 100vh !important; border: none !important; box-shadow: none !important; }
+      .printable-document { width: 100% !important; border: none !important; box-shadow: none !important; }
     }
   </style>
 </head>
@@ -1002,7 +998,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_fixed_ui';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_clickable_print';
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const defaultState = {
@@ -1105,17 +1101,62 @@
       const area = document.getElementById('printable-area');
       area.innerHTML = htmlContent;
       area.style.display = 'block';
+      window.print();
       setTimeout(() => {
-        window.print();
         area.style.display = 'none';
         area.innerHTML = '';
-      }, 150);
+      }, 500);
     }
 
+    window.printRawMaterialReceipt = function(recvIndex) {
+      const r = state.rawRecv[recvIndex] || state.rawRecv[0];
+      if (!r) return;
+      const html = `
+        <div class="printable-document" style="gap: 12px;">
+          ${getBrandedHeader('OFFICIAL RAW MATERIAL RECEIPT / PURCHASE VOUCHER')}
+          <p style="font-size: 0.85rem;"><strong>Receipt ID:</strong> ${r.id} | <strong>Date:</strong> ${r.date}</p>
+          <p style="font-size: 0.85rem;"><strong>Supplier:</strong> ${r.supplier} | <strong>Material:</strong> ${r.item}</p>
+          <p style="font-size: 0.85rem;"><strong>Net Weight:</strong> ${(r.grossKg - r.tareKg).toLocaleString()} kg | <strong>Price per kg:</strong> ₱${r.price.toFixed(2)}</p>
+          <p style="font-size: 1.1rem; font-weight: bold; color: var(--brand-orange);">TOTAL AMOUNT: ₱${r.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</p>
+          <p style="font-size: 0.85rem;"><strong>Payment Terms:</strong> ${r.terms} | <strong>Status:</strong> ${r.status}</p>
+          <div style="display: flex; justify-content: space-between; margin-top: 35px; font-size: 0.75rem;">
+            <div>___________________<br>Supplier Representative</div>
+            <div>___________________<br>Intake Inspector</div>
+          </div>
+        </div>
+      `;
+      executePrint(html);
+    };
+
+    window.printEmployeeCaSOA = function(empName) {
+      const vList = (state.valeVouchers || []).filter(v => v.empName === empName);
+      let totalIssued = 0, totalBal = 0;
+      let rows = vList.map(v => {
+        totalIssued += v.amount;
+        totalBal += (v.remainingBalance || 0);
+        return `<tr style="border-bottom: 1px solid #cbd5e1;"><td style="padding:6px;">${v.date}</td><td style="padding:6px;">${v.id}</td><td style="padding:6px;">₱${v.amount.toLocaleString()}</td><td style="padding:6px;">₱${(v.remainingBalance || 0).toLocaleString()}</td><td style="padding:6px;">${v.notes}</td></tr>`;
+      }).join('') || `<tr><td colspan="5" style="text-align:center; padding:10px;">No cash advances on record.</td></tr>`;
+
+      const html = `
+        <div class="printable-document" style="gap: 12px;">
+          ${getBrandedHeader('EMPLOYEE CASH ADVANCE (VALE) STATEMENT OF ACCOUNT')}
+          <p style="font-size: 0.85rem;"><strong>Employee:</strong> ${empName} | <strong>Plant:</strong> Manloy Plant, Carigara, Leyte</p>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.78rem;">
+            <thead><tr style="border-bottom: 2px solid #000;"><th style="padding:6px;">Date</th><th style="padding:6px;">Voucher ID</th><th style="padding:6px;">Issued</th><th style="padding:6px;">Balance</th><th style="padding:6px;">Notes</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+          <p style="font-size: 0.85rem; margin-top: 10px;"><strong>Total Lifetime Issued:</strong> ₱${totalIssued.toLocaleString()} | <strong style="color:var(--brand-danger);">Total Outstanding Balance: ₱${totalBal.toLocaleString()}</strong></p>
+          <div style="display: flex; justify-content: space-between; margin-top: 35px; font-size: 0.75rem;">
+            <div>___________________<br>Employee Acknowledgment</div>
+            <div>___________________<br>Plant Accounting</div>
+          </div>
+        </div>
+      `;
+      executePrint(html);
+    };
+
     function renderRecommendations() {
-      const totalRev = state.logistics.reduce((s, l) => s + l.amount, 0);
       const outstandingAR = state.logistics.filter(l => l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
-      
       const finText = outstandingAR > 0 
         ? `⚠️ You have ₱${outstandingAR.toLocaleString()} in uncollected customer receivables. Follow up on 30-day credit terms to maintain healthy operating cashflow.`
         : `✅ Outstanding customer receivables are fully settled. Cashflow is currently stable.`;
@@ -1513,6 +1554,85 @@
       const calYear = document.getElementById('cal-year');
       if (calMonth) calMonth.addEventListener('change', renderAttendanceCalendar);
       if (calYear) calYear.addEventListener('change', renderAttendanceCalendar);
+
+      // Global print button bindings with fallback handlers
+      const bindPrintBtn = (id, handler) => {
+        const btn = document.getElementById(id);
+        if (btn) btn.addEventListener('click', handler);
+      };
+
+      bindPrintBtn('btnPrintRawRecv', () => printRawMaterialReceipt(0));
+      bindPrintBtn('btnPrintSoa', () => printEmployeeCaSOA(document.getElementById('soa-emp-select').value));
+      bindPrintBtn('btnPrintSalesSoa', () => printEmployeeCaSOA('AgriGrow Distributors'));
+      bindPrintBtn('btnPrintRawSummary', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('RAW MATERIAL PURCHASES SUMMARY REPORT')}
+            <p>Summary of all raw material receipts and intake logs for Manloy Plant, Leyte.</p>
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem;">
+              <thead><tr style="border-bottom:2px solid #000;"><th style="padding:6px;">ID</th><th>Date</th><th>Material</th><th>Supplier</th><th>Net Weight</th><th>Amount</th></tr></thead>
+              <tbody>
+                ${state.rawRecv.map(r => `<tr><td style="padding:6px;">${r.id}</td><td>${r.date}</td><td>${r.item}</td><td>${r.supplier}</td><td>${(r.grossKg-r.tareKg).toLocaleString()}kg</td><td>₱${r.amount.toLocaleString()}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `);
+      });
+      bindPrintBtn('btnPrintShift', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('FACTORY SHIFT OPEN & CLOSE LOG SHEET')}
+            <p>Blank Daily Factory Operating Log - Manloy Plant Site</p>
+            <div style="border: 1px solid #000; padding: 20px; height: 300px; margin-top: 10px;">
+              <p>Opening Time: ____________________ &nbsp;&nbsp;&nbsp;&nbsp; Opened By: ____________________</p><br>
+              <p>Closing Time: ____________________ &nbsp;&nbsp;&nbsp;&nbsp; Closed By: ____________________</p><br>
+              <p>Machine & Safety Check: [  ] OK   [  ] Issue</p><br>
+              <p>Shift Notes & Handover: __________________________________________________</p>
+            </div>
+          </div>
+        `);
+      });
+      bindPrintBtn('btnPrintBatch', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('PYROLYSIS BATCH STACKING & TEMPERATURE LOG SHEET')}
+            <p>Batch Temperature Segregation & Yield Log</p>
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:10px;">
+              <thead><tr style="border-bottom:2px solid #000;"><th style="padding:6px;">Batch ID</th><th>Raw Feed</th><th>Consumed</th><th>Char Yield</th><th>Wood Vinegar</th><th>Max Temp</th><th>Group</th></tr></thead>
+              <tbody>
+                ${state.batches.map(b => `<tr><td style="padding:6px;">${b.id}</td><td>${b.rawItem}</td><td>${b.consumedKg}kg</td><td>${b.yieldKg}kg</td><td>${b.vinegarLiters}L</td><td>${b.maxTemp}°C</td><td>${b.tempGroup}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `);
+      });
+      bindPrintBtn('btnPrintFurnace', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('FURNACE SAFETY WATCH & INSPECTION LOG')}
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:10px;">
+              <thead><tr style="border-bottom:2px solid #000;"><th style="padding:6px;">Date & Time</th><th>Unit</th><th>Temp</th><th>Vent Status</th><th>Safety</th><th>Inspector</th></tr></thead>
+              <tbody>
+                ${state.furnaceWatch.map(f => `<tr><td style="padding:6px;">${f.datetime}</td><td>${f.unit}</td><td>${f.temp}°C</td><td>${f.vent}</td><td>${f.safety}</td><td>${f.attendant}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `);
+      });
+      bindPrintBtn('btnPrintProd', () => {
+        executePrint(`
+          <div class="printable-document" style="gap: 12px;">
+            ${getBrandedHeader('BRIQUETTE PRODUCTION RUN REPORT')}
+            <table style="width:100%; border-collapse:collapse; font-size:0.8rem; margin-top:10px;">
+              <thead><tr style="border-bottom:2px solid #000;"><th style="padding:6px;">ID</th><th>Date</th><th>Type</th><th>Grade</th><th>Output</th><th>Inspector</th></tr></thead>
+              <tbody>
+                ${state.briquetteQcLogs.map(q => `<tr><td style="padding:6px;">${q.id}</td><td>${q.date}</td><td>${q.type}</td><td>${q.grade}</td><td>${q.outputQty}kg</td><td>${q.inspector}</td></tr>`).join('')}
+              </tbody>
+            </table>
+          </div>
+        `);
+      });
+      bindPrintBtn('btnPrintQc', () => printBtn('btnPrintProd'));
 
       const calcBatchDuration = () => {
         const start = document.getElementById('proc-t-cook-start').value;
