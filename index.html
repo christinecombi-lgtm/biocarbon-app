@@ -144,6 +144,16 @@
     .badge-warn { background: #fef3c7; color: #b45309; }
     .badge-blue { background: #e0f2fe; color: #0369a1; }
 
+    /* ATTENDANCE GRID STYLING */
+    .cal-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 12px; }
+    .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 8px 4px; }
+    .cal-table th { background-color: #f8fafc; font-weight: 700; color: var(--text-muted); }
+    .att-cell { cursor: pointer; font-weight: 800; user-select: none; transition: background 0.15s; }
+    .att-cell.p { background-color: #d1fae5; color: #047857; }
+    .att-cell.h { background-color: #fef3c7; color: #b45309; }
+    .att-cell.a { background-color: #fee2e2; color: #b91c1c; }
+    .att-cell.off { background-color: #f1f5f9; color: #94a3b8; }
+
     @keyframes pulseGlow {
       0% { opacity: 0.3; transform: scale(0.95); }
       100% { opacity: 1; transform: scale(1.05); }
@@ -718,10 +728,10 @@
           </div>
           <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 14px;">
             💡 <strong>Click any cell to toggle status:</strong> 
-            <span class="badge badge-pass">P = Present (1.0)</span> | 
-            <span class="badge badge-warn">H = Half-Day (0.5)</span> | 
-            <span class="badge badge-fail">A = Absent (0.0)</span> | 
-            <span class="badge" style="background:#f1f5f9; color:#64748b;">OFF = Rest Day</span>
+            <span class="badge badge-pass">P = PRESENT (1.0)</span> | 
+            <span class="badge badge-warn">H = HALF-DAY (0.5)</span> | 
+            <span class="badge badge-fail">A = ABSENT (0.0)</span> | 
+            <span class="badge" style="background:#f1f5f9; color:#64748b;">OFF = REST DAY</span>
           </p>
           <div id="calendar-table-container"></div>
         </div>
@@ -992,30 +1002,15 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_scorecard_real';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_fixed_ui';
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const defaultState = {
       scorecardTargets: {
-        outputKg: 1500,
-        feedstockKg: 3000,
-        yieldPct: 50.0,
-        batches: 15,
-        avgKgPerBatch: 100,
-        revenue: 100000,
-        expenses: 50000,
-        net: 50000,
-        expenseRatio: 0.50,
-        costPerKilo: 20.0,
-        soldKg: 2000,
-        revPerKilo: 35.0,
-        unpaidSales: 0.0,
-        activeBuyers: 5,
-        labourCost: 20000,
-        labourPerKilo: 10.0,
-        cashAdvance: 1000,
-        carbonMonth: 10.0,
-        carbonAllTime: 50.0
+        outputKg: 1500, feedstockKg: 3000, yieldPct: 50.0, batches: 15, avgKgPerBatch: 100,
+        revenue: 100000, expenses: 50000, net: 50000, expenseRatio: 0.50, costPerKilo: 20.0,
+        soldKg: 2000, revPerKilo: 35.0, unpaidSales: 0.0, activeBuyers: 5,
+        labourCost: 20000, labourPerKilo: 10.0, cashAdvance: 1000, carbonMonth: 10.0, carbonAllTime: 50.0
       },
       govRates: {
         taxSystem: "GRADUATED", percentageTaxRate: 3.0, flatTaxRate: 8.0,
@@ -1117,18 +1112,102 @@
       }, 150);
     }
 
+    function renderRecommendations() {
+      const totalRev = state.logistics.reduce((s, l) => s + l.amount, 0);
+      const outstandingAR = state.logistics.filter(l => l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
+      
+      const finText = outstandingAR > 0 
+        ? `⚠️ You have ₱${outstandingAR.toLocaleString()} in uncollected customer receivables. Follow up on 30-day credit terms to maintain healthy operating cashflow.`
+        : `✅ Outstanding customer receivables are fully settled. Cashflow is currently stable.`;
+      
+      const lowStockItems = state.inventory.filter(i => i.category === 'Raw Material' && i.stock <= i.min);
+      const stockText = lowStockItems.length > 0
+        ? `⚠️ Low feedstock alert: ${lowStockItems.map(i => i.name).join(', ')} is at or below safety thresholds. Coordinate with Carigara suppliers immediately.`
+        : `✅ All raw material feedstock inventory levels are currently above minimum safety thresholds.`;
+
+      const totalBatches = state.batches.length;
+      const totalVinegar = state.batches.reduce((s, b) => s + (b.vinegarLiters || 0), 0);
+      const yieldText = `🔥 Total of ${totalBatches} pyrolysis batches recorded. Wood vinegar collected: ${totalVinegar} Liters available for farm experiments and commercial sale.`;
+
+      const r1 = document.getElementById('rec-finance-text');
+      const r2 = document.getElementById('rec-stock-text');
+      const r3 = document.getElementById('rec-yield-text');
+
+      if (r1) r1.innerText = finText;
+      if (r2) r2.innerText = stockText;
+      if (r3) r3.innerText = yieldText;
+    }
+
+    function renderAttendanceCalendar() {
+      const container = document.getElementById('calendar-table-container');
+      if (!container) return;
+
+      const monthSelect = document.getElementById('cal-month');
+      const yearSelect = document.getElementById('cal-year');
+      const m = parseInt(monthSelect ? monthSelect.value : 7);
+      const y = parseInt(yearSelect ? yearSelect.value : 2026);
+
+      const daysInMonth = new Date(y, m + 1, 0).getDate();
+      
+      let html = `<table class="cal-table"><thead><tr><th style="text-align:left; min-width:140px;">Employee</th>`;
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dateObj = new Date(y, m, d);
+        const dayOfWeek = dateObj.getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        html += `<th style="${isWeekend ? 'background:#fef3c7; color:#b45309;' : ''}">${d}<br><small>${dayNames[dayOfWeek]}</small></th>`;
+      }
+      html += `<th>Total Present</th></tr></thead><tbody>`;
+
+      state.employees.forEach((emp, empIdx) => {
+        if (!emp.attendance) emp.attendance = {};
+        html += `<tr><td style="text-align:left; font-weight:700;">${emp.name} <br><small style="color:var(--text-muted);">${emp.pos}</small></td>`;
+        
+        let presentCount = 0;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateKey = `${y}-${m}-${d}`;
+          if (!emp.attendance[dateKey]) {
+            const dateObj = new Date(y, m, d);
+            const dayOfWeek = dateObj.getDay();
+            emp.attendance[dateKey] = (dayOfWeek === 0 || dayOfWeek === 6) ? 'OFF' : 'P';
+          }
+          const val = emp.attendance[dateKey];
+          if (val === 'P') presentCount += 1.0;
+          else if (val === 'H') presentCount += 0.5;
+
+          let cssClass = 'att-cell ';
+          if (val === 'P') cssClass += 'p';
+          else if (val === 'H') cssClass += 'h';
+          else if (val === 'A') cssClass += 'a';
+          else cssClass += 'off';
+
+          html += `<td class="${cssClass}" onclick="toggleAttendance(${empIdx}, '${dateKey}')">${val}</td>`;
+        }
+        html += `<td><strong>${presentCount} days</strong></td></tr>`;
+      });
+
+      html += `</tbody></table>`;
+      container.innerHTML = html;
+    }
+
+    window.toggleAttendance = function(empIdx, dateKey) {
+      const emp = state.employees[empIdx];
+      const cur = emp.attendance[dateKey] || 'P';
+      const cycle = { 'P': 'H', 'H': 'A', 'A': 'OFF', 'OFF': 'P' };
+      emp.attendance[dateKey] = cycle[cur] || 'P';
+      saveState();
+      renderAttendanceCalendar();
+    };
+
     function renderScorecard() {
       const inputVal = document.getElementById('scorecard-month-input').value;
       const selectedDate = new Date(inputVal || '2026-08-01');
       const targetYear = selectedDate.getFullYear();
       const targetMonth = selectedDate.getMonth();
 
-      // Helper for last month calculation
       const lastMonthDate = new Date(targetYear, targetMonth - 1, 1);
       const lastYear = lastMonthDate.getFullYear();
       const lastMonth = lastMonthDate.getMonth();
 
-      // Filter current month data from actual application state
       const curBatches = state.batches.filter(b => {
         const d = new Date(b.startTime);
         return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
@@ -1159,7 +1238,6 @@
         return d.getFullYear() === lastYear && d.getMonth() === lastMonth;
       });
 
-      // Actual Computations
       const curOutput = curBatches.reduce((s, b) => s + b.yieldKg, 0);
       const lastOutput = lastBatches.reduce((s, b) => s + b.yieldKg, 0);
 
@@ -1202,8 +1280,7 @@
       const curActiveBuyers = new Set(curLogistics.map(l => l.party)).size;
       const lastActiveBuyers = new Set(lastLogistics.map(l => l.party)).size;
 
-      // Labour calculations based on employee attendance / payroll rates
-      const curLabourCost = state.employees.reduce((s, e) => s + (e.rate * 6 * 4), 0); // 4 weeks approximation or actual logged
+      const curLabourCost = state.employees.reduce((s, e) => s + (e.rate * 6 * 4), 0);
       const lastLabourCost = curLabourCost;
 
       const curLabourPerKilo = curOutput > 0 ? curLabourCost / curOutput : 0;
@@ -1212,13 +1289,10 @@
       const curCashAdvance = state.valeVouchers.reduce((s, v) => s + (v.remainingBalance || 0), 0);
       const lastCashAdvance = curCashAdvance;
 
-      // Carbon calculations (approx 0.0027 t CO2e per kg of biochar/charcoal locked)
       const curCarbonMonth = (curOutput * 0.0027).toFixed(3);
       const lastCarbonMonth = (lastOutput * 0.0027).toFixed(3);
       const allTimeOutput = state.batches.reduce((s, b) => s + b.yieldKg, curOutput);
       const carbonAllTime = (allTimeOutput * 0.0027).toFixed(3);
-
-      const t = state.scorecardTargets;
 
       const rows = [
         { cat: "MAKE — is the furnace producing?", key: "outputKg", name: "Output (kg)", cur: curOutput.toLocaleString(undefined, {maximumFractionDigits: 2}), last: lastOutput.toLocaleString(undefined, {maximumFractionDigits: 2}) },
@@ -1266,9 +1340,9 @@
         `;
       });
 
-      document.getElementById('scorecard-tbody').innerHTML = html;
+      const tbody = document.getElementById('scorecard-tbody');
+      if (tbody) tbody.innerHTML = html;
 
-      // Attach event listeners to editable target inputs
       document.querySelectorAll('.target-input').forEach(input => {
         input.addEventListener('change', (e) => {
           const key = e.target.getAttribute('data-key');
@@ -1351,6 +1425,8 @@
       }
 
       renderScorecard();
+      renderRecommendations();
+      renderAttendanceCalendar();
 
       document.getElementById('tbl-raw-recv').innerHTML = state.rawRecv.map((r, idx) => `
         <tr><td><strong>${r.id}</strong></td><td>${r.date}</td><td>${r.item}</td><td>${r.supplier}</td><td><strong>${(r.grossKg - r.tareKg).toLocaleString()} kg</strong></td><td>₱${r.price.toFixed(2)}</td><td><strong>₱${r.amount.toLocaleString()}</strong></td><td>${r.mcPct}%</td><td><span class="badge badge-blue">${r.terms}</span></td><td><span class="badge ${r.status === 'PAID' ? 'badge-pass' : 'badge-fail'}">${r.status}</span></td><td><button class="btn-secondary" style="padding:2px 6px; font-size:0.68rem;" onclick="printRawMaterialReceipt(${idx})">🖨️ Receipt</button></td></tr>
@@ -1433,6 +1509,10 @@
       });
 
       document.getElementById('scorecard-month-input').addEventListener('change', renderScorecard);
+      const calMonth = document.getElementById('cal-month');
+      const calYear = document.getElementById('cal-year');
+      if (calMonth) calMonth.addEventListener('change', renderAttendanceCalendar);
+      if (calYear) calYear.addEventListener('change', renderAttendanceCalendar);
 
       const calcBatchDuration = () => {
         const start = document.getElementById('proc-t-cook-start').value;
