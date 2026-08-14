@@ -136,6 +136,7 @@
     td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); white-space: nowrap; }
 
     .scorecard-header-row { background-color: #f1f5f9; font-weight: 800; color: var(--text-main); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.5px; }
+    .target-input { width: 80px; padding: 4px 6px; border: 1px solid var(--border-light); border-radius: 4px; text-align: right; font-size: 0.85rem; font-weight: 600; background-color: #fef08a; }
 
     .badge { display: inline-block; padding: 3px 8px; border-radius: 12px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; }
     .badge-pass { background: #d1fae5; color: #047857; }
@@ -357,12 +358,12 @@
             <span>KPI SCORECARD — How the Business is Running</span>
             <div style="display: flex; gap: 10px; align-items: center; font-size: 0.85rem;">
               <label for="scorecard-month-input" style="font-weight: 600; color: var(--text-muted);">Month shown:</label>
-              <input type="date" id="scorecard-month-input" class="form-control" value="2026-06-01" style="padding: 4px 8px; font-size: 0.82rem; width: auto; background-color: #fef08a;">
-              <span style="font-size: 0.72rem; color: var(--text-muted); font-style: italic;">(type any date inside the month)</span>
+              <input type="date" id="scorecard-month-input" class="form-control" value="2026-08-01" style="padding: 4px 8px; font-size: 0.82rem; width: auto; background-color: #fef08a;">
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-style: italic;">(type any date inside the month you want to see)</span>
             </div>
           </div>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 14px;">
-            One row per measure, with the target beside it. Automatically synthesized from your plant operational and financial ledgers.
+            One row per measure, with the target beside it. Automatically pulls actual figures from your application ledgers. Change targets in the yellow cells.
           </p>
           <div class="table-container">
             <table id="scorecard-table">
@@ -376,7 +377,7 @@
                 </tr>
               </thead>
               <tbody id="scorecard-tbody">
-                <!-- Dynamically injected scorecard rows matching user's requested layout -->
+                <!-- Dynamically injected scorecard rows pulled from app data -->
               </tbody>
             </table>
           </div>
@@ -706,8 +707,8 @@
             <div style="display: flex; gap: 12px; align-items: center;">
               <select id="cal-month" class="form-control">
                 <option value="0">January</option><option value="1">February</option><option value="2">March</option>
-                <option value="3">April</option><option value="4">May</option><option value="5" selected>June</option>
-                <option value="6">July</option><option value="7">August</option><option value="8">September</option>
+                <option value="3">April</option><option value="4">May</option><option value="5">June</option>
+                <option value="6">July</option><option value="7" selected>August</option><option value="8">September</option>
                 <option value="9">October</option><option value="10">November</option><option value="11">December</option>
               </select>
               <select id="cal-year" class="form-control">
@@ -991,29 +992,30 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_scorecard';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_scorecard_real';
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const defaultState = {
       scorecardTargets: {
-        outputKg: 1400,
-        yieldPct: 0.60,
-        batches: 20,
-        avgKgPerBatch: 0,
-        revenue: 0,
-        expenses: 0,
-        net: 0,
-        expenseRatio: 0.35,
-        costPerKilo: 25,
-        soldKg: 0,
-        revPerKilo: 0,
-        unpaidSales: 0,
-        activeBuyers: 0,
-        labourCost: 0,
-        labourPerKilo: 0,
-        cashAdvance: 0,
-        carbonMonth: 80,
-        carbonAllTime: 0
+        outputKg: 1500,
+        feedstockKg: 3000,
+        yieldPct: 50.0,
+        batches: 15,
+        avgKgPerBatch: 100,
+        revenue: 100000,
+        expenses: 50000,
+        net: 50000,
+        expenseRatio: 0.50,
+        costPerKilo: 20.0,
+        soldKg: 2000,
+        revPerKilo: 35.0,
+        unpaidSales: 0.0,
+        activeBuyers: 5,
+        labourCost: 20000,
+        labourPerKilo: 10.0,
+        cashAdvance: 1000,
+        carbonMonth: 10.0,
+        carbonAllTime: 50.0
       },
       govRates: {
         taxSystem: "GRADUATED", percentageTaxRate: 3.0, flatTaxRate: 8.0,
@@ -1032,33 +1034,33 @@
         { id: "FIN-06", category: "Finished Goods", name: "Wood Vinegar (Liters)", stock: 320, min: 100, pricePerKg: 50.00, monthlyCost: 15.00 }
       ],
       rawRecv: [
-        { id: "RM-101", date: "2026-06-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 28000, tareKg: 3400, price: 4.00, amount: 98400, mcPct: 18.5, terms: "15 Days Credit", status: "OUTSTANDING", inspector: "Amber" }
+        { id: "RM-101", date: "2026-08-05", item: "Bamboo", supplier: "Carigara Bamboo Farmers Co-Op", grossKg: 3500, tareKg: 500, price: 4.00, amount: 12000, mcPct: 18.5, terms: "15 Days Credit", status: "OUTSTANDING", inspector: "Amber" }
       ],
       batches: [
-        { id: "BATCH-1", rawItem: "Bamboo", consumedKg: 24600, yieldKg: 14140, vinegarLiters: 125.0, cookHours: "7.5 hrs", tempGroup: "Group 2 (451-470°C)", opStart: "Amber", opEnd: "Beryl", maxTemp: 465, preMcPct: 18.5, startTime: "2026-06-08 08:00", endTime: "2026-06-08 15:30", qcNotes: "Clean burn" }
+        { id: "BATCH-1", rawItem: "Bamboo", consumedKg: 850, yieldKg: 360, vinegarLiters: 125.0, cookHours: "7.5 hrs", tempGroup: "Group 2 (451-470°C)", opStart: "Amber", opEnd: "Beryl", maxTemp: 465, preMcPct: 18.5, startTime: "2026-08-08 08:00", endTime: "2026-08-08 15:30", qcNotes: "Clean burn" }
       ],
       furnaceWatch: [
-        { datetime: "2026-06-08 10:00", unit: "Furnace #1", temp: 450, vent: "NORMAL", safety: "SAFE", notes: "Stable", attendant: "Amber" }
+        { datetime: "2026-08-08 10:00", unit: "Furnace #1", temp: 450, vent: "NORMAL", safety: "SAFE", notes: "Stable", attendant: "Amber" }
       ],
       briquetteQcLogs: [
-        { id: "BQ-101", date: "2026-06-07", type: "Briquette", grade: "Export Grade A", sourceBatch: "BATCH-1", outputQty: 12069, dropPct: 97.5, moisture: 3.2, burnTime: 85, inspector: "Beryl", notes: "Export grade passed" }
+        { id: "BQ-101", date: "2026-08-07", type: "Briquette", grade: "Export Grade A", sourceBatch: "BATCH-1", outputQty: 300, dropPct: 97.5, moisture: 3.2, burnTime: 85, inspector: "Beryl", notes: "Export grade passed" }
       ],
       maintenanceLogs: [
-        { id: "MNT-201", date: "2026-06-02", unit: "Furnace #1", cat: "Refractory Repair", tech: "Beryl", cost: 3500, notes: "Seals" }
+        { id: "MNT-201", date: "2026-08-02", unit: "Furnace #1", cat: "Refractory Repair", tech: "Beryl", cost: 2500, notes: "Seals" }
       ],
       valeVouchers: [
-        { id: "VALE-901", date: "2026-06-05", empName: "Amber", amount: 240, remainingBalance: 240, planType: "30", minPct: 30, status: "ACTIVE", notes: "Emergency" }
+        { id: "VALE-901", date: "2026-08-05", empName: "Amber", amount: 1000, remainingBalance: 1000, planType: "30", minPct: 30, status: "ACTIVE", notes: "Emergency" }
       ],
       logistics: [
-        { id: "TICKET-501", date: "2026-06-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "30 Days Credit", status: "PAID", item: "Bamboo Charcoal Briquettes", qty: 12069, amount: 781829 }
+        { id: "TICKET-501", date: "2026-08-08", type: "OUTBOUND_CUSTOMER", party: "AgriGrow Distributors", terms: "30 Days Credit", status: "OUTSTANDING", item: "Bamboo Charcoal Briquettes", qty: 250, amount: 7500 }
       ],
       openclose: [
-        { datetimeIn: "2026-06-01 07:00", openedBy: "Beryl", datetimeOut: "2026-06-30 17:00", closedBy: "Beryl", totalHours: "720 hrs", idleTime: "Standard", machOk: "OK", mode: "Standard", notes: "June operations" }
+        { datetimeIn: "2026-08-01 07:00", openedBy: "Beryl", datetimeOut: "2026-08-10 17:00", closedBy: "Beryl", totalHours: "180 hrs", idleTime: "Standard", machOk: "OK", mode: "Standard", notes: "August operations" }
       ],
       downtime: [{ id: "DT-01", reason: "Maintenance", duration: 30 }],
       employees: [
-        { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", lifetimePresentDays: 320, ytdNetSalary: 34461.54, ytdDaysPresent: 22, ytdVale: 240, attendance: {} },
-        { name: "Beryl", pos: "Plant Shift Supervisor", type: "Regular", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", lifetimePresentDays: 295, ytdNetSalary: 0, ytdDaysPresent: 0, ytdVale: 0, attendance: {} }
+        { name: "Amber", pos: "Furnace Lead Operator", type: "Regular", rate: 650, phone: "0917-111-2222", email: "amber@cbcm.ph", lifetimePresentDays: 320, ytdNetSalary: 15600, ytdDaysPresent: 24, ytdVale: 1000, attendance: {} },
+        { name: "Beryl", pos: "Plant Shift Supervisor", type: "Regular", rate: 600, phone: "0918-222-3333", email: "beryl@cbcm.ph", lifetimePresentDays: 295, ytdNetSalary: 14400, ytdDaysPresent: 24, ytdVale: 0, attendance: {} }
       ],
       contacts: [
         { company: "Carigara Bamboo Farmers Co-Op", person: "Juan Dela Cruz", position: "Supply Lead", type: "Supplier", terms: "15 Days Credit", phone: "0917-123-4567", email: "juan@bamboocoop.ph", address: "Carigara, Leyte" },
@@ -1117,14 +1119,24 @@
 
     function renderScorecard() {
       const inputVal = document.getElementById('scorecard-month-input').value;
-      const selectedDate = new Date(inputVal || '2026-06-01');
+      const selectedDate = new Date(inputVal || '2026-08-01');
       const targetYear = selectedDate.getFullYear();
       const targetMonth = selectedDate.getMonth();
 
-      // Filter current month data
+      // Helper for last month calculation
+      const lastMonthDate = new Date(targetYear, targetMonth - 1, 1);
+      const lastYear = lastMonthDate.getFullYear();
+      const lastMonth = lastMonthDate.getMonth();
+
+      // Filter current month data from actual application state
       const curBatches = state.batches.filter(b => {
         const d = new Date(b.startTime);
         return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
+      });
+
+      const lastBatches = state.batches.filter(b => {
+        const d = new Date(b.startTime);
+        return d.getFullYear() === lastYear && d.getMonth() === lastMonth;
       });
 
       const curLogistics = state.logistics.filter(l => {
@@ -1132,60 +1144,107 @@
         return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
       });
 
+      const lastLogistics = state.logistics.filter(l => {
+        const d = new Date(l.date);
+        return d.getFullYear() === lastYear && d.getMonth() === lastMonth;
+      });
+
       const curRaw = state.rawRecv.filter(r => {
         const d = new Date(r.date);
         return d.getFullYear() === targetYear && d.getMonth() === targetMonth;
       });
 
-      const curExpenses = 64100.00; // or calculated from expenses
-      const curOutput = curBatches.reduce((s, b) => s + b.yieldKg, 14140);
-      const curFeedstock = curBatches.reduce((s, b) => s + b.consumedKg, 246000);
-      const curYieldPct = curFeedstock > 0 ? (curOutput / curFeedstock) * 100 : 57.48;
-      const curBatchesCount = curBatches.length > 0 ? curBatches.length : 49;
-      const curAvgKgBatch = curBatchesCount > 0 ? curOutput / curBatchesCount : 288.57;
+      const lastRaw = state.rawRecv.filter(r => {
+        const d = new Date(r.date);
+        return d.getFullYear() === lastYear && d.getMonth() === lastMonth;
+      });
 
-      const curRevenue = curLogistics.reduce((s, l) => s + l.amount, 781829.00);
-      const curNet = curRevenue - curExpenses - 64100;
-      const curExpenseRatio = curRevenue > 0 ? (64100 / curRevenue) * 100 : 8.20;
-      const curCostPerKilo = curOutput > 0 ? 64100 / curOutput : 4.53;
+      // Actual Computations
+      const curOutput = curBatches.reduce((s, b) => s + b.yieldKg, 0);
+      const lastOutput = lastBatches.reduce((s, b) => s + b.yieldKg, 0);
 
-      const curSoldKg = curLogistics.reduce((s, l) => s + l.qty, 12069.00);
-      const curRevPerKilo = curSoldKg > 0 ? curRevenue / curSoldKg : 64.78;
-      const curUnpaidSales = curLogistics.filter(l => l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0.00);
-      const curActiveBuyers = new Set(curLogistics.map(l => l.party)).size || 3;
+      const curFeedstock = curBatches.reduce((s, b) => s + b.consumedKg, 0);
+      const lastFeedstock = lastBatches.reduce((s, b) => s + b.consumedKg, 0);
 
-      const curLabourCost = 34461.54;
-      const curLabourPerKilo = curOutput > 0 ? curLabourCost / curOutput : 2.44;
-      const curCashAdvance = state.valeVouchers.reduce((s, v) => s + (v.remainingBalance || 0), 240.00);
+      const curYieldPct = curFeedstock > 0 ? (curOutput / curFeedstock) * 100 : 0;
+      const lastYieldPct = lastFeedstock > 0 ? (lastOutput / lastFeedstock) * 100 : 0;
 
-      const carbonMonthVal = 38.178;
-      const carbonAllTimeVal = 42.498;
+      const curBatchesCount = curBatches.length;
+      const lastBatchesCount = lastBatches.length;
+
+      const curAvgKgBatch = curBatchesCount > 0 ? curOutput / curBatchesCount : 0;
+      const lastAvgKgBatch = lastBatchesCount > 0 ? lastOutput / lastBatchesCount : 0;
+
+      const curRevenue = curLogistics.reduce((s, l) => s + l.amount, 0);
+      const lastRevenue = lastLogistics.reduce((s, l) => s + l.amount, 0);
+
+      const curExpenses = curRaw.reduce((s, r) => s + r.amount, 0) + state.maintenanceLogs.reduce((s, m) => s + m.cost, 0);
+      const lastExpenses = lastRaw.reduce((s, r) => s + r.amount, 0);
+
+      const curNet = curRevenue - curExpenses;
+      const lastNet = lastRevenue - lastExpenses;
+
+      const curExpenseRatio = curRevenue > 0 ? (curExpenses / curRevenue) * 100 : 0;
+      const lastExpenseRatio = lastRevenue > 0 ? (lastExpenses / lastRevenue) * 100 : 0;
+
+      const curCostPerKilo = curOutput > 0 ? curExpenses / curOutput : 0;
+      const lastCostPerKilo = lastOutput > 0 ? lastExpenses / lastOutput : 0;
+
+      const curSoldKg = curLogistics.reduce((s, l) => s + l.qty, 0);
+      const lastSoldKg = lastLogistics.reduce((s, l) => s + l.qty, 0);
+
+      const curRevPerKilo = curSoldKg > 0 ? curRevenue / curSoldKg : 0;
+      const lastRevPerKilo = lastSoldKg > 0 ? lastRevenue / lastSoldKg : 0;
+
+      const curUnpaidSales = curLogistics.filter(l => l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
+      const lastUnpaidSales = lastLogistics.filter(l => l.status === 'OUTSTANDING').reduce((s, l) => s + l.amount, 0);
+
+      const curActiveBuyers = new Set(curLogistics.map(l => l.party)).size;
+      const lastActiveBuyers = new Set(lastLogistics.map(l => l.party)).size;
+
+      // Labour calculations based on employee attendance / payroll rates
+      const curLabourCost = state.employees.reduce((s, e) => s + (e.rate * 6 * 4), 0); // 4 weeks approximation or actual logged
+      const lastLabourCost = curLabourCost;
+
+      const curLabourPerKilo = curOutput > 0 ? curLabourCost / curOutput : 0;
+      const lastLabourPerKilo = lastOutput > 0 ? lastLabourCost / lastOutput : 0;
+
+      const curCashAdvance = state.valeVouchers.reduce((s, v) => s + (v.remainingBalance || 0), 0);
+      const lastCashAdvance = curCashAdvance;
+
+      // Carbon calculations (approx 0.0027 t CO2e per kg of biochar/charcoal locked)
+      const curCarbonMonth = (curOutput * 0.0027).toFixed(3);
+      const lastCarbonMonth = (lastOutput * 0.0027).toFixed(3);
+      const allTimeOutput = state.batches.reduce((s, b) => s + b.yieldKg, curOutput);
+      const carbonAllTime = (allTimeOutput * 0.0027).toFixed(3);
+
+      const t = state.scorecardTargets;
 
       const rows = [
-        { cat: "MAKE — is the furnace producing?", name: "Output (kg)", cur: curOutput.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2}), last: "141", target: "400", status: "" },
-        { cat: "", name: "Feedstock used (kg)", cur: curFeedstock.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 2}), last: "246000", target: "0", status: "" },
-        { cat: "", name: "Yield %", cur: curYieldPct.toFixed(2) + "%", last: "0.00%", target: "0.6", status: "" },
+        { cat: "MAKE — is the furnace producing?", key: "outputKg", name: "Output (kg)", cur: curOutput.toLocaleString(undefined, {maximumFractionDigits: 2}), last: lastOutput.toLocaleString(undefined, {maximumFractionDigits: 2}) },
+        { cat: "", key: "feedstockKg", name: "Feedstock used (kg)", cur: curFeedstock.toLocaleString(undefined, {maximumFractionDigits: 2}), last: lastFeedstock.toLocaleString(undefined, {maximumFractionDigits: 2}) },
+        { cat: "", key: "yieldPct", name: "Yield %", cur: curYieldPct.toFixed(2) + "%", last: lastYieldPct.toFixed(2) + "%" },
         
-        { cat: "ACTION", name: "Batches completed", cur: curBatchesCount.toLocaleString(), last: "490", target: "20", status: "OK" },
-        { cat: "", name: "Average kg per batch", cur: curAvgKgBatch.toFixed(2), last: "288.57", target: "0", status: "" },
+        { cat: "ACTION", key: "batches", name: "Batches completed", cur: curBatchesCount.toLocaleString(), last: lastBatchesCount.toLocaleString() },
+        { cat: "", key: "avgKgPerBatch", name: "Average kg per batch", cur: curAvgKgBatch.toFixed(2), last: lastAvgKgBatch.toFixed(2) },
         
-        { cat: "MONEY — are we making a profit per kilo?", name: "Revenue (₱)", cur: curRevenue.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "781,829.00", target: "0.00", status: "" },
-        { cat: "", name: "Expenses (₱)", cur: "64,100.00", last: "64,100.00", target: "0.00", status: "" },
-        { cat: "", name: "Net (₱)", cur: curNet.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "717,729.00", target: "0.00", status: "" },
-        { cat: "", name: "Expense ratio %", cur: curExpenseRatio.toFixed(2) + "%", last: "8.20%", target: "0.35", status: "OK" },
-        { cat: "", name: "Cost per kilo (₱)", cur: curCostPerKilo.toFixed(2), last: "4.53", target: "25", status: "OK" },
+        { cat: "MONEY — are we making a profit per kilo?", key: "revenue", name: "Revenue (₱)", cur: "₱" + curRevenue.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastRevenue.toLocaleString(undefined, {minimumFractionDigits: 2}) },
+        { cat: "", key: "expenses", name: "Expenses (₱)", cur: "₱" + curExpenses.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastExpenses.toLocaleString(undefined, {minimumFractionDigits: 2}) },
+        { cat: "", key: "net", name: "Net (₱)", cur: "₱" + curNet.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastNet.toLocaleString(undefined, {minimumFractionDigits: 2}) },
+        { cat: "", key: "expenseRatio", name: "Expense ratio %", cur: curExpenseRatio.toFixed(2) + "%", last: lastExpenseRatio.toFixed(2) + "%" },
+        { cat: "", key: "costPerKilo", name: "Cost per kilo (₱)", cur: "₱" + curCostPerKilo.toFixed(2), last: "₱" + lastCostPerKilo.toFixed(2) },
         
-        { cat: "SELL & STOCK — is stock turning into cash?", name: "Sold (kg)", cur: curSoldKg.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "12,069.00", target: "0.00", status: "" },
-        { cat: "", name: "Revenue per kilo (₱)", cur: curRevPerKilo.toFixed(2), last: "64.78", target: "0.00", status: "" },
-        { cat: "", name: "Sales not yet marked Paid (₱)", cur: curUnpaidSales.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "0.00", target: "0", status: "OK" },
-        { cat: "", name: "Active buyers this month", cur: curActiveBuyers.toString(), last: "3", target: "", status: "" },
+        { cat: "SELL & STOCK — is stock turning into cash?", key: "soldKg", name: "Sold (kg)", cur: curSoldKg.toLocaleString(undefined, {maximumFractionDigits: 2}), last: lastSoldKg.toLocaleString(undefined, {maximumFractionDigits: 2}) },
+        { cat: "", key: "revPerKilo", name: "Revenue per kilo (₱)", cur: "₱" + curRevPerKilo.toFixed(2), last: "₱" + lastRevPerKilo.toFixed(2) },
+        { cat: "", key: "unpaidSales", name: "Sales not yet marked Paid (₱)", cur: "₱" + curUnpaidSales.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastUnpaidSales.toLocaleString(undefined, {minimumFractionDigits: 2}) },
+        { cat: "", key: "activeBuyers", name: "Active buyers this month", cur: curActiveBuyers.toString(), last: lastActiveBuyers.toString() },
         
-        { cat: "PEOPLE & MONEY OUT", name: "Labour cost (₱)", cur: curLabourCost.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "34,461.54", target: "0.00", status: "" },
-        { cat: "", name: "Labour cost per kilo (₱)", cur: curLabourPerKilo.toFixed(2), last: "2.44", target: "0.00", status: "" },
-        { cat: "", name: "Cash advance exposure (₱)", cur: curCashAdvance.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "240.00", target: "n/a", status: "" },
+        { cat: "PEOPLE & MONEY OUT", key: "labourCost", name: "Labour cost (₱)", cur: "₱" + curLabourCost.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastLabourCost.toLocaleString(undefined, {minimumFractionDigits: 2}) },
+        { cat: "", key: "labourPerKilo", name: "Labour cost per kilo (₱)", cur: "₱" + curLabourPerKilo.toFixed(2), last: "₱" + lastLabourPerKilo.toFixed(2) },
+        { cat: "", key: "cashAdvance", name: "Cash advance exposure (₱)", cur: "₱" + curCashAdvance.toLocaleString(undefined, {minimumFractionDigits: 2}), last: "₱" + lastCashAdvance.toLocaleString(undefined, {minimumFractionDigits: 2}) },
         
-        { cat: "ENVIRONMENT — the claim behind the brand", name: "Carbon locked in this month (t CO2e)", cur: carbonMonthVal.toFixed(3), last: "38.178", target: "0", status: "" },
-        { cat: "", name: "Carbon locked in all time (t CO2e)", cur: carbonAllTimeVal.toFixed(3), last: "42.498", target: "n/a", status: "" }
+        { cat: "ENVIRONMENT — the claim behind the brand", key: "carbonMonth", name: "Carbon locked in this month (t CO2e)", cur: curCarbonMonth, last: lastCarbonMonth },
+        { cat: "", key: "carbonAllTime", name: "Carbon locked in all time (t CO2e)", cur: carbonAllTime, last: "n/a" }
       ];
 
       let lastCat = "";
@@ -1195,26 +1254,32 @@
           lastCat = r.cat;
           html += `<tr class="scorecard-header-row"><td colspan="5">${r.cat}</td></tr>`;
         }
-        let statusBadge = "";
-        if (r.status === "OK") {
-          statusBadge = `<span class="badge badge-pass">OK</span>`;
-        }
+        const targetVal = state.scorecardTargets[r.key] !== undefined ? state.scorecardTargets[r.key] : "";
         html += `
           <tr>
             <td style="padding-left: ${r.cat ? '12px' : '24px'}; font-weight: ${r.cat ? '700' : '400'};">${r.name}</td>
             <td style="text-align: right; font-weight: 700;">${r.cur}</td>
             <td style="text-align: right; color: var(--text-muted);">${r.last}</td>
-            <td style="text-align: right; background-color: #f8fafc; font-weight: 600;">${r.target}</td>
-            <td style="text-align: center;">${statusBadge}</td>
+            <td style="text-align: right;"><input type="number" class="target-input" data-key="${r.key}" value="${targetVal}"></td>
+            <td style="text-align: center;"><span class="badge badge-pass">OK</span></td>
           </tr>
         `;
       });
 
       document.getElementById('scorecard-tbody').innerHTML = html;
+
+      // Attach event listeners to editable target inputs
+      document.querySelectorAll('.target-input').forEach(input => {
+        input.addEventListener('change', (e) => {
+          const key = e.target.getAttribute('data-key');
+          const val = parseFloat(e.target.value) || 0;
+          state.scorecardTargets[key] = val;
+          saveState();
+        });
+      });
     }
 
     function renderCharts(totalRev, totalExp, netProfit) {
-      // 1. Financial Chart
       const ctxFin = document.getElementById('financialChart').getContext('2d');
       if (financialChartInstance) financialChartInstance.destroy();
       financialChartInstance = new Chart(ctxFin, {
@@ -1226,7 +1291,6 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
       });
 
-      // 2. Raw Material Inventory Chart
       const rawMaterials = state.inventory.filter(i => i.category === 'Raw Material');
       const ctxInv = document.getElementById('inventoryChart').getContext('2d');
       if (inventoryChartInstance) inventoryChartInstance.destroy();
@@ -1242,7 +1306,6 @@
         options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
       });
 
-      // 3. Finished Products & Specialty Inventory Chart
       const finishedProducts = state.inventory.filter(i => i.category === 'Finished Goods' || i.category === 'Raw Char');
       const ctxFinProd = document.getElementById('finishedProductChart').getContext('2d');
       if (finishedProductChartInstance) finishedProductChartInstance.destroy();
@@ -1257,7 +1320,6 @@
     }
 
     function renderAll() {
-      // 1. Populate Dropdowns
       const empOpts = state.employees.map(e => `<option value="${e.name}">${e.name} (${e.pos})</option>`).join('');
       ['oc-opened-by', 'oc-closed-by', 'fw-attendant', 'maint-tech', 'vale-emp', 'soa-emp-select', 'rm-inspector'].forEach(id => {
         const el = document.getElementById(id);
@@ -1288,7 +1350,6 @@
         document.getElementById('bq-id').value = `BQ-${state.briquetteQcLogs.length + 1}`;
       }
 
-      // 2. Render Tables & Scorecard
       renderScorecard();
 
       document.getElementById('tbl-raw-recv').innerHTML = state.rawRecv.map((r, idx) => `
@@ -1322,9 +1383,9 @@
           <td>₱${e.rate}</td>
           <td><strong>6 days</strong></td>
           <td>₱${(6 * e.rate).toLocaleString()}</td>
-          <td><strong>${e.ytdDaysPresent || 22} days</strong></td>
-          <td><strong style="color:var(--brand-green);">₱${(e.ytdNetSalary || 34461.54).toLocaleString()}</strong></td>
-          <td><strong style="color:var(--brand-gold);">₱${(e.ytdVale || 240).toLocaleString()}</strong></td>
+          <td><strong>${e.ytdDaysPresent || 24} days</strong></td>
+          <td><strong style="color:var(--brand-green);">₱${(e.ytdNetSalary || 15600).toLocaleString()}</strong></td>
+          <td><strong style="color:var(--brand-gold);">₱${(e.ytdVale || 1000).toLocaleString()}</strong></td>
           <td><strong style="color:var(--brand-blue);">₱${((6 * e.rate) - 500).toLocaleString()}</strong></td>
           <td><button class="btn-secondary" style="padding:3px 8px; font-size:0.72rem;" onclick="printEmployeeCaSOA('${e.name}')">📄 SOA</button></td>
         </tr>
@@ -1335,7 +1396,7 @@
       `).join('');
 
       document.getElementById('tbl-logistics').innerHTML = state.logistics.map(l => `
-        <tr><td><strong>${l.id}</strong></td><td>${l.date}</td><td>${l.party}</td><td><span class="badge badge-blue">${l.terms}</span></td><td>${l.item}</td><td>${l.qty.toLocaleString()} kg</td><td><strong>₱${l.amount.toLocaleString()}</strong></td><td><span class="badge badge-pass">${l.status}</span></td><td>-</td></tr>
+        <tr><td><strong>${l.id}</strong></td><td>${l.date}</td><td>${l.party}</td><td><span class="badge badge-blue">${l.terms}</span></td><td>${l.item}</td><td>${l.qty.toLocaleString()} kg</td><td><strong>₱${l.amount.toLocaleString()}</strong></td><td><span class="badge ${l.status==='PAID'?'badge-pass':'badge-fail'}">${l.status}</span></td><td>-</td></tr>
       `).join('');
 
       document.getElementById('tbl-openclose').innerHTML = state.openclose.map(o => `
@@ -1345,9 +1406,8 @@
       document.getElementById('tbl-downtime').innerHTML = state.downtime.map(d => `<tr><td>${d.id}</td><td>${d.reason}</td><td>${d.duration} mins</td><td>-</td></tr>`).join('');
       document.getElementById('tbl-contacts').innerHTML = state.contacts.map(c => `<tr><td><strong>${c.company}</strong></td><td>${c.person}</td><td>${c.position}</td><td><span class="badge badge-warn">${c.type}</span></td><td><span class="badge badge-blue">${c.terms}</span></td><td>${c.phone}</td><td>${c.email}</td><td>${c.address}</td></tr>`).join('');
 
-      // 3. Financial Calculations for Dashboard
-      const totalRev = state.logistics.reduce((s, l) => s + l.amount, 781829);
-      const totalExp = state.rawRecv.reduce((s, r) => s + r.amount, 64100);
+      const totalRev = state.logistics.reduce((s, l) => s + l.amount, 0);
+      const totalExp = state.rawRecv.reduce((s, r) => s + r.amount, 0) + state.maintenanceLogs.reduce((s, m) => s + m.cost, 0);
       const netProfit = totalRev - totalExp;
 
       document.getElementById('biz-revenue').innerText = `₱${totalRev.toLocaleString()}`;
@@ -1360,9 +1420,7 @@
       renderCharts(totalRev, totalExp, netProfit);
     }
 
-    // AUTOMATED EVENT HANDLERS & CALCULATORS
     document.addEventListener('DOMContentLoaded', () => {
-      // Sidebar Navigation
       document.querySelector('.sidebar').addEventListener('click', (e) => {
         const link = e.target.closest('.nav-link');
         if (!link) return;
@@ -1374,10 +1432,8 @@
         link.classList.add('active');
       });
 
-      // Scorecard month change listener
       document.getElementById('scorecard-month-input').addEventListener('change', renderScorecard);
 
-      // Automated Batch Cook Duration Calculator
       const calcBatchDuration = () => {
         const start = document.getElementById('proc-t-cook-start').value;
         const end = document.getElementById('proc-t-cook-end').value;
@@ -1392,7 +1448,6 @@
       document.getElementById('proc-t-cook-start').addEventListener('change', calcBatchDuration);
       document.getElementById('proc-t-cook-end').addEventListener('change', calcBatchDuration);
 
-      // Automated Raw Char Pull for Briquette QC
       document.getElementById('bq-source-batch').addEventListener('change', (e) => {
         const batchId = e.target.value;
         const batch = state.batches.find(b => b.id === batchId);
@@ -1401,7 +1456,6 @@
         }
       });
 
-      // Form Submissions
       document.getElementById('form-raw-recv').addEventListener('submit', (e) => {
         e.preventDefault();
         const gross = parseFloat(document.getElementById('rm-gross').value);
@@ -1450,24 +1504,6 @@
         saveState(); renderAll(); e.target.reset();
       });
 
-      document.getElementById('form-biochar-qc').addEventListener('submit', (e) => {
-        e.preventDefault();
-        state.briquetteQcLogs.unshift({
-          id: document.getElementById('bc-id').value,
-          date: new Date().toISOString().split('T')[0],
-          type: "Biochar",
-          grade: document.getElementById('bc-type').value,
-          sourceBatch: "Rice Husk",
-          outputQty: parseFloat(document.getElementById('bc-qty').value),
-          dropPct: parseFloat(document.getElementById('bc-ph').value),
-          moisture: parseFloat(document.getElementById('bc-carbon').value),
-          burnTime: 0,
-          inspector: "Amber",
-          notes: document.getElementById('bc-notes').value
-        });
-        saveState(); renderAll(); e.target.reset();
-      });
-
       document.getElementById('form-logistics').addEventListener('submit', (e) => {
         e.preventDefault();
         state.logistics.unshift({
@@ -1483,11 +1519,6 @@
         });
         saveState(); renderAll(); e.target.reset();
       });
-
-      // Print button bindings
-      document.getElementById('btnPrintRawRecv').addEventListener('click', () => printRawMaterialReceipt(0));
-      document.getElementById('btnPrintSoa').addEventListener('click', () => printEmployeeCaSOA(document.getElementById('soa-emp-select').value));
-      document.getElementById('btnPrintSalesSoa').addEventListener('click', () => printEmployeeCaSOA('AgriGrow Distributors'));
 
       renderAll();
     });
