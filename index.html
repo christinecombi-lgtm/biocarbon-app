@@ -144,7 +144,6 @@
     .badge-warn { background: #fef3c7; color: #b45309; }
     .badge-blue { background: #e0f2fe; color: #0369a1; }
 
-    /* ATTENDANCE GRID STYLING */
     .cal-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; margin-top: 12px; }
     .cal-table th, .cal-table td { border: 1px solid var(--border-light); text-align: center; padding: 8px 4px; }
     .cal-table th { background-color: #f8fafc; font-weight: 700; color: var(--text-muted); }
@@ -168,7 +167,17 @@
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
     }
 
-    /* PRINTABLE DOCUMENT ENGINE */
+    .sanity-warning {
+      background-color: #fef2f2;
+      border: 1px solid var(--brand-danger);
+      color: #991b1b;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      margin-bottom: 12px;
+      display: none;
+    }
+
     .printable-document {
       background: #ffffff;
       border: 1px solid #1a1816;
@@ -397,6 +406,7 @@
             <span>Record Raw Material Delivery / Purchase (Bamboo, Rice Husk, Coconut Shell)</span>
             <button class="btn-secondary" id="btnPrintRawRecv">🖨️ Print / Save Supplier Receipt PDF</button>
           </div>
+          <div id="raw-sanity-alert" class="sanity-warning"></div>
           <form id="form-raw-recv">
             <div class="form-grid">
               <div class="form-group"><label>Ticket Date</label><input type="date" id="rm-date" class="form-control" required></div>
@@ -488,6 +498,7 @@
             <span>Log Pyrolysis Batch Cook & Raw Char Stacking</span>
             <button class="btn-secondary" id="btnPrintBatch">🖨️ Print Full-Page Pyrolysis Stacking Sheet</button>
           </div>
+          <div id="batch-sanity-alert" class="sanity-warning"></div>
           <form id="form-batches">
             <div class="form-grid">
               <div class="form-group"><label>Batch ID (Auto-Numbered)</label><input type="text" id="proc-batch-id" class="form-control" readonly style="background: #f8fafc; font-weight: bold;"></div>
@@ -610,6 +621,7 @@
               <button type="button" class="btn-secondary" id="btnPrintQc">🖨️ Print QC Form</button>
             </div>
           </div>
+          <div id="qc-sanity-alert" class="sanity-warning"></div>
           <form id="form-briquette-qc">
             <div class="form-grid">
               <div class="form-group"><label>Run ID (Auto)</label><input type="text" id="bq-id" class="form-control" readonly style="background: #f8fafc; font-weight: bold;"></div>
@@ -998,7 +1010,7 @@
   <div id="printable-area" style="display: none;"></div>
 
   <script>
-    const STORAGE_KEY = 'cbcm_master_suite_v26_clickable_print_fix2';
+    const STORAGE_KEY = 'cbcm_master_suite_v26_logical_checks';
     const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     const defaultState = {
@@ -1555,11 +1567,10 @@
       if (calMonth) calMonth.addEventListener('change', renderAttendanceCalendar);
       if (calYear) calYear.addEventListener('change', renderAttendanceCalendar);
 
-      // Global print button bindings with explicit handlers
       const bindPrintBtn = (id, handler) => {
         const btn = document.getElementById(id);
         if (btn) {
-          btn.type = 'button'; // Prevent any form submission
+          btn.type = 'button';
           btn.addEventListener('click', (e) => {
             e.preventDefault();
             handler();
@@ -1688,8 +1699,106 @@
         }
       });
 
+      // LOGICAL SANITY CHECK ON RAW MATERIAL INTAKE
+      document.getElementById('form-raw-recv').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const gross = parseFloat(document.getElementById('rm-gross').value);
+        const tare = parseFloat(document.getElementById('rm-tare').value);
+        const price = parseFloat(document.getElementById('rm-price').value);
+        const mc = parseFloat(document.getElementById('rm-mc').value);
+        const alertBox = document.getElementById('raw-sanity-alert');
+
+        if (tare >= gross) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Sanity Warning:</strong> Tare weight cannot exceed or equal gross weight. Please double-check scale readings.';
+          return;
+        }
+        if (mc < 0 || mc > 60) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Sanity Warning:</strong> Moisture content of ' + mc + '% is outside normal feedstock limits (0-60%). Double-check sample test.';
+          return;
+        }
+        alertBox.style.display = 'none';
+
+        const net = Math.max(0, gross - tare);
+        const amount = net * price;
+
+        state.rawRecv.unshift({
+          id: `RM-${Date.now().toString().slice(-3)}`,
+          date: document.getElementById('rm-date').value,
+          item: document.getElementById('rm-item').value,
+          supplier: document.getElementById('rm-supplier').value,
+          grossKg: gross, tareKg: tare, price: price, amount: amount,
+          mcPct: mc,
+          terms: document.getElementById('rm-terms').value,
+          status: document.getElementById('rm-status').value,
+          inspector: document.getElementById('rm-inspector').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      // LOGICAL SANITY CHECK ON PYROLYSIS BATCH LOGS
+      document.getElementById('form-batches').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const consumed = parseFloat(document.getElementById('proc-raw-qty').value);
+        const output = parseFloat(document.getElementById('proc-fin-qty').value);
+        const temp = parseInt(document.getElementById('proc-temp').value);
+        const alertBox = document.getElementById('batch-sanity-alert');
+
+        if (output > consumed) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Logical Error / Mass Balance Violation:</strong> Char output (' + output + 'kg) cannot exceed raw feedstock consumed (' + consumed + 'kg). Yield cannot be > 100%.';
+          return;
+        }
+        if (temp < 300 || temp > 800) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Sanity Warning:</strong> Peak operating temperature of ' + temp + '°C is outside standard carbonization range (300°C - 700°C).';
+          return;
+        }
+        alertBox.style.display = 'none';
+
+        let tempGroup = "Group 1 (400-450°C)";
+        if (temp >= 451 && temp <= 470) tempGroup = "Group 2 (451-470°C)";
+        else if (temp >= 471) tempGroup = "Group 3 (471-500+°C)";
+
+        state.batches.unshift({
+          id: document.getElementById('proc-batch-id').value,
+          rawItem: document.getElementById('proc-raw-item').value,
+          consumedKg: consumed,
+          yieldKg: output,
+          vinegarLiters: parseFloat(document.getElementById('proc-vinegar-qty').value),
+          cookHours: document.getElementById('proc-cook-hours').value,
+          tempGroup: tempGroup,
+          opStart: document.getElementById('proc-op-start').value,
+          opEnd: document.getElementById('proc-op-end').value,
+          maxTemp: temp,
+          preMcPct: parseFloat(document.getElementById('proc-pre-mc').value),
+          startTime: document.getElementById('proc-t-cook-start').value.replace('T', ' '),
+          endTime: document.getElementById('proc-t-cook-end').value.replace('T', ' '),
+          qcNotes: document.getElementById('proc-qc-notes').value
+        });
+        saveState(); renderAll(); e.target.reset();
+      });
+
+      // LOGICAL SANITY CHECK ON QC LAB TESTING
       document.getElementById('form-briquette-qc').addEventListener('submit', (e) => {
         e.preventDefault();
+        const drop = parseFloat(document.getElementById('bq-drop-pct').value);
+        const moisture = parseFloat(document.getElementById('bq-moisture').value);
+        const alertBox = document.getElementById('qc-sanity-alert');
+
+        if (drop < 0 || drop > 100) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Sanity Warning:</strong> Drop test retain percentage must be between 0% and 100%.';
+          return;
+        }
+        if (moisture < 0 || moisture > 30) {
+          alertBox.style.display = 'block';
+          alertBox.innerHTML = '⚠️ <strong>Sanity Warning:</strong> Finished briquette moisture of ' + moisture + '% is unusually high (normal target is < 5% - 8%).';
+          return;
+        }
+        alertBox.style.display = 'none';
+
         state.briquetteQcLogs.unshift({
           id: document.getElementById('bq-id').value,
           date: document.getElementById('bq-date').value,
@@ -1697,8 +1806,8 @@
           grade: document.getElementById('bq-grade').value,
           sourceBatch: document.getElementById('bq-source-batch').value,
           outputQty: parseFloat(document.getElementById('bq-output-qty').value),
-          dropPct: parseFloat(document.getElementById('bq-drop-pct').value),
-          moisture: parseFloat(document.getElementById('bq-moisture').value),
+          dropPct: drop,
+          moisture: moisture,
           burnTime: parseFloat(document.getElementById('bq-burn-time').value),
           inspector: document.getElementById('bq-inspector').value,
           notes: document.getElementById('bq-notes').value
@@ -1719,54 +1828,6 @@
           carbon: parseFloat(document.getElementById('bc-carbon').value),
           inspector: "Lab Team",
           notes: document.getElementById('bc-notes').value
-        });
-        saveState(); renderAll(); e.target.reset();
-      });
-
-      document.getElementById('form-raw-recv').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const gross = parseFloat(document.getElementById('rm-gross').value);
-        const tare = parseFloat(document.getElementById('rm-tare').value);
-        const price = parseFloat(document.getElementById('rm-price').value);
-        const net = Math.max(0, gross - tare);
-        const amount = net * price;
-
-        state.rawRecv.unshift({
-          id: `RM-${Date.now().toString().slice(-3)}`,
-          date: document.getElementById('rm-date').value,
-          item: document.getElementById('rm-item').value,
-          supplier: document.getElementById('rm-supplier').value,
-          grossKg: gross, tareKg: tare, price: price, amount: amount,
-          mcPct: parseFloat(document.getElementById('rm-mc').value),
-          terms: document.getElementById('rm-terms').value,
-          status: document.getElementById('rm-status').value,
-          inspector: document.getElementById('rm-inspector').value
-        });
-        saveState(); renderAll(); e.target.reset();
-      });
-
-      document.getElementById('form-batches').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const temp = parseInt(document.getElementById('proc-temp').value);
-        let tempGroup = "Group 1 (400-450°C)";
-        if (temp >= 451 && temp <= 470) tempGroup = "Group 2 (451-470°C)";
-        else if (temp >= 471) tempGroup = "Group 3 (471-500+°C)";
-
-        state.batches.unshift({
-          id: document.getElementById('proc-batch-id').value,
-          rawItem: document.getElementById('proc-raw-item').value,
-          consumedKg: parseFloat(document.getElementById('proc-raw-qty').value),
-          yieldKg: parseFloat(document.getElementById('proc-fin-qty').value),
-          vinegarLiters: parseFloat(document.getElementById('proc-vinegar-qty').value),
-          cookHours: document.getElementById('proc-cook-hours').value,
-          tempGroup: tempGroup,
-          opStart: document.getElementById('proc-op-start').value,
-          opEnd: document.getElementById('proc-op-end').value,
-          maxTemp: temp,
-          preMcPct: parseFloat(document.getElementById('proc-pre-mc').value),
-          startTime: document.getElementById('proc-t-cook-start').value.replace('T', ' '),
-          endTime: document.getElementById('proc-t-cook-end').value.replace('T', ' '),
-          qcNotes: document.getElementById('proc-qc-notes').value
         });
         saveState(); renderAll(); e.target.reset();
       });
